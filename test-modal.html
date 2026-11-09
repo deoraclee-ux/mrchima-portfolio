@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Modal Test</title>
+    <style>
+        body { font-family: Arial; padding: 40px; }
+        .test-card {
+            width: 300px;
+            padding: 20px;
+            border: 2px solid #007ACC;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 20px 0;
+        }
+        .test-card:hover {
+            background: #f0f8ff;
+        }
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 400px;
+        }
+        .close-btn {
+            float: right;
+            font-size: 24px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Modal Test Page</h1>
+    <p>If this works, the modal functionality is fine and the issue is elsewhere.</p>
+    
+    <div class="test-card" onclick="openModal()">
+        <h3>Click Me to Open Modal</h3>
+        <p>Oracle Weather App - ₦15,000</p>
+    </div>
+    
+    <div id="test-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2>Test Modal</h2>
+            <p>If you see this, the modal is working!</p>
+            <input type="email" placeholder="Email" style="width: 100%; padding: 10px; margin: 10px 0;">
+            <button onclick="alert('Payment would start here!')" style="width: 100%; padding: 12px; background: #7c2d12; color: white; border: none; border-radius: 8px; cursor: pointer;">Pay ₦15,000</button>
+        </div>
+    </div>
+    
+    <script>
+        console.log('Test page loaded');
+        
+        function openModal() {
+            console.log('Opening modal...');
+            document.getElementById('test-modal').style.display = 'flex';
+        }
+        
+        function closeModal() {
+            console.log('Closing modal...');
+            document.getElementById('test-modal').style.display = 'none';
+        }
+        
+        // Test on page load
+        setTimeout(() => {
+            console.log('Modal element:', document.getElementById('test-modal'));
+            console.log('Card element:', document.querySelector('.test-card'));
+        }, 100);
+    </script>
+</body>
+</html>

@@ -1,0 +1,372 @@
+<!-- Checkout Modal - Original Simple Design -->
+<div id="checkout-modal" class="checkout-modal" style="display:none;">
+  <div class="checkout-overlay" onclick="closeCheckout()"></div>
+  <div class="checkout-dialog">
+    <button class="checkout-close" onclick="closeCheckout()">&times;</button>
+    <h2 class="checkout-title">Checkout</h2>
+    <div class="checkout-content">
+      <!-- Product Info -->
+      <div class="checkout-product">
+        <div class="checkout-product-icon">
+          <span id="product-initial">B</span>
+        </div>
+        <div class="checkout-product-info">
+          <h3 id="product-name">Browser Decryption</h3>
+          <p id="product-type">Source code · ZIP</p>
+        </div>
+        <div class="checkout-product-price">
+          <span id="product-price">₦15,000</span>
+        </div>
+      </div>
+      <!-- Email Input -->
+      <input 
+        type="email" 
+        id="customer-email" 
+        class="checkout-input" 
+        placeholder="Email"
+        required
+      />
+      <!-- Name Input -->
+      <input 
+        type="text" 
+        id="customer-name" 
+        class="checkout-input" 
+        placeholder="Name (optional)"
+        />
+      <!-- Notice -->
+      <p class="checkout-notice">Your download link and receipt go to this email.</p>
+      <!-- Pay Button -->
+      <button 
+        class="checkout-pay-btn" 
+        id="pay-btn"
+        onclick="processPayment()"
+      >
+        <span id="button-text">Pay ₦15,000</span>
+        <span id="button-loading" style="display:none;">Processing...</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Checkout Modal Styles - Simple & Clean -->
+<style>
+.checkout-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.checkout-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(2px);
+}
+.checkout-dialog {
+  position: relative;
+  background: white;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 460px;
+  padding: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  animation: slideUp 0.25s ease-out;
+}
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.checkout-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  color: #999;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  line-height: 1;
+  transition: color 0.15s;
+}
+.checkout-close:hover {
+  color: #333;
+}
+.checkout-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 20px 0;
+  color: #1a1a1a;
+  letter-spacing: -0.01em;
+}
+.checkout-content {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.checkout-product {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin-bottom: 4px;
+}
+.checkout-product-icon {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  background: #7a6f9b;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.checkout-product-icon span {
+  font-size: 20px;
+  font-weight: 600;
+  color: white;
+  text-transform: uppercase;
+}
+.checkout-product-info {
+  flex: 1;
+  min-width: 0;
+}
+.checkout-product-info h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a1a;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.checkout-product-info p {
+  margin: 2px 0 0 0;
+  font-size: 13px;
+  color: #6b7280;
+  line-height: 1.3;
+}
+.checkout-product-price {
+  flex-shrink: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+.checkout-input {
+  width: 100%;
+  padding: 13px 14px;
+  font-size: 14px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 8px;
+  outline: none;
+  transition: all 0.15s ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  background: #fafafa;
+  color: #1a1a1a;
+  box-sizing: border-box;
+}
+.checkout-input:hover {
+  border-color: #d1d5db;
+  background: #f9fafb;
+}
+.checkout-input:focus {
+  background: #ffffff;
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+.checkout-input::placeholder {
+  color: #9ca3af;
+}
+.checkout-notice {
+  font-size: 13px;
+  color: #6b7280;
+  margin: -2px 0 0 0;
+  line-height: 1.4;
+}
+.checkout-pay-btn {
+  width: 100%;
+  padding: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  color: white;
+  background: #7c2d12;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 6px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  letter-spacing: -0.01em;
+}
+.checkout-pay-btn:hover {
+  background: #6b2510;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(124, 45, 18, 0.3);
+}
+.checkout-pay-btn:active {
+  transform: translateY(0);
+}
+.checkout-pay-btn:disabled {
+  background: #d1d5db;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+</style>
+
+<!-- Checkout Scripts -->
+<script>
+  let currentProduct = null;
+  let paystackPublicKey = null;
+
+  // Fetch Paystack public key on page load
+  async function fetchPaystackKey() {
+    try {
+      const response = await fetch('http://localhost:8000/api/config');
+      const data = await response.json();
+      paystackPublicKey = data.paystack_public_key;
+      console.log('Paystack key loaded:', paystackPublicKey ? 'Success' : 'Failed');
+    } catch (error) {
+      console.error('Failed to load Paystack key:', error);
+    }
+  }
+
+  // Call on page load
+  fetchPaystackKey();
+
+  function openCheckout(productId, productName, price) {
+    currentProduct = { id: productId, name: productName, price: price };
+    
+    // Update modal content
+    document.getElementById('product-initial').textContent = productName[0].toUpperCase();
+    document.getElementById('product-name').textContent = productName;
+    document.getElementById('product-price').textContent = '₦' + price.toLocaleString();
+    document.getElementById('button-text').textContent = 'Pay ₦' + price.toLocaleString();
+    
+    // Clear inputs
+    document.getElementById('customer-email').value = '';
+    document.getElementById('customer-name').value = '';
+    
+    // Show modal
+    document.getElementById('checkout-modal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeCheckout() {
+    document.getElementById('checkout-modal').style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  async function processPayment() {
+    const email = document.getElementById('customer-email').value.trim();
+    const name = document.getElementById('customer-name').value.trim() || 'Customer';
+    
+    if (!email) {
+      alert('Please enter your email address');
+      return;
+    }
+    
+    if (!paystackPublicKey) {
+      alert('Payment system not ready. Please refresh the page and try again.');
+      await fetchPaystackKey();
+      return;
+    }
+
+    // Show loading state
+    const btn = document.getElementById('pay-btn');
+    btn.disabled = true;
+    document.getElementById('button-text').style.display = 'none';
+    document.getElementById('button-loading').style.display = 'inline';
+
+    try {
+      // Initialize Paystack
+      const handler = PaystackPop.setup({
+        key: paystackPublicKey,
+        email: email,
+        amount: currentProduct.price * 100, // Convert to kobo
+        currency: 'NGN',
+        ref: 'REF_' + Date.now() + '_' + Math.random().toString(36).substring(2, 11),
+        metadata: {
+          product_id: currentProduct.id,
+          product_name: currentProduct.name,
+          customer_name: name
+        },
+        callback: async function(response) {
+          console.log('Payment successful:', response.reference);
+          
+          // Verify payment on backend
+          try {
+            const verifyResponse = await fetch('http://localhost:8000/api/verify-payment', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                reference: response.reference,
+                product_id: currentProduct.id,
+                customer_email: email,
+                customer_name: name
+              })
+            });
+            
+            const result = await verifyResponse.json();
+            
+            if (result.success) {
+              alert(`✅ Payment successful! ${result.email_sent ? 'Check your email for the download link.' : 'Please contact support with reference: ' + response.reference}`);
+              closeCheckout();
+            } else {
+              alert('Payment verification failed. Please contact support with reference: ' + response.reference);
+            }
+          } catch (error) {
+            console.error('Verification error:', error);
+            alert('Payment processed but verification failed. Please contact support with reference: ' + response.reference);
+          }
+          
+          // Reset button
+          btn.disabled = false;
+          document.getElementById('button-text').style.display = 'inline';
+          document.getElementById('button-loading').style.display = 'none';
+        },
+        onClose: function() {
+          console.log('Payment cancelled');
+          btn.disabled = false;
+          document.getElementById('button-text').style.display = 'inline';
+          document.getElementById('button-loading').style.display = 'none';
+        }
+      });
+      
+      handler.openIframe();
+      
+    } catch (error) {
+      console.error('Payment error:', error);
+      alert('Failed to initialize payment. Please try again.');
+      btn.disabled = false;
+      document.getElementById('button-text').style.display = 'inline';
+      document.getElementById('button-loading').style.display = 'none';
+    }
+  }
+
+  // Close modal with Escape key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      closeCheckout();
+    }
+  });
+</script>

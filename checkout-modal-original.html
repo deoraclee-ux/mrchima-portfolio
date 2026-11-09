@@ -1,0 +1,448 @@
+<!-- Checkout Modal - Exact Original Design -->
+<div id="checkout-modal" class="checkout-modal" style="display:none;">
+  <div class="checkout-overlay"></div>
+  <div class="checkout-dialog">
+    <button class="checkout-close" onclick="closeCheckout()">&times;</button>
+    
+    <h2 class="checkout-title">Checkout</h2>
+    
+    <div class="checkout-content">
+      <!-- Product Info -->
+      <div class="checkout-product">
+        <div class="checkout-product-icon">
+          <span id="product-initial">B</span>
+        </div>
+        <div class="checkout-product-info">
+          <h3 id="product-name">Browser Decryption</h3>
+          <p id="product-type">Source code · ZIP</p>
+        </div>
+        <div class="checkout-product-price">
+          <span id="product-price">₦15,000</span>
+        </div>
+      </div>
+      
+      <!-- Email Input (no label) -->
+      <div class="checkout-field">
+        <input 
+          type="email" 
+          id="customer-email" 
+          class="checkout-input" 
+          placeholder="deoraclee@gmail.com"
+          required
+        />
+      </div>
+      
+      <!-- Name Input (no label) -->
+      <div class="checkout-field">
+        <input 
+          type="text" 
+          id="customer-name" 
+          class="checkout-input" 
+          placeholder="De Oracle"
+          required
+        />
+      </div>
+      
+      <!-- Notice -->
+      <p class="checkout-notice">Your download link and receipt go to this email.</p>
+      
+      <!-- Pay Button -->
+      <button 
+        class="checkout-pay-btn" 
+        id="pay-btn"
+        onclick="processPayment()"
+      >
+        Pay ₦15,000
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Checkout Modal Styles -->
+<style>
+.checkout-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.checkout-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+.checkout-dialog {
+  position: relative;
+  background: white;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 480px;
+  padding: 32px 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.checkout-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  font-size: 28px;
+  color: #666;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.checkout-close:hover {
+  background: #f5f5f5;
+  color: #333;
+}
+
+.checkout-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 24px 0;
+  color: #1a1a1a;
+}
+
+.checkout-product {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.checkout-product-icon {
+  width: 48px;
+  height: 48px;
+  background: #B8C5D6;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.checkout-product-icon span {
+  font-size: 20px;
+  font-weight: 600;
+  color: #4A5568;
+}
+
+.checkout-product-info {
+  flex: 1;
+}
+
+.checkout-product-info h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+  color: #1a1a1a;
+}
+
+.checkout-product-info p {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+.checkout-product-price {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.checkout-field {
+  margin-bottom: 16px;
+}
+
+.checkout-input {
+  width: 100%;
+  padding: 14px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-family: inherit;
+  background: #f8f9fa;
+  box-sizing: border-box;
+  color: #333;
+}
+
+.checkout-input:focus {
+  outline: none;
+  background: #f0f0f0;
+}
+
+.checkout-input::placeholder {
+  color: #999;
+}
+
+.checkout-notice {
+  font-size: 14px;
+  color: #666;
+  margin: 0 0 24px 0;
+  text-align: left;
+}
+
+.checkout-pay-btn {
+  width: 100%;
+  padding: 16px;
+  background: #007ACC;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.checkout-pay-btn:hover {
+  background: #005A9E;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 122, 204, 0.3);
+}
+
+.checkout-pay-btn:active {
+  transform: translateY(0);
+}
+
+.checkout-pay-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+</style>
+
+<!-- Checkout Modal JavaScript -->
+<script src="https://js.paystack.co/v1/inline.js"></script>
+<script>
+// Product data
+const PRODUCTS = {
+  'oracle-weather': {
+    name: 'Oracle Weather App',
+    type: 'Source code · ZIP',
+    initial: 'O',
+    price: 15000,
+    amount: 1500000,
+    filename: 'Oracle-Weather-App.zip'
+  },
+  'mr-chima-ai': {
+    name: 'Mr Chima AI Agent Source Code',
+    type: 'Source code · ZIP',
+    initial: 'M',
+    price: 15000,
+    amount: 1500000,
+    filename: 'mr-chima-ai-agent.zip'
+  }
+};
+
+let currentProduct = null;
+let PAYSTACK_PUBLIC_KEY = null;
+
+// Fetch Paystack key from backend (secure)
+fetch('http://localhost:8000/api/config')
+  .then(res => res.json())
+  .then(data => {
+    PAYSTACK_PUBLIC_KEY = data.paystack_public_key;
+  })
+  .catch(err => {
+    console.error('Failed to load Paystack config:', err);
+  });
+
+// Open checkout modal
+function openCheckout(productId) {
+  const product = PRODUCTS[productId];
+  if (!product) return;
+  
+  currentProduct = productId;
+  
+  // Update modal content
+  document.getElementById('product-initial').textContent = product.initial;
+  document.getElementById('product-name').textContent = product.name;
+  document.getElementById('product-type').textContent = product.type;
+  document.getElementById('product-price').textContent = `₦${product.price.toLocaleString()}`;
+  document.getElementById('pay-btn').textContent = `Pay ₦${product.price.toLocaleString()}`;
+  
+  // Show modal
+  document.getElementById('checkout-modal').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+// Close checkout modal
+function closeCheckout() {
+  document.getElementById('checkout-modal').style.display = 'none';
+  document.body.style.overflow = '';
+  
+  // Clear inputs
+  document.getElementById('customer-email').value = '';
+  document.getElementById('customer-name').value = '';
+  currentProduct = null;
+}
+
+// Process payment
+function processPayment() {
+  const email = document.getElementById('customer-email').value.trim();
+  const name = document.getElementById('customer-name').value.trim();
+  
+  // Validate
+  if (!email || !email.includes('@')) {
+    alert('Please enter a valid email address');
+    return;
+  }
+  
+  if (!name) {
+    alert('Please enter your name');
+    return;
+  }
+  
+  if (!PAYSTACK_PUBLIC_KEY) {
+    alert('Payment system not ready. Please try again.');
+    return;
+  }
+  
+  const product = PRODUCTS[currentProduct];
+  
+  // Generate reference
+  const reference = 'REF_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+  
+  // Initialize Paystack
+  const handler = PaystackPop.setup({
+    key: PAYSTACK_PUBLIC_KEY,
+    email: email,
+    amount: product.amount,
+    currency: 'NGN',
+    ref: reference,
+    metadata: {
+      custom_fields: [
+        {
+          display_name: 'Customer Name',
+          variable_name: 'customer_name',
+          value: name
+        },
+        {
+          display_name: 'Product',
+          variable_name: 'product_name',
+          value: product.name
+        },
+        {
+          display_name: 'Product ID',
+          variable_name: 'product_id',
+          value: currentProduct
+        }
+      ]
+    },
+    callback: function(response) {
+      handlePaymentSuccess(response, email, name);
+    },
+    onClose: function() {
+      console.log('Payment cancelled');
+    }
+  });
+  
+  handler.openIframe();
+}
+
+// Handle successful payment
+function handlePaymentSuccess(response, email, name) {
+  const product = PRODUCTS[currentProduct];
+  
+  // Close modal
+  closeCheckout();
+  
+  // Show success message
+  alert(`Payment successful!\n\nYour download link will be sent to ${email}\n\nReference: ${response.reference}`);
+  
+  // Send to backend for verification and email
+  fetch('http://localhost:8000/api/verify-payment', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      reference: response.reference,
+      product_id: currentProduct,
+      customer_email: email,
+      customer_name: name
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      alert('Download link sent to your email!');
+    } else {
+      alert('Payment verified but email failed. Please contact support with reference: ' + response.reference);
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('Unable to send download link. Please contact support with reference: ' + response.reference);
+  });
+}
+
+// Attach to product buttons
+document.addEventListener('DOMContentLoaded', function() {
+  const cards = document.querySelectorAll('.card');
+  
+  cards.forEach(card => {
+    const title = card.querySelector('.card-title');
+    if (!title) return;
+    
+    const titleText = title.textContent.trim();
+    let productId = null;
+    
+    if (titleText.includes('Oracle Weather')) {
+      productId = 'oracle-weather';
+    } else if (titleText.includes('Mr Chima AI')) {
+      productId = 'mr-chima-ai';
+    }
+    
+    if (productId) {
+      card.addEventListener('click', function(e) {
+        e.preventDefault();
+        openCheckout(productId);
+      });
+    }
+  });
+});
+
+// Close on overlay click
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('checkout-overlay')) {
+    closeCheckout();
+  }
+});
+</script>
