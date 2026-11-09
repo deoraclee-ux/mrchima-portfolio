@@ -1433,7 +1433,7 @@ function saveUserData(email, name) {
 }
 
 // Fetch Paystack key from backend (secure)
-fetch('http://localhost:8000/api/config')
+fetch('${BACKEND_URL}/api/config')
   .then(res => res.json())
   .then(data => {
     PAYSTACK_PUBLIC_KEY = data.paystack_public_key;
@@ -1443,7 +1443,7 @@ fetch('http://localhost:8000/api/config')
     console.error('Failed to load Paystack config:', err);
     // Retry once after 2 seconds
     setTimeout(() => {
-      fetch('http://localhost:8000/api/config')
+      fetch('${BACKEND_URL}/api/config')
         .then(res => res.json())
         .then(data => {
           PAYSTACK_PUBLIC_KEY = data.paystack_public_key;
@@ -1583,7 +1583,7 @@ function handlePaymentSuccess(response, email, name, productId) {
   alert(`Payment successful!\n\nYour download link will be sent to ${email}\n\nReference: ${response.reference}`);
   
   // Send to backend for verification and email
-  fetch('http://localhost:8000/api/verify-payment', {
+  fetch('${BACKEND_URL}/api/verify-payment', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -2458,7 +2458,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const originalText = submitBtn.textContent;
       
       try {
-        const response = await fetch('http://localhost:8000/api/contact', {
+        const response = await fetch('${BACKEND_URL}/api/contact', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
