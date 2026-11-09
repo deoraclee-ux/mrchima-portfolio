@@ -1,0 +1,9 @@
+backend/
+*.py
+*.db
+__pycache__/
+*.pyc
+.python-version
+requirements.txt
+Procfile
+runtime.txt

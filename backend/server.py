@@ -535,6 +535,7 @@ Reference: {reference}
     # Send to customer
     customer_sent = send_email(
         to_email=customer_email,
+        to_name=customer_name,
         subject=subject,
         html_content=html_content,
         text_content=text_content
@@ -632,6 +633,7 @@ Confirmation email sent to customer.'''
     # Send to admin
     admin_sent = send_email(
         to_email=admin_email,
+        to_name="Abone Chima",
         subject=admin_subject,
         html_content=admin_html,
         text_content=admin_text
@@ -766,7 +768,13 @@ Python Developer & Instructor
 mrchima.dev
     '''
     
-    return send_email(customer_email, customer_name, subject, html_content, text_content)
+    return send_email(
+        to_email=customer_email,
+        to_name=customer_name,
+        subject=subject,
+        html_content=html_content,
+        text_content=text_content
+    )
 
 
 @app.get("/")
@@ -1238,7 +1246,7 @@ async def download_file(token: str, request: Request, user_agent: Optional[str] 
         raise HTTPException(status_code=500, detail='Download not available for this product')
     
     # Increment download count
-    increment_download_count(token, client_ip)
+    update_token_download(token, client_ip)
     
     # Log successful download
     log_download_attempt(token, client_ip, client_ua, True, "Download successful - redirecting to Google Drive")

@@ -1,0 +1,7 @@
+{
+  "buildCommand": null,
+  "framework": null,
+  "rewrites": [
+    { "source": "/hire", "destination": "/hire.html" }
+  ]
+}

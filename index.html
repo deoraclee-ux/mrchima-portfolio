@@ -1433,7 +1433,7 @@ function saveUserData(email, name) {
 }
 
 // Fetch Paystack key from backend (secure)
-fetch('${BACKEND_URL}/api/config')
+fetch(`${BACKEND_URL}/api/config`)
   .then(res => res.json())
   .then(data => {
     PAYSTACK_PUBLIC_KEY = data.paystack_public_key;
@@ -1443,7 +1443,7 @@ fetch('${BACKEND_URL}/api/config')
     console.error('Failed to load Paystack config:', err);
     // Retry once after 2 seconds
     setTimeout(() => {
-      fetch('${BACKEND_URL}/api/config')
+      fetch(`${BACKEND_URL}/api/config`)
         .then(res => res.json())
         .then(data => {
           PAYSTACK_PUBLIC_KEY = data.paystack_public_key;
