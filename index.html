@@ -220,12 +220,7 @@ button.hf-submit.success::before {
   object-fit: contain !important;
 }
 
-/* Update all brown colors to blue */
-.btn-dark, .nav-cta, button[type="submit"], .hf-submit {
-  background-color: var(--vscode-blue) !important;
-  border-color: var(--vscode-blue) !important;
-  color: white !important;
-}
+/* Button styling - use original colors */
 
 /* Navbar link styling */
 .nav-links a:not(.btn-dark):not(.nav-cta):not(.nav-support) {
@@ -276,17 +271,7 @@ button.hf-submit.success::before {
 
 /* Fix hero buttons - override hardcoded styles */
 .hero-buttons .btn-dark,
-.hero-buttons .btn-grey {
-  background-color: var(--vscode-blue) !important;
-  border-color: var(--vscode-blue) !important;
-  color: white !important;
-}
-
-.hero-buttons .btn-grey {
-  background-color: transparent !important;
-  border: 2px solid var(--vscode-blue) !important;
-  color: var(--vscode-blue) !important;
-}
+/* Hero button styling - restored to original */
 
 .hero-buttons .btn-dark:hover {
   background: #333336 !important;
