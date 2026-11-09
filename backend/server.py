@@ -42,7 +42,7 @@ import time
 import base64
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
 # Load environment variables from .env file
 load_dotenv()
@@ -208,8 +208,8 @@ def verify_token_signature(token: str, signature: str, data: dict) -> bool:
 
 
 def get_encryption_key() -> bytes:
-    """Derive encryption key from SECRET_KEY using PBKDF2"""
-    kdf = PBKDF2(
+    """Derive encryption key from SECRET_KEY using PBKDF2HMAC"""
+    kdf = PBKDF2HMAC(
         algorithm=hashes.SHA256(),
         length=32,
         salt=b'mrchima_salt_2024',  # Static salt for consistent key
