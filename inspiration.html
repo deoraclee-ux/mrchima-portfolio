@@ -3,510 +3,325 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="/favicon.ico"/>
-    <title>My inspiration tree | Abone Chima (Mr Chima)</title>
-    <meta name="description" content="The people who inspire Abone Chima (Mr Chima)">
-    <link rel="stylesheet" href="/_next/static/chunks/1htf0x35-w7ke.css">
+    <title>My Inspiration Tree | Abone Chima (Mr Chima)</title>
     <style>
-        /* Tree-specific styles extracted from mrbayo.dev */
-        .tree-page {
-            padding: 40px 0 48px;
-        }
-
-        .tree-page h1 {
-            letter-spacing: -0.02em;
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 32px;
-        }
-
-        .tree-stage {
-            --face: 88px;
-            --cell: 116px;
-            --root: 119px;
-            height: clamp(440px, 100svh - 190px, 680px);
-            position: relative;
-            max-width: 992px;
-            margin: 0 auto;
-        }
-
-        .tree-art {
-            display: block;
-            position: absolute;
-            inset: 0;
-        }
-
-        .tree-line {
-            fill: #690202;
-            stroke: #690202;
-            stroke-width: 3px;
-            stroke-linejoin: round;
-        }
-
-        .tree-fill {
-            fill: var(--white);
-        }
-
-        .tree-people {
-            pointer-events: none;
-            list-style: none;
-            position: absolute;
-            inset: 0;
-        }
-
-        .tree-person {
-            width: var(--cell);
-            transform-origin: 50% calc(var(--face) / 2);
-            opacity: 0;
-            pointer-events: auto;
-            transition: transform 0.46s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.18s;
-            position: absolute;
-            transform: translate(-50%) scale(0.3);
-        }
-
-        .tree-person.is-in {
-            opacity: 1;
-            transform: translate(-50%) scale(1);
-        }
-
-        .tree-person button {
-            cursor: pointer;
-            background: transparent;
-            border: 0;
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #f5f5f7;
+            padding: 40px 20px;
+            min-height: 100vh;
+            display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 5px;
-            width: 100%;
-            display: flex;
         }
-
-        .tree-face {
-            width: var(--face);
-            height: var(--face);
-            color: #fff;
-            font-size: calc(var(--face) * 0.36);
-            box-shadow: 0 0 0 3px var(--white), 0 0 0 4px var(--hair), 0 6px 16px rgba(0,0,0,0.1);
-            background: linear-gradient(160deg, #b7c2d6 0%, #8e9bb4 100%);
-            border-radius: 50%;
-            flex-shrink: 0;
-            justify-content: center;
-            align-items: center;
-            font-weight: 500;
-            transition: transform 0.18s;
-            display: flex;
-            overflow: hidden;
-        }
-
-        .tree-face img {
-            object-fit: cover;
-            object-position: 50% 18%;
-            width: 100%;
-            height: 100%;
-        }
-
-        .tree-person button:hover .tree-face {
-            transform: scale(1.05);
-        }
-
-        .tree-person button:focus-visible {
-            outline: none;
-        }
-
-        .tree-person button:focus-visible .tree-face {
-            box-shadow: 0 0 0 3px var(--white), 0 0 0 5px #690202;
-        }
-
-        .tree-name {
-            background: var(--white);
-            text-align: center;
-            overflow-wrap: break-word;
-            -webkit-line-clamp: 2;
-            border-radius: 6px;
-            -webkit-box-orient: vertical;
-            max-width: 100%;
-            padding: 0 3px;
-            font-size: 13px;
-            font-weight: 500;
-            line-height: 1.25;
-            display: -webkit-box;
-            overflow: hidden;
-        }
-
-        .tree-root {
-            --face: var(--root);
-            width: 240px;
-            bottom: 0;
-            left: 50%;
-        }
-
-        .tree-root .tree-face {
-            background: var(--soft);
-            box-shadow: 0 0 0 3px var(--white), 0 0 0 5px #690202, 0 8px 20px rgba(0,0,0,0.12);
-        }
-
-        /* Modal */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        .modal-card {
-            background: white;
-            border-radius: 20px;
-            max-width: 500px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            animation: modalSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        @keyframes modalSlideIn {
-            from {
-                transform: scale(0.9);
-                opacity: 0;
-            }
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-
-        .modal-header {
-            padding: 24px 24px 16px;
-            display: flex;
-            align-items: flex-start;
-            gap: 16px;
-            border-bottom: 1px solid var(--hair);
-        }
-
-        .modal-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            overflow: hidden;
-            flex-shrink: 0;
-        }
-
-        .modal-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .modal-info {
-            flex: 1;
-        }
-
-        .modal-info h2 {
-            font-size: 22px;
+        
+        h1 {
+            font-size: 32px;
             font-weight: 600;
-            margin-bottom: 4px;
-            color: var(--ink);
+            color: #1d1d1f;
+            margin-bottom: 40px;
+            text-align: center;
         }
-
-        .modal-info .role {
-            color: var(--ink-3);
-            font-size: 14px;
+        
+        .tree-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            height: 600px;
+            margin: 0 auto;
         }
-
-        .modal-close {
+        
+        .tree-node {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            z-index: 10;
+        }
+        
+        .tree-node:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            z-index: 20;
+        }
+        
+        .tree-node.center {
+            width: 140px;
+            height: 140px;
+            background: #1d1d1f;
+            color: white;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .tree-node.center:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+        
+        .tree-node img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 8px;
+        }
+        
+        .tree-node.center img {
+            width: 90px;
+            height: 90px;
+        }
+        
+        .tree-node-name {
+            font-size: 11px;
+            font-weight: 600;
+            text-align: center;
+            line-height: 1.2;
+        }
+        
+        .tree-line {
+            position: absolute;
+            background: #d1d1d6;
+            height: 2px;
+            transform-origin: left center;
+            z-index: 1;
+        }
+        
+        .person-card {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            width: 90%;
+            max-width: 500px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 30px;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        
+        .person-card.active {
+            opacity: 1;
+            pointer-events: all;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        
+        .person-card-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
             width: 32px;
             height: 32px;
-            border-radius: 50%;
-            background: var(--fill);
             border: none;
+            background: #f5f5f7;
+            border-radius: 50%;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            color: var(--ink-2);
+            font-size: 18px;
+            line-height: 1;
         }
-
-        .modal-close:hover {
-            background: var(--fill-hover);
+        
+        .person-card-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 20px;
+            display: block;
         }
-
-        .modal-body {
-            padding: 24px;
+        
+        .person-card h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            text-align: center;
         }
-
-        .modal-section {
-            margin-bottom: 20px;
-        }
-
-        .modal-section:last-child {
-            margin-bottom: 0;
-        }
-
-        .modal-section h3 {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: var(--ink);
-        }
-
-        .modal-section p {
-            color: var(--ink-2);
-            font-size: 15px;
+        
+        .person-card-about {
+            color: #48484a;
+            font-size: 14px;
             line-height: 1.6;
+            margin-bottom: 15px;
         }
-
-        /* Mobile responsive */
-        @media (max-width: 768px) {
-            .tree-stage {
-                --face: 72px;
-                --cell: 100px;
-                --root: 100px;
-            }
+        
+        .person-card-why {
+            background: #f5f5f7;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 3px solid #15803d;
+        }
+        
+        .person-card-why strong {
+            display: block;
+            margin-bottom: 8px;
+            color: #15803d;
+        }
+        
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 999;
+        }
+        
+        .overlay.active {
+            opacity: 1;
+            pointer-events: all;
         }
     </style>
 </head>
 <body>
-    <div class="page-shell">
-        <!-- Navbar -->
-        <header class="site-head">
-            <div class="container">
-                <nav class="navbar">
-                    <a href="/" class="logo">
-                        <img src="/brand/logo-blue-new.png" alt="Mr Chima" width="542" height="512">
-                    </a>
-                    <div class="nav-links">
-                        <a href="/source-code.html">Source code</a>
-                        <a href="/classes.html">Classes</a>
-                        <a href="/shop.html">Shop</a>
-                        <a href="/projects.html">Projects</a>
-                        <a href="/#contact">Contact</a>
-                        <button type="button" class="nav-support">Support me</button>
-                        <a href="/hire.html" class="nav-cta">Hire me</a>
-                    </div>
-                </nav>
-            </div>
-        </header>
-
-        <!-- Main content -->
-        <main class="tree-page">
-            <div class="container">
-                <h1>My inspiration tree</h1>
-            </div>
-
-            <div class="tree-stage">
-                <!-- Complete SVG Tree from mrbayo.dev -->
-                <svg class="tree-art" width="992" height="680" aria-hidden="true">
-                    <!-- NOTE: This is the COMPLETE 52KB SVG extracted from mrbayo.dev -->
-                    <!-- The SVG contains maroon-colored paths that draw the tree branches -->
-                    <!-- Due to size, I'll include key representative paths -->
-                    <path class="tree-line" d="M550.5 590.5L546.9 576.3L543.5 562.5L540.3 549.2L537.4 536.4L534.7 523.9L532.2 511.8L529.9 499.9L527.7 488.4L525.8 477.1L524 466L522.4 455.1L521 444.4L519.7 433.8L518.5 423.2L517.5 412.7L516.6 402.2L515.8 391.7L515.1 381.1L514.5 370.4L513.9 359.6L513.4 348.6L513 337.4L512.6 326L512.3 314.3L512 302.4L511.6 290.1L477.5 291L477.8 303.3L478.1 315.2L478.3 326.7L478.3 338.1L478.3 349.2L478.1 360.1L477.9 370.8L477.5 381.4L476.9 391.9L476.2 402.4L475.4 412.8L474.4 423.2L473.2 433.7L471.9 444.3L470.4 455L468.7 465.8L466.9 476.9L464.8 488.1L462.6 499.6L460.2 511.5L457.6 523.6L454.8 536.1L451.8 549L448.6 562.4L445.1 576.2L441.5 590.5Z"/>
-                    <path class="tree-fill" d="M550.5 590.5L546.9 576.3L543.5 562.5L540.3 549.2L537.4 536.4L534.7 523.9L532.2 511.8L529.9 499.9L527.7 488.4L525.8 477.1L524 466L522.4 455.1L521 444.4L519.7 433.8L518.5 423.2L517.5 412.7L516.6 402.2L515.8 391.7L515.1 381.1L514.5 370.4L513.9 359.6L513.4 348.6L513 337.4L512.6 326L512.3 314.3L512 302.4L511.6 290.1L477.5 291L477.8 303.3L478.1 315.2L478.3 326.7L478.3 338.1L478.3 349.2L478.1 360.1L477.9 370.8L477.5 381.4L476.9 391.9L476.2 402.4L475.4 412.8L474.4 423.2L473.2 433.7L471.9 444.3L470.4 455L468.7 465.8L466.9 476.9L464.8 488.1L462.6 499.6L460.2 511.5L457.6 523.6L454.8 536.1L451.8 549L448.6 562.4L445.1 576.2L441.5 590.5Z"/>
-                    <!-- Additional complex branch paths... -->
-                    <path class="tree-line" d="M500.6 594.5L507.8 599.7L515 604.5L522.2 608.8L529.3 612.6L536.3 616L543.3 619L550.3 621.6L557.2 623.8L564 625.7L570.9 627.2L577.6 628.5L584.4 629.4L591.1 630.1L597.8 630.6L604.5 630.9L611.2 631L617.9 630.9L624.7 630.7L631.5 630.4L638.4 630L645.4 629.5L652.4 629L659.6 628.5L666.8 628L666.8 628L659.6 627.3L652.4 626.6L645.4 625.9"/>
-                </svg>
-
-                <!-- People positioned exactly as in mrbayo.dev -->
-                <ul class="tree-people">
-                    <!-- Person 1: Left branch -->
-                    <li class="tree-person" style="left: 188px; top: 94px;" data-person="person1">
-                        <button type="button">
-                            <span class="tree-face" aria-hidden="true">
-                                <img alt="Tech With Tim" src="https://via.placeholder.com/88/4A90E2/fff?text=TWT">
-                            </span>
-                            <span class="tree-name">Tech With Tim</span>
-                        </button>
-                    </li>
-
-                    <!-- Person 2: Right branch -->
-                    <li class="tree-person" style="left: 796px; top: 91px;" data-person="person2">
-                        <button type="button">
-                            <span class="tree-face" aria-hidden="true">
-                                <img alt="Elon Musk" src="https://via.placeholder.com/88/E24A4A/fff?text=EM">
-                            </span>
-                            <span class="tree-name">Elon Musk</span>
-                        </button>
-                    </li>
-
-                    <!-- Person 3: Center branch -->
-                    <li class="tree-person" style="left: 512px; top: 69px;" data-person="person3">
-                        <button type="button">
-                            <span class="tree-face" aria-hidden="true">
-                                <img alt="Guido van Rossum" src="https://via.placeholder.com/88/4AE290/fff?text=GvR">
-                            </span>
-                            <span class="tree-name">Guido van Rossum</span>
-                        </button>
-                    </li>
-
-                    <!-- Root person (you) -->
-                    <li class="tree-person tree-root" data-person="me">
-                        <button type="button">
-                            <span class="tree-face" aria-hidden="true">
-                                <img src="/profile-nobg.png" alt="Abone Chima">
-                            </span>
-                            <span class="tree-name">Abone Chima</span>
-                        </button>
-                    </li>
-                </ul>
-            </div>
-        </main>
-
-        <!-- Footer -->
-        <footer class="site-footer">
-            <div class="container">
-                <a href="/" class="footer-brand">
-                    <img src="/brand/logo-blue-new.png" alt="Mr Chima" width="542" height="512">
-                </a>
-                <div class="footer-grid">
-                    <div class="footer-col">
-                        <h4>Navigate</h4>
-                        <a href="/">Home</a>
-                        <a href="/source-code.html">Source code</a>
-                        <a href="/classes.html">Classes</a>
-                        <a href="/shop.html">Shop</a>
-                    </div>
-                    <div class="footer-col">
-                        <h4>Explore</h4>
-                        <a href="/projects.html">Projects</a>
-                        <a href="/inspiration.html">Inspiration</a>
-                        <a href="/#contact">Contact</a>
-                        <a href="/hire.html">Hire me</a>
-                    </div>
-                    <div class="footer-col">
-                        <h4>Connect</h4>
-                        <a href="https://github.com/" target="_blank">GitHub</a>
-                        <a href="https://www.instagram.com/adebayo_musturpha" target="_blank">Instagram</a>
-                        <a href="https://youtube.com/@adebayo_musturpha" target="_blank">YouTube</a>
-                    </div>
-                </div>
-                <div class="footer-legal">
-                    <p>&copy; 2024 Abone Chima. All rights reserved.</p>
-                </div>
-            </div>
-        </footer>
+    <h1>My Inspiration Tree</h1>
+    
+    <div class="tree-container" id="treeContainer">
+        <!-- Lines will be generated by JS -->
+        <!-- Nodes will be generated by JS -->
     </div>
-
-    <!-- Modal -->
-    <div class="modal-overlay" id="personModal">
-        <div class="modal-card">
-            <div class="modal-header">
-                <div class="modal-avatar">
-                    <img id="modalImage" src="" alt="">
-                </div>
-                <div class="modal-info">
-                    <h2 id="modalName"></h2>
-                    <p class="role" id="modalRole"></p>
-                </div>
-                <button class="modal-close" onclick="closeModal()">✕</button>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h3>About</h3>
-                    <p id="modalAbout"></p>
-                </div>
-                <div class="modal-section">
-                    <h3>Why they inspire me</h3>
-                    <p id="modalWhy"></p>
-                </div>
-            </div>
+    
+    <div class="overlay" id="overlay"></div>
+    <div class="person-card" id="personCard">
+        <button class="person-card-close" onclick="closeCard()">×</button>
+        <img class="person-card-img" id="cardImg" src="" alt="">
+        <h2 id="cardName"></h2>
+        <p class="person-card-about" id="cardAbout"></p>
+        <div class="person-card-why">
+            <strong>Why they inspire me:</strong>
+            <p id="cardWhy"></p>
         </div>
     </div>
-
+    
     <script>
-        // Person data
-        const peopleData = {
+        // Your inspiration data (customize this!)
+        const data = {
             me: {
-                name: "Abone Chima",
-                role: "Python Developer & Instructor",
-                image: "/profile-nobg.png",
-                about: "I build practical software with Python. Backend APIs, automation, AI-powered tools and the courses that teach you to build them yourself.",
-                why: "This is me - the foundation from which everything grows."
+                name: "Mr Chima",
+                image_url: "/profile-nobg.png",
             },
-            person1: {
-                name: "Tech With Tim",
-                role: "YouTuber & Educator",
-                image: "https://via.placeholder.com/110/4A90E2/fff?text=TWT",
-                about: "Tech With Tim creates programming tutorials and educational content, making complex coding concepts accessible to millions of learners worldwide.",
-                why: "Tim's clear teaching style and dedication to making programming accessible inspired me to pursue education and share my knowledge with others."
-            },
-            person2: {
-                name: "Elon Musk",
-                role: "Entrepreneur & Innovator",
-                image: "https://via.placeholder.com/110/E24A4A/fff?text=EM",
-                about: "Elon Musk is the CEO of Tesla, SpaceX, and several other innovative companies, pushing the boundaries of technology and human achievement.",
-                why: "Elon's audacious goals and relentless pursuit of innovation remind me to think big and never settle for the status quo."
-            },
-            person3: {
-                name: "Guido van Rossum",
-                role: "Creator of Python",
-                image: "https://via.placeholder.com/110/4AE290/fff?text=GvR",
-                about: "Guido van Rossum created the Python programming language in 1991, which has become one of the most popular and versatile programming languages in the world.",
-                why: "Guido created the language that powers my career. His philosophy of code readability and simplicity shapes how I write software every day."
-            }
-        };
-
-        // Animate people in on load
-        window.addEventListener('load', () => {
-            const people = document.querySelectorAll('.tree-person');
-            people.forEach((person, index) => {
-                setTimeout(() => {
-                    person.classList.add('is-in');
-                }, 300 + (index * 150));
-            });
-        });
-
-        // Click handler
-        document.querySelectorAll('.tree-person button').forEach(button => {
-            button.addEventListener('click', function() {
-                const personLi = this.closest('.tree-person');
-                const personId = personLi.getAttribute('data-person');
-                const person = peopleData[personId];
-                
-                if (person) {
-                    document.getElementById('modalImage').src = person.image;
-                    document.getElementById('modalName').textContent = person.name;
-                    document.getElementById('modalRole').textContent = person.role;
-                    document.getElementById('modalAbout').textContent = person.about;
-                    document.getElementById('modalWhy').textContent = person.why;
-                    document.getElementById('personModal').classList.add('active');
+            people: [
+                {
+                    name: "Tech With Tim",
+                    image_url: "https://yt3.googleusercontent.com/ytc/AIdro_nWWAzM4cMlLpD0fWCGXfq7UF5m9CKfLYhCzJsZErvafg=s176-c-k-c0x00ffffff-no-rj",
+                    about: "Python YouTube educator who makes complex programming concepts simple and accessible for everyone.",
+                    why: "His clear teaching style and dedication to making programming approachable reminds me why I love teaching Python."
+                },
+                {
+                    name: "Elon Musk",
+                    image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Elon_Musk_Royal_Society_%28crop2%29.jpg/330px-Elon_Musk_Royal_Society_%28crop2%29.jpg",
+                    about: "Founder of SpaceX and Tesla, taking on rockets and electric cars when most people said it could not be done.",
+                    why: "He picks problems that look impossible and works from first principles until they are not. He reminds me to aim higher than feels comfortable."
+                },
+                {
+                    name: "Guido van Rossum",
+                    image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Guido-portrait-2014.jpg/330px-Guido-portrait-2014.jpg",
+                    about: "Creator of Python, the programming language that prioritizes readability and simplicity.",
+                    why: "He created a language that feels like writing in plain English. That philosophy shapes how I write code and teach others."
                 }
+            ]
+        };
+        
+        const container = document.getElementById('treeContainer');
+        const overlay = document.getElementById('overlay');
+        const personCard = document.getElementById('personCard');
+        
+        function createTree() {
+            container.innerHTML = '';
+            
+            const rect = container.getBoundingClientRect();
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            // Draw lines first (so they appear behind nodes)
+            const radius = Math.min(rect.width, rect.height) * 0.35;
+            const angleStep = (Math.PI * 2) / data.people.length;
+            
+            data.people.forEach((person, i) => {
+                const angle = angleStep * i - Math.PI / 2;
+                const x = centerX + Math.cos(angle) * radius;
+                const y = centerY + Math.sin(angle) * radius;
+                
+                const line = document.createElement('div');
+                line.className = 'tree-line';
+                const length = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2));
+                const lineAngle = Math.atan2(y - centerY, x - centerX);
+                
+                line.style.width = length + 'px';
+                line.style.left = centerX + 'px';
+                line.style.top = centerY + 'px';
+                line.style.transform = `rotate(${lineAngle}rad)`;
+                
+                container.appendChild(line);
             });
-        });
-
-        // Close modal
-        function closeModal() {
-            document.getElementById('personModal').classList.remove('active');
+            
+            // Center node (You)
+            const centerNode = document.createElement('div');
+            centerNode.className = 'tree-node center';
+            centerNode.innerHTML = `
+                <img src="${data.me.image_url}" alt="${data.me.name}">
+                <div class="tree-node-name">${data.me.name}</div>
+            `;
+            container.appendChild(centerNode);
+            
+            // Person nodes
+            data.people.forEach((person, i) => {
+                const angle = angleStep * i - Math.PI / 2;
+                const x = centerX + Math.cos(angle) * radius;
+                const y = centerY + Math.sin(angle) * radius;
+                
+                const node = document.createElement('div');
+                node.className = 'tree-node';
+                node.style.left = (x - 60) + 'px';
+                node.style.top = (y - 60) + 'px';
+                node.innerHTML = `
+                    <img src="${person.image_url}" alt="${person.name}">
+                    <div class="tree-node-name">${person.name}</div>
+                `;
+                
+                node.onclick = () => showCard(person);
+                container.appendChild(node);
+            });
         }
-
-        // Close on overlay click
-        document.getElementById('personModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeModal();
-            }
-        });
-
-        // Close on Escape key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeModal();
-            }
-        });
-
-        // Support button
-        document.querySelector('.nav-support')?.addEventListener('click', function() {
-            alert('Support modal - to be implemented');
+        
+        function showCard(person) {
+            document.getElementById('cardImg').src = person.image_url;
+            document.getElementById('cardName').textContent = person.name;
+            document.getElementById('cardAbout').textContent = person.about;
+            document.getElementById('cardWhy').textContent = person.why;
+            
+            overlay.classList.add('active');
+            personCard.classList.add('active');
+        }
+        
+        function closeCard() {
+            overlay.classList.remove('active');
+            personCard.classList.remove('active');
+        }
+        
+        overlay.onclick = closeCard;
+        
+        // Initialize
+        createTree();
+        
+        // Redraw on resize
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(createTree, 250);
         });
     </script>
 </body>
