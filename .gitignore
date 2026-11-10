@@ -36,3 +36,5 @@ backend/downloads/
 
 # Node
 node_modules/
+
+.vercel

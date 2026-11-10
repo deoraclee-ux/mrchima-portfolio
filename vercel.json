@@ -7,8 +7,6 @@
     { "source": "/classes", "destination": "/classes.html" },
     { "source": "/shop", "destination": "/shop.html" },
     { "source": "/projects", "destination": "/projects.html" },
-    { "source": "/inspiration", "destination": "/inspiration.html" },
-    { "source": "/contact", "destination": "/contact.html" },
-    { "source": "/support", "destination": "/support.html" }
+    { "source": "/inspiration", "destination": "/inspiration.html" }
   ]
 }
