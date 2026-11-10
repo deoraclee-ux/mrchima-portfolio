@@ -27,7 +27,7 @@
             --radius: 14px;
             --head-h: 56px;
             --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            --branch-color: #a0522d;
+            --maroon: #690202;
         }
 
         body {
@@ -139,129 +139,141 @@
             min-height: 100vh;
         }
 
-        .inspiration-section {
+        /* Tree styles from mrbayo.dev */
+        .tree-page {
+            padding: 40px 0 48px;
             flex: 1;
-            background: var(--white);
-            padding: 80px 20px 100px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
         }
 
-        h1 {
-            font-size: 32px;
-            font-weight: 600;
+        .tree-page h1 {
             letter-spacing: -0.02em;
-            color: var(--ink);
-            margin-bottom: 8px;
             text-align: center;
+            margin-bottom: 20px;
+            font-size: 32px;
         }
 
-        .subtitle {
-            color: var(--ink-3);
-            font-size: 16px;
-            margin-bottom: 60px;
-            text-align: center;
-        }
-
-        /* Tree container */
-        .tree-container {
+        .tree-stage {
+            --face: 88px;
+            --cell: 116px;
+            --root: 119px;
+            height: clamp(440px, 100svh - 190px, 680px);
             position: relative;
-            width: 100%;
-            max-width: 800px;
-            height: 700px;
+            max-width: 900px;
             margin: 0 auto;
         }
 
-        /* SVG tree */
-        .tree-svg {
+        .tree-art {
+            display: block;
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: visible;
+            inset: 0;
         }
 
-        .branch {
-            fill: none;
-            stroke: var(--branch-color);
-            stroke-width: 2.5;
-            stroke-linecap: round;
+        .tree-line {
+            fill: var(--maroon);
+            stroke: var(--maroon);
+            stroke-width: 3px;
             stroke-linejoin: round;
-            stroke-dasharray: 1000;
-            stroke-dashoffset: 1000;
-            animation: drawBranch 2s ease-out forwards;
         }
 
-        @keyframes drawBranch {
-            to {
-                stroke-dashoffset: 0;
-            }
+        .tree-fill {
+            fill: var(--white);
         }
 
-        /* Person nodes */
-        .person-node {
+        .tree-people {
+            pointer-events: none;
+            list-style: none;
             position: absolute;
-            width: 110px;
-            height: 110px;
+            inset: 0;
+        }
+
+        .tree-person {
+            width: var(--cell);
+            transform-origin: 50% calc(var(--face) / 2);
             opacity: 0;
-            animation: fadeInPerson 0.6s ease-out forwards;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-
-        .person-node:hover {
-            transform: scale(1.1);
-            z-index: 10;
-        }
-
-        @keyframes fadeInPerson {
-            to {
-                opacity: 1;
-            }
-        }
-
-        .person-node.root {
-            width: 130px;
-            height: 130px;
-            animation-delay: 1.5s;
-        }
-
-        .person-node.branch-person {
-            animation-delay: 1.8s;
-        }
-
-        .person-avatar {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: white;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 3px solid white;
-        }
-
-        .person-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .person-name {
+            pointer-events: auto;
+            transition: transform 0.46s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.18s;
             position: absolute;
-            bottom: -30px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 14px;
+            transform: translate(-50%) scale(0.3);
+        }
+
+        .tree-person.is-in {
+            opacity: 1;
+            transform: translate(-50%) scale(1);
+        }
+
+        .tree-person button {
+            cursor: pointer;
+            background: transparent;
+            border: 0;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            width: 100%;
+            display: flex;
+        }
+
+        .tree-face {
+            width: var(--face);
+            height: var(--face);
+            color: #fff;
+            font-size: calc(var(--face) * 0.36);
+            box-shadow: 0 0 0 3px var(--white), 0 0 0 4px var(--hair), 0 6px 16px rgba(0,0,0,0.1);
+            background: linear-gradient(160deg, #b7c2d6 0%, #8e9bb4 100%);
+            border-radius: 50%;
+            flex-shrink: 0;
+            justify-content: center;
+            align-items: center;
             font-weight: 500;
-            color: var(--ink);
-            white-space: nowrap;
+            transition: transform 0.18s;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .tree-face img {
+            object-fit: cover;
+            object-position: 50% 18%;
+            width: 100%;
+            height: 100%;
+        }
+
+        .tree-person button:hover .tree-face {
+            transform: scale(1.05);
+        }
+
+        .tree-person button:focus-visible {
+            outline: none;
+        }
+
+        .tree-person button:focus-visible .tree-face {
+            box-shadow: 0 0 0 3px var(--white), 0 0 0 5px var(--maroon);
+        }
+
+        .tree-name {
+            background: var(--white);
             text-align: center;
+            overflow-wrap: break-word;
+            -webkit-line-clamp: 2;
+            border-radius: 6px;
+            -webkit-box-orient: vertical;
+            max-width: 100%;
+            padding: 0 3px;
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 1.25;
+            display: -webkit-box;
+            overflow: hidden;
+        }
+
+        .tree-root {
+            --face: var(--root);
+            width: 240px;
+            bottom: 0;
+            left: 50%;
+        }
+
+        .tree-root .tree-face {
+            background: var(--soft);
+            box-shadow: 0 0 0 3px var(--white), 0 0 0 5px var(--maroon), 0 8px 20px rgba(0,0,0,0.12);
         }
 
         /* Modal */
@@ -451,18 +463,10 @@
         }
 
         @media (max-width: 768px) {
-            .tree-container {
-                height: 600px;
-            }
-
-            .person-node {
-                width: 90px;
-                height: 90px;
-            }
-
-            .person-node.root {
-                width: 110px;
-                height: 110px;
+            .tree-stage {
+                --face: 72px;
+                --cell: 100px;
+                --root: 100px;
             }
 
             .navbar {
@@ -494,80 +498,80 @@
         </header>
 
         <!-- Main content -->
-        <main>
-            <section class="inspiration-section">
+        <main class="tree-page">
+            <div class="container">
                 <h1>My inspiration tree</h1>
-                <p class="subtitle">The people who inspire my work and continuous learning</p>
+            </div>
 
-                <div class="tree-container">
-                    <!-- SVG Tree -->
-                    <svg class="tree-svg" viewBox="0 0 800 700" preserveAspectRatio="xMidYMid meet">
-                        <!-- Trunk -->
-                        <path class="branch" d="M 400 700 Q 400 650, 400 550" style="stroke-width: 4; animation-delay: 0s;"/>
-                        
-                        <!-- Root branches (ground level) -->
-                        <path class="branch" d="M 400 700 Q 350 690, 320 680" style="stroke-width: 3; animation-delay: 0.2s;"/>
-                        <path class="branch" d="M 400 700 Q 450 690, 480 680" style="stroke-width: 3; animation-delay: 0.3s;"/>
-                        <path class="branch" d="M 400 700 Q 380 695, 360 690" style="stroke-width: 2.5; animation-delay: 0.4s;"/>
-                        <path class="branch" d="M 400 700 Q 420 695, 440 690" style="stroke-width: 2.5; animation-delay: 0.5s;"/>
-                        
-                        <!-- Main branches going up -->
-                        <path class="branch" d="M 400 550 Q 300 500, 200 400" style="stroke-width: 3.5; animation-delay: 0.6s;"/>
-                        <path class="branch" d="M 400 550 Q 400 450, 400 350" style="stroke-width: 3.5; animation-delay: 0.7s;"/>
-                        <path class="branch" d="M 400 550 Q 500 500, 600 400" style="stroke-width: 3.5; animation-delay: 0.8s;"/>
-                        
-                        <!-- Sub-branches from left main branch -->
-                        <path class="branch" d="M 250 450 Q 220 420, 180 380" style="stroke-width: 2; animation-delay: 0.9s;"/>
-                        <path class="branch" d="M 200 400 Q 170 380, 150 350" style="stroke-width: 2; animation-delay: 1s;"/>
-                        
-                        <!-- Sub-branches from center main branch -->
-                        <path class="branch" d="M 400 400 Q 360 370, 330 340" style="stroke-width: 2; animation-delay: 1.1s;"/>
-                        <path class="branch" d="M 400 350 Q 420 320, 450 280" style="stroke-width: 2; animation-delay: 1.2s;"/>
-                        
-                        <!-- Sub-branches from right main branch -->
-                        <path class="branch" d="M 550 450 Q 580 420, 620 380" style="stroke-width: 2; animation-delay: 1.3s;"/>
-                        <path class="branch" d="M 600 400 Q 630 380, 650 350" style="stroke-width: 2; animation-delay: 1.4s;"/>
-                        
-                        <!-- Tiny twigs -->
-                        <path class="branch" d="M 180 380 L 160 360" style="stroke-width: 1.5; animation-delay: 1.5s;"/>
-                        <path class="branch" d="M 200 380 L 190 350" style="stroke-width: 1.5; animation-delay: 1.5s;"/>
-                        <path class="branch" d="M 400 300 L 380 270" style="stroke-width: 1.5; animation-delay: 1.6s;"/>
-                        <path class="branch" d="M 400 300 L 420 270" style="stroke-width: 1.5; animation-delay: 1.6s;"/>
-                        <path class="branch" d="M 620 380 L 640 360" style="stroke-width: 1.5; animation-delay: 1.7s;"/>
-                        <path class="branch" d="M 600 380 L 610 350" style="stroke-width: 1.5; animation-delay: 1.7s;"/>
-                    </svg>
+            <div class="tree-stage">
+                <!-- SVG Tree Art -->
+                <svg class="tree-art" viewBox="0 0 600 500" preserveAspectRatio="xMidYMid meet">
+                    <!-- Root base lines -->
+                    <polyline class="tree-line" points="270,500 300,480 330,500"/>
+                    <polyline class="tree-line" points="250,495 300,475 350,495"/>
+                    
+                    <!-- Main trunk -->
+                    <line class="tree-line" x1="300" y1="480" x2="300" y2="390"/>
+                    
+                    <!-- Left branch -->
+                    <polyline class="tree-line" points="300,390 150,200"/>
+                    <polyline class="tree-line" points="150,200 130,180"/>
+                    <polyline class="tree-line" points="150,200 170,180"/>
+                    
+                    <!-- Center branch -->
+                    <polyline class="tree-line" points="300,390 300,100"/>
+                    <polyline class="tree-line" points="300,100 280,80"/>
+                    <polyline class="tree-line" points="300,100 320,80"/>
+                    
+                    <!-- Right branch -->
+                    <polyline class="tree-line" points="300,390 450,200"/>
+                    <polyline class="tree-line" points="450,200 430,180"/>
+                    <polyline class="tree-line" points="450,200 470,180"/>
+                </svg>
 
-                    <!-- Person at root/base -->
-                    <div class="person-node root" style="left: 50%; bottom: 30px; transform: translateX(-50%);" data-person="me">
-                        <div class="person-avatar">
-                            <img src="/profile-nobg.png" alt="Abone Chima">
-                        </div>
-                        <div class="person-name">Abone Chima</div>
-                    </div>
+                <!-- People -->
+                <ul class="tree-people">
+                    <!-- Root person (you) -->
+                    <li class="tree-person tree-root" data-person="me">
+                        <button type="button">
+                            <div class="tree-face">
+                                <img src="/profile-nobg.png" alt="Abone Chima">
+                            </div>
+                            <div class="tree-name">Abone Chima</div>
+                        </button>
+                    </li>
 
-                    <!-- People on branches -->
-                    <div class="person-node branch-person" style="left: 15%; top: 30%;" data-person="person1">
-                        <div class="person-avatar">
-                            <img src="https://via.placeholder.com/110/4A90E2/fff?text=TWT" alt="Tech With Tim">
-                        </div>
-                        <div class="person-name">Tech With Tim</div>
-                    </div>
+                    <!-- Person on left branch -->
+                    <li class="tree-person" style="left: 25%; top: 30%;" data-person="person1">
+                        <button type="button">
+                            <div class="tree-face">
+                                <span>TWT</span>
+                            </div>
+                            <div class="tree-name">Tech With Tim</div>
+                        </button>
+                    </li>
 
-                    <div class="person-node branch-person" style="left: 50%; top: 15%; transform: translateX(-50%);" data-person="person2">
-                        <div class="person-avatar">
-                            <img src="https://via.placeholder.com/110/E24A4A/fff?text=EM" alt="Elon Musk">
-                        </div>
-                        <div class="person-name">Elon Musk</div>
-                    </div>
+                    <!-- Person on center branch -->
+                    <li class="tree-person" style="left: 50%; top: 10%;" data-person="person2">
+                        <button type="button">
+                            <div class="tree-face">
+                                <span>EM</span>
+                            </div>
+                            <div class="tree-name">Elon Musk</div>
+                        </button>
+                    </li>
 
-                    <div class="person-node branch-person" style="right: 15%; top: 30%;" data-person="person3">
-                        <div class="person-avatar">
-                            <img src="https://via.placeholder.com/110/4AE290/fff?text=GvR" alt="Guido van Rossum">
-                        </div>
-                        <div class="person-name">Guido van Rossum</div>
-                    </div>
-                </div>
-            </section>
+                    <!-- Person on right branch -->
+                    <li class="tree-person" style="left: 75%; top: 30%;" data-person="person3">
+                        <button type="button">
+                            <div class="tree-face">
+                                <span>GvR</span>
+                            </div>
+                            <div class="tree-name">Guido van Rossum</div>
+                        </button>
+                    </li>
+                </ul>
+            </div>
         </main>
 
         <!-- Footer -->
@@ -664,10 +668,21 @@
             }
         };
 
+        // Animate people in on load
+        window.addEventListener('load', () => {
+            const people = document.querySelectorAll('.tree-person');
+            people.forEach((person, index) => {
+                setTimeout(() => {
+                    person.classList.add('is-in');
+                }, 300 + (index * 150));
+            });
+        });
+
         // Click handler
-        document.querySelectorAll('.person-node').forEach(node => {
-            node.addEventListener('click', function() {
-                const personId = this.getAttribute('data-person');
+        document.querySelectorAll('.tree-person button').forEach(button => {
+            button.addEventListener('click', function() {
+                const personLi = this.closest('.tree-person');
+                const personId = personLi.getAttribute('data-person');
                 const person = peopleData[personId];
                 
                 if (person) {
@@ -700,9 +715,8 @@
             }
         });
 
-        // Support button (reuse from index.html)
+        // Support button
         document.querySelector('.nav-support')?.addEventListener('click', function() {
-            // Add support modal logic here if needed
             alert('Support modal - to be implemented');
         });
     </script>
