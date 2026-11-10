@@ -49,386 +49,288 @@
         }
         
         .navbar {
-            height: 56px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            gap: 16px;
+            justify-content: space-between;
+            padding: 15px 0;
+            gap: 20px;
         }
         
         .logo {
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 15px;
-            font-weight: 600;
             text-decoration: none;
             color: var(--ink);
+            font-weight: 600;
+            font-size: 18px;
         }
         
         .logo img {
-            width: 140px;
-            height: auto;
+            width: 32px;
+            height: 30px;
         }
         
         .nav-links {
             display: flex;
+            gap: 25px;
             align-items: center;
-            gap: 4px;
         }
         
         .nav-links a {
-            height: 32px;
-            color: var(--ink-2);
-            background: transparent;
-            border: 0;
-            border-radius: 8px;
-            padding: 0 11px;
-            font-size: 14px;
-            font-weight: 500;
             text-decoration: none;
-            display: inline-flex;
-            align-items: center;
+            color: var(--ink-2);
+            font-size: 14px;
+            transition: color 0.2s;
         }
         
-        .nav-links a:hover {
-            background: var(--fill);
-            color: var(--ink);
-        }
-        
+        .nav-links a:hover,
         .nav-links a.active {
             color: var(--ink);
         }
         
-        .nav-cta {
-            background: #000 !important;
-            color: #fff !important;
-            border-radius: 9px;
-            height: 32px;
-            margin-left: 6px;
-            padding: 0 14px;
-        }
-        
-        .nav-cta:hover {
-            background: #333 !important;
-        }
-        
-        /* Tree page */
-        .tree-page {
-            padding: 40px 0 48px;
-        }
-        
-        .tree-page h1 {
-            letter-spacing: -0.02em;
-            text-align: center;
-            margin-bottom: 40px;
-            font-size: 32px;
-        }
-        
-        .tree-stage {
-            --face: 88px;
-            --cell: 116px;
-            --root: 119px;
-            height: clamp(440px, 70vh, 680px);
-            position: relative;
-            max-width: 992px;
-            margin: 0 auto;
-        }
-        
-        .tree-art {
-            display: block;
-            position: absolute;
-            inset: 0;
-        }
-        
-        .tree-line {
-            fill: #690202;
-            stroke: #690202;
-            stroke-width: 3px;
-            stroke-linejoin: round;
-        }
-        
-        .tree-fill {
-            fill: var(--white);
-        }
-        
-        .tree-people {
-            list-style: none;
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-        }
-        
-        .tree-person {
-            position: absolute;
-            width: var(--cell);
-            pointer-events: auto;
-            transform-origin: 50% calc(var(--face) / 2);
-            opacity: 0;
-            transform: translate(-50%) scale(0.3);
-            transition: transform 0.46s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.18s;
-        }
-        
-        .tree-person.is-in {
-            opacity: 1;
-            transform: translate(-50%) scale(1);
-        }
-        
-        .tree-person button {
-            background: transparent;
-            border: 0;
-            cursor: pointer;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .tree-face {
-            width: var(--face);
-            height: var(--face);
-            border-radius: 50%;
-            background: linear-gradient(160deg, #b7c2d6 0%, #8e9bb4 100%);
-            box-shadow: 0 0 0 3px var(--white), 0 0 0 4px var(--hair), 0 6px 16px rgba(0,0,0,0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            flex-shrink: 0;
-            color: #fff;
-            font-size: calc(var(--face) * 0.36);
+        .nav-links a.active {
             font-weight: 500;
-            transition: transform 0.18s;
+        }
+
+        /* Tree Page Styles */
+        .tree-page{
+            padding:40px 0 48px;
         }
         
-        .tree-face img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: 50% 18%;
+        .tree-page h1{
+            letter-spacing:-.02em;
+            text-align:center;
+            margin-bottom:20px;
+            font-size:32px;
         }
         
-        .tree-person button:hover .tree-face {
-            transform: scale(1.05);
+        .tree-stage{
+            --face:88px;
+            --cell:116px;
+            --root:119px;
+            height:clamp(440px,100svh - 190px,680px);
+            position:relative;
         }
         
-        .tree-name {
-            background: var(--white);
-            text-align: center;
-            border-radius: 6px;
-            padding: 0 3px;
-            font-size: 13px;
-            font-weight: 500;
-            line-height: 1.25;
-            max-width: 100%;
-            overflow-wrap: break-word;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
+        .tree-art{
+            display:block;
+            position:absolute;
+            inset:0;
         }
         
-        .tree-root {
-            --face: var(--root);
-            width: 240px;
-            bottom: 0;
-            left: 50%;
+        .tree-line{
+            fill:#690202;
+            stroke:#690202;
+            stroke-width:3px;
+            stroke-linejoin:round;
         }
         
-        .tree-root .tree-face {
-            background: var(--soft);
-            box-shadow: 0 0 0 3px var(--white), 0 0 0 5px #690202, 0 8px 20px rgba(0,0,0,0.12);
+        .tree-fill{
+            fill:var(--white);
+        }
+        
+        .tree-people{
+            pointer-events:none;
+            list-style:none;
+            position:absolute;
+            inset:0;
+        }
+        
+        .tree-person{
+            width:var(--cell);
+            transform-origin:50% calc(var(--face) / 2);
+            opacity:0;
+            pointer-events:auto;
+            transition:transform .46s cubic-bezier(.34,1.56,.64,1),opacity .18s;
+            position:absolute;
+            transform:translate(-50%)scale(.3);
+        }
+        
+        .tree-person.is-in{
+            opacity:1;
+            transform:translate(-50%)scale(1);
+        }
+        
+        .tree-person button{
+            cursor:pointer;
+            background:0 0;
+            border:0;
+            flex-direction:column;
+            align-items:center;
+            gap:5px;
+            width:100%;
+            display:flex;
+        }
+        
+        .tree-face{
+            width:var(--face);
+            height:var(--face);
+            color:#fff;
+            font-size:calc(var(--face) * .36);
+            box-shadow:0 0 0 3px var(--white), 0 0 0 4px var(--hair), 0 6px 16px #0000001a;
+            background:linear-gradient(160deg,#b7c2d6 0%,#8e9bb4 100%);
+            border-radius:50%;
+            flex-shrink:0;
+            justify-content:center;
+            align-items:center;
+            font-weight:500;
+            transition:transform .18s;
+            display:flex;
+            overflow:hidden;
+        }
+        
+        .tree-face img{
+            object-fit:cover;
+            object-position:50% 18%;
+            width:100%;
+            height:100%;
+        }
+        
+        .tree-person button:hover .tree-face{
+            transform:scale(1.05);
+        }
+        
+        .tree-person button:focus-visible{
+            outline:none;
+        }
+        
+        .tree-person button:focus-visible .tree-face{
+            box-shadow:0 0 0 3px var(--white), 0 0 0 5px #690202;
+        }
+        
+        .tree-name{
+            background:var(--white);
+            text-align:center;
+            overflow-wrap:break-word;
+            -webkit-line-clamp:2;
+            border-radius:6px;
+            -webkit-box-orient:vertical;
+            max-width:100%;
+            padding:0 3px;
+            font-size:13px;
+            font-weight:500;
+            line-height:1.25;
+            display:-webkit-box;
+            overflow:hidden;
+        }
+        
+        .tree-root{
+            --face:var(--root);
+            width:240px;
+            bottom:0;
+            left:50%;
+        }
+        
+        .tree-root .tree-face{
+            background:var(--soft);
+            box-shadow:0 0 0 3px var(--white), 0 0 0 5px #690202, 0 8px 20px #0000001f;
+        }
+        
+        .tree-root .tree-name{
+            font-size:15px;
+            padding:2px 6px;
         }
         
         /* Footer */
-        .site-footer {
-            background: var(--white);
-            box-shadow: inset 0 1px 0 var(--hair);
-            padding: 56px 0 32px;
-        }
-        
-        .footer-brand {
-            display: block;
-            margin-bottom: 16px;
-        }
-        
-        .footer-brand img {
-            width: auto !important;
-            height: 90px !important;
-        }
-        
-        .footer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 32px;
-            margin-bottom: 32px;
-        }
-        
-        .footer-col {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        
-        .footer-col h4 {
+        footer {
+            background: var(--soft);
+            padding: 30px 0;
+            margin-top: 60px;
+            text-align: center;
+            color: var(--ink-2);
             font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-        
-        .footer-col a {
-            color: var(--ink-3);
-            font-size: 14px;
-            text-decoration: none;
-        }
-        
-        .footer-col a:hover {
-            color: var(--ink);
-        }
-        
-        .footer-legal {
-            padding-top: 16px;
-            border-top: 1px solid var(--hair);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-        
-        .footer-legal p {
-            color: var(--ink-3);
-            font-size: 13px;
-        }
-        
-        @media (max-width: 768px) {
-            .tree-stage {
-                --face: 72px;
-                --cell: 100px;
-                --root: 100px;
-            }
-            
-            .nav-links {
-                display: none;
-            }
         }
     </style>
 </head>
 <body>
-    <div class="page-shell">
-        <header class="site-head">
-            <div class="container">
-                <nav class="navbar">
-                    <a href="/" class="logo">
-                        <img src="/brand/logo-blue-new.png" alt="Mr Chima">
-                    </a>
-                    <div class="nav-links">
-                        <a href="/source-code.html">Source code</a>
-                        <a href="/classes.html">Classes</a>
-                        <a href="/shop.html">Shop</a>
-                        <a href="/projects.html">Projects</a>
-                        <a href="/#contact">Contact</a>
-                        <a href="/hire.html" class="nav-cta">Hire me</a>
-                    </div>
-                </nav>
-            </div>
-        </header>
-
-        <main>
-            <section class="tree-page">
-                <div class="container">
-                    <h1>My inspiration tree</h1>
+    <!-- Navigation -->
+    <header class="site-head">
+        <div class="container">
+            <nav class="navbar">
+                <a href="/" class="logo">
+                    <img src="/brand/logo-blue-new.png" alt="Mr Chima Logo" width="32" height="30">
+                    <span>Mr Chima</span>
+                </a>
+                <div class="nav-links">
+                    <a href="/index.html">Home</a>
+                    <a href="/projects.html">Projects</a>
+                    <a href="/inspiration.html" class="active">Inspiration</a>
+                    <a href="/hire.html">Hire me</a>
                 </div>
+            </nav>
+        </div>
+    </header>
 
-                <div class="tree-stage">
-                    <!-- SVG Tree (simplified version for now) -->
+    <!-- Tree Page -->
+    <main>
+        <section class="tree-page">
+            <div class="container">
+                <h1>My inspiration tree</h1>
+                <div class="tree-stage" style="height: 680px; --face: 88px; --cell: 123px; --root: 119px;">
                     <svg class="tree-art" width="992" height="680" aria-hidden="true">
-                        <path class="tree-line" d="M550.5 590.5L546.9 576.3L543.5 562.5L540.3 549.2L537.4 536.4L534.7 523.9L532.2 511.8L529.9 499.9L527.7 488.4L525.8 477.1L524 466L522.4 455.1L521 444.4L519.7 433.8L518.5 423.2L517.5 412.7L516.6 402.2L515.8 391.7L515.1 381.1L514.5 370.4L513.9 359.6L513.4 348.6L513 337.4L512.6 326L512.3 314.3L512 302.4L511.6 290.1L477.5 291L477.8 303.3L478.1 315.2L478.3 326.7L478.3 338.1L478.3 349.2L478.1 360.1L477.9 370.8L477.5 381.4L476.9 391.9L476.2 402.4L475.4 412.8L474.4 423.2L473.2 433.7L471.9 444.3L470.4 455L468.7 465.8L466.9 476.9L464.8 488.1L462.6 499.6L460.2 511.5L457.6 523.6L454.8 536.1L451.8 549L448.6 562.4L445.1 576.2L441.5 590.5Z"/>
+                        <path class="tree-line" d="M550.5 590.5L546.9 576.3L543.5 562.5L540.3 549.2L537.4 536.4L534.7 523.9L532.2 511.8L529.9 499.9L527.7 488.4L525.8 477.1L524 466L522.4 455.1L521 444.4L519.7 433.8L518.5 423.2L517.5 412.7L516.6 402.2L515.8 391.7L515.1 381.1L514.5 370.4L513.9 359.6L513.4 348.6L513 337.4L512.6 326L512.3 314.3L512 302.4L511.6 290.1L477.5 291L477.8 303.3L478.1 315.2L478.3 326.7L478.3 338.1L478.3 349.2L478.1 360.1L477.9 370.8L477.5 381.4L476.9 391.9L476.2 402.4L475.4 412.8L474.4 423.2L473.2 433.7L471.9 444.3L470.4 455L468.7 465.8L466.9 476.9L464.8 488.1L462.6 499.6L460.2 511.5L457.6 523.6L454.8 536.1L451.8 549L448.6 562.4L445.1 576.2L441.5 590.5ZM511.6 290.5L508.4 280.5L499.8 274.3L489.3 274.3L480.8 280.5L477.5 290.5L480.8 300.6L489.3 306.8L499.8 306.8L508.4 300.6ZM472.2 572.3L466.4 577.9L460.6 583L454.9 587.8L449.2 592.1L443.5 596.1L437.8 599.8L432 603.2L426.2 606.2L420.3 609L414.4 611.5L408.4 613.7L402.3 615.7L396.1 617.4L389.9 619L383.5 620.3L377 621.5L370.4 622.5L363.7 623.4L357 624.1L350.1 624.7L343.1 625.2L335.9 625.6L328.7 625.9L321.4 626.2L313.9 626.5L313.9 626.5L321.3 627.4L328.6 628.3L335.8 629.1L343 629.9L350 630.5L357 631.1L364 631.6L370.9 631.9L377.8 632.1L384.7 632L391.6 631.8L398.5 631.3L405.4 630.6L412.4 629.6L419.4 628.4L426.4 626.8L433.4 624.8L440.5 622.5L447.7 619.8L454.9 616.7L462.1 613.2L469.4 609.2L476.7 604.8L484 599.9L491.4 594.5ZM496.5 583.4L493.7 574.8L486.3 569.4L477.2 569.4L469.9 574.8L467.1 583.4L469.9 592L477.2 597.4L486.3 597.4L493.7 592Z"/>
                         <path class="tree-fill" d="M550.5 590.5L546.9 576.3L543.5 562.5L540.3 549.2L537.4 536.4L534.7 523.9L532.2 511.8L529.9 499.9L527.7 488.4L525.8 477.1L524 466L522.4 455.1L521 444.4L519.7 433.8L518.5 423.2L517.5 412.7L516.6 402.2L515.8 391.7L515.1 381.1L514.5 370.4L513.9 359.6L513.4 348.6L513 337.4L512.6 326L512.3 314.3L512 302.4L511.6 290.1L477.5 291L477.8 303.3L478.1 315.2L478.3 326.7L478.3 338.1L478.3 349.2L478.1 360.1L477.9 370.8L477.5 381.4L476.9 391.9L476.2 402.4L475.4 412.8L474.4 423.2L473.2 433.7L471.9 444.3L470.4 455L468.7 465.8L466.9 476.9L464.8 488.1L462.6 499.6L460.2 511.5L457.6 523.6L454.8 536.1L451.8 549L448.6 562.4L445.1 576.2L441.5 590.5Z"/>
-                        <!-- Add more branch paths here from mrbayo-inspiration-FULL.html if needed -->
                     </svg>
-
-                    <!-- People -->
+                    
                     <ul class="tree-people">
+                        <!-- Person 1 -->
                         <li class="tree-person" style="left: 188px; top: 94px;">
                             <button type="button">
-                                <span class="tree-face">
-                                    <img alt="Tech With Tim" src="https://via.placeholder.com/88/4A90E2/fff?text=TWT">
-                                </span>
-                                <span class="tree-name">Tech With Tim</span>
+                                <div class="tree-face">
+                                    <span>JD</span>
+                                </div>
+                                <div class="tree-name">John Doe</div>
                             </button>
                         </li>
-
+                        
+                        <!-- Person 2 -->
                         <li class="tree-person" style="left: 796px; top: 91px;">
                             <button type="button">
-                                <span class="tree-face">
-                                    <img alt="Elon Musk" src="https://via.placeholder.com/88/E24A4A/fff?text=EM">
-                                </span>
-                                <span class="tree-name">Elon Musk</span>
+                                <div class="tree-face">
+                                    <span>JS</span>
+                                </div>
+                                <div class="tree-name">Jane Smith</div>
                             </button>
                         </li>
-
+                        
+                        <!-- Person 3 -->
                         <li class="tree-person" style="left: 512px; top: 69px;">
                             <button type="button">
-                                <span class="tree-face">
-                                    <img alt="Guido van Rossum" src="https://via.placeholder.com/88/4AE290/fff?text=GvR">
-                                </span>
-                                <span class="tree-name">Guido van Rossum</span>
+                                <div class="tree-face">
+                                    <span>AB</span>
+                                </div>
+                                <div class="tree-name">Alex Brown</div>
                             </button>
                         </li>
-
-                        <li class="tree-person tree-root">
+                        
+                        <!-- Root Person (You) -->
+                        <li class="tree-person tree-root is-in" style="bottom: 0; left: 50%;">
                             <button type="button">
-                                <span class="tree-face">
-                                    <img src="/profile-nobg.png" alt="Abone Chima">
-                                </span>
-                                <span class="tree-name">Abone Chima</span>
+                                <div class="tree-face">
+                                    <img src="/profile-nobg.png" alt="Mr Chima">
+                                </div>
+                                <div class="tree-name">Mr Chima</div>
                             </button>
                         </li>
                     </ul>
                 </div>
-            </section>
-        </main>
-
-        <footer class="site-footer">
-            <div class="container">
-                <a href="/" class="footer-brand">
-                    <img src="/brand/logo-blue-new.png" alt="Mr Chima">
-                </a>
-                <div class="footer-grid">
-                    <div class="footer-col">
-                        <h4>Navigate</h4>
-                        <a href="/">Home</a>
-                        <a href="/source-code.html">Source code</a>
-                        <a href="/classes.html">Classes</a>
-                        <a href="/shop.html">Shop</a>
-                    </div>
-                    <div class="footer-col">
-                        <h4>Explore</h4>
-                        <a href="/projects.html">Projects</a>
-                        <a href="/inspiration.html">Inspiration</a>
-                        <a href="/#contact">Contact</a>
-                        <a href="/hire.html">Hire me</a>
-                    </div>
-                    <div class="footer-col">
-                        <h4>Connect</h4>
-                        <a href="https://github.com/" target="_blank">GitHub</a>
-                        <a href="https://www.instagram.com/adebayo_musturpha" target="_blank">Instagram</a>
-                        <a href="https://youtube.com/@adebayo_musturpha" target="_blank">YouTube</a>
-                    </div>
-                </div>
-                <div class="footer-legal">
-                    <p>&copy; 2024 Abone Chima. All rights reserved.</p>
-                </div>
             </div>
-        </footer>
-    </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Mr Chima. All rights reserved.</p>
+        </div>
+    </footer>
 
     <script>
-        // Animate people in
-        window.addEventListener('load', () => {
-            const people = document.querySelectorAll('.tree-person');
+        // Animate tree people on load
+        document.addEventListener('DOMContentLoaded', function() {
+            const people = document.querySelectorAll('.tree-person:not(.tree-root)');
+            
             people.forEach((person, index) => {
                 setTimeout(() => {
                     person.classList.add('is-in');
