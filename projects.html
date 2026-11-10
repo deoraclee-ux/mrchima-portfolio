@@ -198,14 +198,7 @@ button.hf-submit.success::before {
 }
 
 
-/* VS Code Blue Theme */
-:root {
-  --vscode-blue: #007ACC;
-  --vscode-dark-blue: #1E1E1E;
-  --vscode-light-blue: #4FC3F7;
-  --vscode-text: #FFFFFF;
-  --vscode-secondary: #6A9FB5;
-}
+/* Blue theme variables removed */
 
 .logo { 
   display: flex !important;
@@ -220,10 +213,46 @@ button.hf-submit.success::before {
   object-fit: contain !important;
 }
 
-/* Update all brown colors to blue */
-.btn-dark, .nav-cta, button[type="submit"], .hf-submit {
-  background-color: var(--vscode-blue) !important;
-  border-color: var(--vscode-blue) !important;
+/* Button styling restored */
+
+/* FORCE BLACK BACKGROUNDS ON ALL PRIMARY BUTTONS */
+.btn-dark,
+.nav-cta,
+.hf-submit,
+button[type="submit"],
+.primary-btn,
+.purchase-btn,
+.co-pay-btn,
+.cm-buy {
+  background: #000000 !important;
+  background-color: #000000 !important;
+  color: white !important;
+}
+
+/* FORCE BLACK HOVER STATES */
+.btn-dark:hover,
+.nav-cta:hover,
+.hf-submit:hover,
+button[type="submit"]:hover,
+.primary-btn:hover,
+.purchase-btn:hover,
+.co-pay-btn:hover,
+.cm-buy:hover {
+  background: #1a1a1a !important;
+  background-color: #1a1a1a !important;
+  color: white !important;
+}
+
+/* FORCE NAVBAR HIRE ME BUTTON TO BE BLACK */
+.nav-links .nav-cta {
+  background: #000000 !important;
+  background-color: #000000 !important;
+  color: white !important;
+}
+
+.nav-links .nav-cta:hover {
+  background: #1a1a1a !important;
+  background-color: #1a1a1a !important;
   color: white !important;
 }
 
@@ -274,28 +303,7 @@ button.hf-submit.success::before {
   color: var(--vscode-blue) !important;
 }
 
-/* Fix hero buttons - override hardcoded styles */
-.hero-buttons .btn-dark,
-.hero-buttons .btn-grey {
-  background-color: var(--vscode-blue) !important;
-  border-color: var(--vscode-blue) !important;
-  color: white !important;
-}
-
-.hero-buttons .btn-grey {
-  background-color: transparent !important;
-  border: 2px solid var(--vscode-blue) !important;
-  color: var(--vscode-blue) !important;
-}
-
-.hero-buttons .btn-dark:hover {
-  background: #333336 !important;
-}
-
-.hero-buttons .btn-grey:hover {
-  background-color: var(--vscode-blue) !important;
-  color: white !important;
-}
+/* Hero buttons use original styling */
 
 a:not(.btn-dark):not(.nav-cta), a:hover:not(.btn-dark):not(.nav-cta) {
   /* Only make specific links blue, not all links */
