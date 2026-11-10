@@ -198,14 +198,7 @@ button.hf-submit.success::before {
 }
 
 
-/* VS Code Blue Theme */
-:root {
-  --vscode-blue: #007ACC;
-  --vscode-dark-blue: #1E1E1E;
-  --vscode-light-blue: #4FC3F7;
-  --vscode-text: #FFFFFF;
-  --vscode-secondary: #6A9FB5;
-}
+/* Blue theme variables removed */
 
 .logo { 
   display: flex !important;
@@ -220,7 +213,7 @@ button.hf-submit.success::before {
   object-fit: contain !important;
 }
 
-/* Button styling - use original colors */
+/* Button styling restored */
 
 /* Navbar link styling */
 .nav-links a:not(.btn-dark):not(.nav-cta):not(.nav-support) {
@@ -269,18 +262,7 @@ button.hf-submit.success::before {
   color: var(--vscode-blue) !important;
 }
 
-/* Fix hero buttons - override hardcoded styles */
-.hero-buttons .btn-dark,
-/* Hero button styling - restored to original */
-
-.hero-buttons .btn-dark:hover {
-  background: #333336 !important;
-}
-
-.hero-buttons .btn-grey:hover {
-  background-color: var(--vscode-blue) !important;
-  color: white !important;
-}
+/* Hero buttons use original styling */
 
 a:not(.btn-dark):not(.nav-cta), a:hover:not(.btn-dark):not(.nav-cta) {
   /* Only make specific links blue, not all links */
