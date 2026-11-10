@@ -119,37 +119,15 @@
             inset:0;
         }
         
-        .tree-line,
-        .tree-fill{
+        .tree-line{
             fill:#690202;
             stroke:#690202;
             stroke-width:3px;
             stroke-linejoin:round;
         }
         
-        /* Animate tree paths growing */
-        .tree-line {
-            fill: none;
-            stroke-dasharray: 15000;
-            stroke-dashoffset: 15000;
-            animation: growTree 2.5s ease-out forwards;
-        }
-        
-        .tree-fill {
-            opacity: 0;
-            animation: fadeInFill 0.6s ease-out 2.3s forwards;
-        }
-        
-        @keyframes growTree {
-            to {
-                stroke-dashoffset: 0;
-            }
-        }
-        
-        @keyframes fadeInFill {
-            to {
-                opacity: 1;
-            }
+        .tree-fill{
+            fill:var(--white);
         }
         
         .tree-people{
@@ -347,15 +325,14 @@
     </footer>
 
     <script>
-        // Animate tree growing then people appearing
+        // Simple people animation - tree is already visible
         document.addEventListener('DOMContentLoaded', function() {
             const people = document.querySelectorAll('.tree-person:not(.tree-root)');
             
-            // Start people animation after tree finishes growing (2.5s)
             people.forEach((person, index) => {
                 setTimeout(() => {
                     person.classList.add('is-in');
-                }, 2700 + (index * 500));  // Start at 2.7s, each person 500ms apart
+                }, 300 + (index * 500));
             });
         });
     </script>
