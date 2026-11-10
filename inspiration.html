@@ -124,6 +124,15 @@
             stroke:#690202;
             stroke-width:3px;
             stroke-linejoin:round;
+            stroke-dasharray: 10000;
+            stroke-dashoffset: 10000;
+            animation: drawTree 3s ease-out forwards;
+        }
+        
+        @keyframes drawTree {
+            to {
+                stroke-dashoffset: 0;
+            }
         }
         
         .tree-fill{
@@ -325,14 +334,33 @@
     </footer>
 
     <script>
-        // Animate tree people on load
+        // Animate tree growth and people appearing
         document.addEventListener('DOMContentLoaded', function() {
+            const treeLine = document.querySelector('.tree-line');
             const people = document.querySelectorAll('.tree-person:not(.tree-root)');
             
+            // Start animating people after tree starts growing
             people.forEach((person, index) => {
                 setTimeout(() => {
                     person.classList.add('is-in');
-                }, 300 + (index * 150));
+                }, 1000 + (index * 400));  // Start after 1s, stagger by 400ms
+            });
+            
+            // Optional: Add subtle hover effect to tree
+            const treeStage = document.querySelector('.tree-stage');
+            if (treeStage) {
+                treeStage.style.cursor = 'default';
+            }
+        });
+        
+        // Add ripple effect when people appear
+        document.querySelectorAll('.tree-person button').forEach(button => {
+            button.addEventListener('click', function(e) {
+                const face = this.querySelector('.tree-face');
+                face.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    face.style.transform = '';
+                }, 200);
             });
         });
     </script>
