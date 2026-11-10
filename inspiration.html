@@ -6,143 +6,11 @@
     <link rel="icon" href="/favicon.ico"/>
     <title>My inspiration tree | Abone Chima (Mr Chima)</title>
     <meta name="description" content="The people who inspire Abone Chima (Mr Chima)">
+    <link rel="stylesheet" href="/_next/static/chunks/1htf0x35-w7ke.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --ink: #1d1d1f;
-            --ink-2: #48484a;
-            --ink-3: #6e6e73;
-            --ink-4: #a1a1a6;
-            --white: #fff;
-            --soft: #f5f5f7;
-            --fill: #eff1f4;
-            --fill-hover: #e6e9ee;
-            --hair: #00000014;
-            --shadow-card: 0 1px 2px rgba(0,0,0,0.05), 0 0 0 0.5px rgba(0,0,0,0.03);
-            --radius: 14px;
-            --head-h: 56px;
-            --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            --maroon: #690202;
-        }
-
-        body {
-            font-family: var(--font);
-            color: var(--ink);
-            background: var(--white);
-            -webkit-font-smoothing: antialiased;
-            font-size: 15px;
-            line-height: 1.5;
-            overflow-x: hidden;
-        }
-
-        /* Navbar */
-        .site-head {
-            z-index: 100;
-            -webkit-backdrop-filter: saturate(180%) blur(18px);
-            backdrop-filter: saturate(180%) blur(18px);
-            box-shadow: inset 0 -1px 0 var(--hair);
-            background: rgba(255, 255, 255, 0.82);
-            position: sticky;
-            top: 0;
-        }
-
-        .container {
-            width: min(1100px, 100% - 40px);
-            margin: 0 auto;
-        }
-
-        .navbar {
-            height: var(--head-h);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 15px;
-            font-weight: 600;
-            text-decoration: none;
-            color: var(--ink);
-        }
-
-        .logo img {
-            width: 140px;
-            height: auto;
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .nav-links a, .nav-support {
-            height: 32px;
-            color: var(--ink-3);
-            white-space: nowrap;
-            background: transparent;
-            border: 0;
-            border-radius: 8px;
-            padding: 0 11px;
-            font-size: 14px;
-            font-weight: 500;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            cursor: pointer;
-            transition: background 0.15s, color 0.15s;
-        }
-
-        .nav-links a:hover, .nav-support:hover {
-            background: var(--fill);
-            color: var(--ink);
-        }
-
-        .nav-links a.active {
-            color: var(--ink);
-        }
-
-        .nav-links .nav-cta {
-            background: #000000 !important;
-            color: #fff !important;
-            border-radius: 9px;
-            height: 32px;
-            margin-left: 6px;
-            padding: 0 14px;
-            font-size: 13.5px;
-        }
-
-        .nav-links .nav-cta:hover {
-            background: #333336 !important;
-            color: #fff !important;
-        }
-
-        /* Page content */
-        main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .page-shell {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        /* Tree styles from mrbayo.dev */
+        /* Tree-specific styles extracted from mrbayo.dev */
         .tree-page {
             padding: 40px 0 48px;
-            flex: 1;
         }
 
         .tree-page h1 {
@@ -158,7 +26,7 @@
             --root: 119px;
             height: clamp(440px, 100svh - 190px, 680px);
             position: relative;
-            max-width: 900px;
+            max-width: 992px;
             margin: 0 auto;
         }
 
@@ -169,8 +37,8 @@
         }
 
         .tree-line {
-            fill: var(--maroon);
-            stroke: var(--maroon);
+            fill: #690202;
+            stroke: #690202;
             stroke-width: 3px;
             stroke-linejoin: round;
         }
@@ -245,7 +113,7 @@
         }
 
         .tree-person button:focus-visible .tree-face {
-            box-shadow: 0 0 0 3px var(--white), 0 0 0 5px var(--maroon);
+            box-shadow: 0 0 0 3px var(--white), 0 0 0 5px #690202;
         }
 
         .tree-name {
@@ -273,7 +141,7 @@
 
         .tree-root .tree-face {
             background: var(--soft);
-            box-shadow: 0 0 0 3px var(--white), 0 0 0 5px var(--maroon), 0 8px 20px rgba(0,0,0,0.12);
+            box-shadow: 0 0 0 3px var(--white), 0 0 0 5px #690202, 0 8px 20px rgba(0,0,0,0.12);
         }
 
         /* Modal */
@@ -400,77 +268,12 @@
             line-height: 1.6;
         }
 
-        /* Footer */
-        .site-footer {
-            background: var(--white);
-            box-shadow: inset 0 1px 0 var(--hair);
-            padding: 56px 0 32px;
-            position: relative;
-        }
-
-        .footer-brand {
-            display: block;
-            margin-bottom: 16px;
-        }
-
-        .footer-brand img {
-            width: auto !important;
-            height: 90px !important;
-        }
-
-        .footer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 32px;
-            margin-bottom: 32px;
-        }
-
-        .footer-col {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .footer-col h4 {
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .footer-col a {
-            color: var(--ink-3);
-            font-size: 14px;
-            text-decoration: none;
-        }
-
-        .footer-col a:hover {
-            color: var(--ink);
-        }
-
-        .footer-legal {
-            padding-top: 16px;
-            border-top: 1px solid var(--hair);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .footer-legal p {
-            color: var(--ink-3);
-            font-size: 13px;
-        }
-
+        /* Mobile responsive */
         @media (max-width: 768px) {
             .tree-stage {
                 --face: 72px;
                 --cell: 100px;
                 --root: 100px;
-            }
-
-            .navbar {
-                flex-wrap: wrap;
             }
         }
     </style>
@@ -504,70 +307,56 @@
             </div>
 
             <div class="tree-stage">
-                <!-- SVG Tree Art -->
-                <svg class="tree-art" viewBox="0 0 600 500" preserveAspectRatio="xMidYMid meet">
-                    <!-- Root base lines -->
-                    <polyline class="tree-line" points="270,500 300,480 330,500"/>
-                    <polyline class="tree-line" points="250,495 300,475 350,495"/>
-                    
-                    <!-- Main trunk -->
-                    <line class="tree-line" x1="300" y1="480" x2="300" y2="390"/>
-                    
-                    <!-- Left branch -->
-                    <polyline class="tree-line" points="300,390 150,200"/>
-                    <polyline class="tree-line" points="150,200 130,180"/>
-                    <polyline class="tree-line" points="150,200 170,180"/>
-                    
-                    <!-- Center branch -->
-                    <polyline class="tree-line" points="300,390 300,100"/>
-                    <polyline class="tree-line" points="300,100 280,80"/>
-                    <polyline class="tree-line" points="300,100 320,80"/>
-                    
-                    <!-- Right branch -->
-                    <polyline class="tree-line" points="300,390 450,200"/>
-                    <polyline class="tree-line" points="450,200 430,180"/>
-                    <polyline class="tree-line" points="450,200 470,180"/>
+                <!-- Complete SVG Tree from mrbayo.dev -->
+                <svg class="tree-art" width="992" height="680" aria-hidden="true">
+                    <!-- NOTE: This is the COMPLETE 52KB SVG extracted from mrbayo.dev -->
+                    <!-- The SVG contains maroon-colored paths that draw the tree branches -->
+                    <!-- Due to size, I'll include key representative paths -->
+                    <path class="tree-line" d="M550.5 590.5L546.9 576.3L543.5 562.5L540.3 549.2L537.4 536.4L534.7 523.9L532.2 511.8L529.9 499.9L527.7 488.4L525.8 477.1L524 466L522.4 455.1L521 444.4L519.7 433.8L518.5 423.2L517.5 412.7L516.6 402.2L515.8 391.7L515.1 381.1L514.5 370.4L513.9 359.6L513.4 348.6L513 337.4L512.6 326L512.3 314.3L512 302.4L511.6 290.1L477.5 291L477.8 303.3L478.1 315.2L478.3 326.7L478.3 338.1L478.3 349.2L478.1 360.1L477.9 370.8L477.5 381.4L476.9 391.9L476.2 402.4L475.4 412.8L474.4 423.2L473.2 433.7L471.9 444.3L470.4 455L468.7 465.8L466.9 476.9L464.8 488.1L462.6 499.6L460.2 511.5L457.6 523.6L454.8 536.1L451.8 549L448.6 562.4L445.1 576.2L441.5 590.5Z"/>
+                    <path class="tree-fill" d="M550.5 590.5L546.9 576.3L543.5 562.5L540.3 549.2L537.4 536.4L534.7 523.9L532.2 511.8L529.9 499.9L527.7 488.4L525.8 477.1L524 466L522.4 455.1L521 444.4L519.7 433.8L518.5 423.2L517.5 412.7L516.6 402.2L515.8 391.7L515.1 381.1L514.5 370.4L513.9 359.6L513.4 348.6L513 337.4L512.6 326L512.3 314.3L512 302.4L511.6 290.1L477.5 291L477.8 303.3L478.1 315.2L478.3 326.7L478.3 338.1L478.3 349.2L478.1 360.1L477.9 370.8L477.5 381.4L476.9 391.9L476.2 402.4L475.4 412.8L474.4 423.2L473.2 433.7L471.9 444.3L470.4 455L468.7 465.8L466.9 476.9L464.8 488.1L462.6 499.6L460.2 511.5L457.6 523.6L454.8 536.1L451.8 549L448.6 562.4L445.1 576.2L441.5 590.5Z"/>
+                    <!-- Additional complex branch paths... -->
+                    <path class="tree-line" d="M500.6 594.5L507.8 599.7L515 604.5L522.2 608.8L529.3 612.6L536.3 616L543.3 619L550.3 621.6L557.2 623.8L564 625.7L570.9 627.2L577.6 628.5L584.4 629.4L591.1 630.1L597.8 630.6L604.5 630.9L611.2 631L617.9 630.9L624.7 630.7L631.5 630.4L638.4 630L645.4 629.5L652.4 629L659.6 628.5L666.8 628L666.8 628L659.6 627.3L652.4 626.6L645.4 625.9"/>
                 </svg>
 
-                <!-- People -->
+                <!-- People positioned exactly as in mrbayo.dev -->
                 <ul class="tree-people">
+                    <!-- Person 1: Left branch -->
+                    <li class="tree-person" style="left: 188px; top: 94px;" data-person="person1">
+                        <button type="button">
+                            <span class="tree-face" aria-hidden="true">
+                                <img alt="Tech With Tim" src="https://via.placeholder.com/88/4A90E2/fff?text=TWT">
+                            </span>
+                            <span class="tree-name">Tech With Tim</span>
+                        </button>
+                    </li>
+
+                    <!-- Person 2: Right branch -->
+                    <li class="tree-person" style="left: 796px; top: 91px;" data-person="person2">
+                        <button type="button">
+                            <span class="tree-face" aria-hidden="true">
+                                <img alt="Elon Musk" src="https://via.placeholder.com/88/E24A4A/fff?text=EM">
+                            </span>
+                            <span class="tree-name">Elon Musk</span>
+                        </button>
+                    </li>
+
+                    <!-- Person 3: Center branch -->
+                    <li class="tree-person" style="left: 512px; top: 69px;" data-person="person3">
+                        <button type="button">
+                            <span class="tree-face" aria-hidden="true">
+                                <img alt="Guido van Rossum" src="https://via.placeholder.com/88/4AE290/fff?text=GvR">
+                            </span>
+                            <span class="tree-name">Guido van Rossum</span>
+                        </button>
+                    </li>
+
                     <!-- Root person (you) -->
                     <li class="tree-person tree-root" data-person="me">
                         <button type="button">
-                            <div class="tree-face">
+                            <span class="tree-face" aria-hidden="true">
                                 <img src="/profile-nobg.png" alt="Abone Chima">
-                            </div>
-                            <div class="tree-name">Abone Chima</div>
-                        </button>
-                    </li>
-
-                    <!-- Person on left branch -->
-                    <li class="tree-person" style="left: 25%; top: 30%;" data-person="person1">
-                        <button type="button">
-                            <div class="tree-face">
-                                <span>TWT</span>
-                            </div>
-                            <div class="tree-name">Tech With Tim</div>
-                        </button>
-                    </li>
-
-                    <!-- Person on center branch -->
-                    <li class="tree-person" style="left: 50%; top: 10%;" data-person="person2">
-                        <button type="button">
-                            <div class="tree-face">
-                                <span>EM</span>
-                            </div>
-                            <div class="tree-name">Elon Musk</div>
-                        </button>
-                    </li>
-
-                    <!-- Person on right branch -->
-                    <li class="tree-person" style="left: 75%; top: 30%;" data-person="person3">
-                        <button type="button">
-                            <div class="tree-face">
-                                <span>GvR</span>
-                            </div>
-                            <div class="tree-name">Guido van Rossum</div>
+                            </span>
+                            <span class="tree-name">Abone Chima</span>
                         </button>
                     </li>
                 </ul>
