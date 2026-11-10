@@ -899,7 +899,360 @@ a:not(.btn-dark):not(.nav-cta), a:hover:not(.btn-dark):not(.nav-cta) {
     opacity: 0;
   }
 }
-</style></head><body><header class="site-head"><div class="container"><nav class="navbar" aria-label="Main"><a href="/" class="logo" aria-label="Abone Chima — home"><img src="/brand/logo-blue-new.png" alt="Mr Chima" width="542" height="512" decoding="async"/></a><div class="nav-links" id="site-menu"><a href="/source-code">Source code</a><a href="/classes">Classes</a><a href="/shop">Shop</a><a href="/projects">Projects</a><a href="/inspiration">Inspiration</a><a href="/#contact">Contact</a><button type="button" class="nav-support">Support me</button><a href="/hire" class="btn-dark nav-cta">Hire me</a></div><button type="button" class="menu-btn" aria-label="Open menu" aria-expanded="false" aria-controls="site-menu"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu icon-open" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x icon-close" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button></nav></div></header><main><section class="hire-section"><div class="container"><div class="status-msg" id="statusMsg"></div><div class="hire-layout"><div class="left-side"><h1 class="hire-title">Tell me about your project</h1><label class="build-label">What should I build?</label><div class="project-options" id="projectOptions"><label class="project-option selected" data-type="mobile"><div class="project-option-radio"></div><div class="project-option-text"><strong>Mobile app</strong><span>iOS or Android app</span></div></label><label class="project-option" data-type="web"><div class="project-option-radio"></div><div class="project-option-text"><strong>Web app</strong><span>Website or web platform</span></div></label><label class="project-option" data-type="ai"><div class="project-option-radio"></div><div class="project-option-text"><strong>AI system</strong><span>ChatBot, automation, AI tool</span></div></label><label class="project-option" data-type="other"><div class="project-option-radio"></div><div class="project-option-text"><strong>Other</strong><span>Something different</span></div></label></div><div class="project-description"><label for="projectDesc">Describe the project</label><textarea id="projectDesc" placeholder="Your description here..." maxlength="2000"></textarea><div class="char-count"><span id="charCount">0</span>/2000</div></div></div><div class="right-side"><form id="hireForm"><input type="text" name="website" style="position:absolute;left:-5000px;" tabindex="-1" autocomplete="off"/><div class="form-field"><input type="text" id="name" name="name" placeholder="Your name" required/></div><div class="form-field"><input type="email" id="email" name="email" placeholder="Email" required/></div><div class="form-field"><input type="tel" id="phone" name="phone" placeholder="Phone, e.g. +234 801 234 5678"/></div><label class="whatsapp-check"><input type="checkbox" id="sameOnWhatsapp" checked/><span>Same number on WhatsApp</span></label><div class="contact-method"><label class="contact-method-label">How should I reach you?</label><div class="contact-chips"><button type="button" class="contact-chip selected" data-method="whatsapp">WhatsApp</button><button type="button" class="contact-chip" data-method="email">Email</button><button type="button" class="contact-chip" data-method="phone">Phone call</button></div></div><button type="submit" class="submit-btn" id="submitBtn">Send request</button></form></div></div></section></main><script>const BACKEND_URL='https://mrchima-portfolio.onrender.com';let selectedType='mobile';let selectedMethod='whatsapp';const projectOptions=document.querySelectorAll('.project-option');projectOptions.forEach(opt=>{opt.addEventListener('click',()=>{projectOptions.forEach(o=>o.classList.remove('selected'));opt.classList.add('selected');selectedType=opt.dataset.type})});const projectDesc=document.getElementById('projectDesc');const charCount=document.getElementById('charCount');projectDesc.addEventListener('input',()=>{charCount.textContent=projectDesc.value.length});const methodChips=document.querySelectorAll('.contact-chip');methodChips.forEach(chip=>{chip.addEventListener('click',()=>{methodChips.forEach(c=>c.classList.remove('selected'));chip.classList.add('selected');selectedMethod=chip.dataset.method})});const hireForm=document.getElementById('hireForm');const submitBtn=document.getElementById('submitBtn');const statusMsg=document.getElementById('statusMsg');hireForm.addEventListener('submit',async(e)=>{e.preventDefault();statusMsg.style.display='none';const name=document.getElementById('name').value.trim();const email=document.getElementById('email').value.trim();const phone=document.getElementById('phone').value.trim();const sameOnWhatsapp=document.getElementById('sameOnWhatsapp').checked;const description=projectDesc.value.trim();const website=e.target.website.value;if(!name||!email||!description){statusMsg.textContent='Please fill in your name, email, and project description.';statusMsg.className='status-msg error';statusMsg.style.display='block';return}submitBtn.disabled=true;submitBtn.textContent='Sending...';try{const projectTypeMap={mobile:'Mobile App (iOS/Android)',web:'Web App/Website',ai:'AI System (ChatBot/Automation)',other:'Other'};const methodMap={whatsapp:'WhatsApp',email:'Email',phone:'Phone call'};const response=await fetch(`${BACKEND_URL}/api/contact`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,email,subject:`Hire Request: ${projectTypeMap[selectedType]}`,message:`
+
+/* HIRE PAGE SPECIFIC STYLES */
+.hire-section {
+  background: var(--soft);
+  flex: 1;
+  padding: 40px 0 72px;
+}
+
+.hire-layout {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 32px;
+  align-items: start;
+}
+
+.left-side {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.hire-title {
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+
+.build-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-2);
+  margin-bottom: 8px;
+  display: block;
+}
+
+.project-options {
+  background: var(--fill);
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.project-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 48px;
+  padding: 8px 14px;
+  cursor: pointer;
+  position: relative;
+  background: transparent;
+  border: 0;
+  text-align: left;
+}
+
+.project-option + .project-option:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 44px;
+  right: 0;
+  height: 1px;
+  background: var(--hair);
+}
+
+.project-option:hover {
+  background: rgba(0,0,0,0.03);
+}
+
+.project-option-radio {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid var(--ink-4);
+  background: var(--white);
+  flex-shrink: 0;
+  transition: border 0.15s;
+}
+
+.project-option.selected .project-option-radio {
+  border: 5px solid var(--green);
+}
+
+.project-option-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.project-option-text strong {
+  font-size: 14.5px;
+  font-weight: 500;
+}
+
+.project-option-text span {
+  font-size: 12.5px;
+  color: var(--ink-3);
+}
+
+.project-description {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.project-description label {
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+.project-description textarea {
+  background: var(--fill);
+  border: 0;
+  border-radius: var(--radius-sm);
+  padding: 9px 13px;
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--ink);
+  caret-color: var(--green);
+  min-height: 180px;
+  resize: none;
+  field-sizing: content;
+  transition: background 0.15s, box-shadow 0.15s;
+}
+
+.project-description textarea:focus {
+  outline: none;
+  background: var(--white);
+  box-shadow: 0 0 0 3px rgba(29, 170, 97, 0.2);
+}
+
+.char-count {
+  text-align: right;
+  font-size: 11.5px;
+  color: var(--ink-4);
+  font-variant-numeric: tabular-nums;
+}
+
+.right-side {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 22px 22px 20px;
+  position: sticky;
+  top: calc(var(--head-h) + 20px);
+}
+
+.form-field {
+  margin-bottom: 16px;
+}
+
+.form-field input {
+  width: 100%;
+  background: var(--fill);
+  border: 0;
+  border-radius: var(--radius-sm);
+  padding: 9px 13px;
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--ink);
+  caret-color: var(--green);
+  min-height: 40px;
+  transition: background 0.15s, box-shadow 0.15s;
+}
+
+.form-field input::placeholder {
+  color: var(--ink-4);
+}
+
+.form-field input:focus {
+  outline: none;
+  background: var(--white);
+  box-shadow: 0 0 0 3px rgba(29, 170, 97, 0.2);
+}
+
+.whatsapp-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--ink-2);
+  cursor: pointer;
+  margin-bottom: 16px;
+}
+
+.whatsapp-check input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--green);
+  margin: 0;
+  cursor: pointer;
+}
+
+.contact-method {
+  margin-bottom: 18px;
+}
+
+.contact-method-label {
+  display: block;
+  font-size: 13px;
+  color: var(--ink-2);
+  margin-bottom: 8px;
+}
+
+.contact-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.contact-chip {
+  background: var(--fill);
+  border: 0;
+  border-radius: 999px;
+  height: 34px;
+  padding: 0 14px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.contact-chip.selected {
+  background: #e7fce3;
+  color: var(--green-ink);
+}
+
+.submit-btn {
+  width: 100%;
+  background: #000000 !important;
+  color: white !important;
+  border: 0;
+  border-radius: 11px;
+  height: 44px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.submit-btn:hover {
+  background: #1a1a1a !important;
+}
+
+.submit-btn:disabled {
+  background: var(--fill) !important;
+  color: var(--ink-4) !important;
+  cursor: default;
+}
+
+.status-msg {
+  border-radius: var(--radius-sm);
+  background: var(--fill);
+  color: var(--ink-2);
+  padding: 10px 12px;
+  font-size: 14px;
+  line-height: 1.45;
+  margin-bottom: 14px;
+  display: none;
+}
+
+.status-msg.error {
+  background: var(--red-soft);
+  color: var(--red-ink);
+}
+
+.status-msg.success {
+  background: var(--green-soft);
+  color: var(--green-ink);
+}
+
+@media (max-width: 900px) {
+  .hire-layout {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  
+  .right-side {
+    position: static;
+  }
+}
+
+/* FOOTER STYLES */
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 40px;
+  margin-bottom: 24px;
+}
+
+.footer-brand {
+  display: block;
+}
+
+.footer-brand img {
+  width: 400px;
+  height: auto;
+  max-width: 100%;
+}
+
+.footer-col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.footer-col h4 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
+.footer-col a,
+.footer-col button {
+  font-size: 13px;
+  color: var(--ink-3);
+  text-decoration: none;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+}
+
+.footer-col a:hover,
+.footer-col button:hover {
+  color: var(--ink);
+}
+
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-top: 24px;
+  border-top: 1px solid var(--hair);
+}
+
+.footer-bottom p {
+  font-size: 12.5px;
+  color: var(--ink-3);
+}
+
+@media (max-width: 768px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+</style></head><body><div class="page-shell"><header class="site-head"><div class="container"><nav class="navbar" aria-label="Main"><a href="/" class="logo" aria-label="Abone Chima — home"><img src="/brand/logo-blue-new.png" alt="Mr Chima" width="542" height="512" decoding="async"/></a><div class="nav-links" id="site-menu"><a href="/source-code">Source code</a><a href="/classes">Classes</a><a href="/shop">Shop</a><a href="/projects">Projects</a><a href="/inspiration">Inspiration</a><a href="/#contact">Contact</a><button type="button" class="nav-support">Support me</button><a href="/hire" class="btn-dark nav-cta">Hire me</a></div><button type="button" class="menu-btn" aria-label="Open menu" aria-expanded="false" aria-controls="site-menu"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu icon-open" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x icon-close" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button></nav></div></header><main><section class="hire-section"><div class="container"><div class="status-msg" id="statusMsg"></div><div class="hire-layout"><div class="left-side"><h1 class="hire-title">Tell me about your project</h1><label class="build-label">What should I build?</label><div class="project-options" id="projectOptions"><label class="project-option selected" data-type="mobile"><div class="project-option-radio"></div><div class="project-option-text"><strong>Mobile app</strong><span>iOS or Android app</span></div></label><label class="project-option" data-type="web"><div class="project-option-radio"></div><div class="project-option-text"><strong>Web app</strong><span>Website or web platform</span></div></label><label class="project-option" data-type="ai"><div class="project-option-radio"></div><div class="project-option-text"><strong>AI system</strong><span>ChatBot, automation, AI tool</span></div></label><label class="project-option" data-type="other"><div class="project-option-radio"></div><div class="project-option-text"><strong>Other</strong><span>Something different</span></div></label></div><div class="project-description"><label for="projectDesc">Describe the project</label><textarea id="projectDesc" placeholder="Your description here..." maxlength="2000"></textarea><div class="char-count"><span id="charCount">0</span>/2000</div></div></div><div class="right-side"><form id="hireForm"><input type="text" name="website" style="position:absolute;left:-5000px;" tabindex="-1" autocomplete="off"/><div class="form-field"><input type="text" id="name" name="name" placeholder="Your name" required/></div><div class="form-field"><input type="email" id="email" name="email" placeholder="Email" required/></div><div class="form-field"><input type="tel" id="phone" name="phone" placeholder="Phone, e.g. +234 801 234 5678"/></div><label class="whatsapp-check"><input type="checkbox" id="sameOnWhatsapp" checked/><span>Same number on WhatsApp</span></label><div class="contact-method"><label class="contact-method-label">How should I reach you?</label><div class="contact-chips"><button type="button" class="contact-chip selected" data-method="whatsapp">WhatsApp</button><button type="button" class="contact-chip" data-method="email">Email</button><button type="button" class="contact-chip" data-method="phone">Phone call</button></div></div><button type="submit" class="submit-btn" id="submitBtn">Send request</button></form></div></div></section></main><script>const BACKEND_URL='https://mrchima-portfolio.onrender.com';let selectedType='mobile';let selectedMethod='whatsapp';const projectOptions=document.querySelectorAll('.project-option');projectOptions.forEach(opt=>{opt.addEventListener('click',()=>{projectOptions.forEach(o=>o.classList.remove('selected'));opt.classList.add('selected');selectedType=opt.dataset.type})});const projectDesc=document.getElementById('projectDesc');const charCount=document.getElementById('charCount');projectDesc.addEventListener('input',()=>{charCount.textContent=projectDesc.value.length});const methodChips=document.querySelectorAll('.contact-chip');methodChips.forEach(chip=>{chip.addEventListener('click',()=>{methodChips.forEach(c=>c.classList.remove('selected'));chip.classList.add('selected');selectedMethod=chip.dataset.method})});const hireForm=document.getElementById('hireForm');const submitBtn=document.getElementById('submitBtn');const statusMsg=document.getElementById('statusMsg');hireForm.addEventListener('submit',async(e)=>{e.preventDefault();statusMsg.style.display='none';const name=document.getElementById('name').value.trim();const email=document.getElementById('email').value.trim();const phone=document.getElementById('phone').value.trim();const sameOnWhatsapp=document.getElementById('sameOnWhatsapp').checked;const description=projectDesc.value.trim();const website=e.target.website.value;if(!name||!email||!description){statusMsg.textContent='Please fill in your name, email, and project description.';statusMsg.className='status-msg error';statusMsg.style.display='block';return}submitBtn.disabled=true;submitBtn.textContent='Sending...';try{const projectTypeMap={mobile:'Mobile App (iOS/Android)',web:'Web App/Website',ai:'AI System (ChatBot/Automation)',other:'Other'};const methodMap={whatsapp:'WhatsApp',email:'Email',phone:'Phone call'};const response=await fetch(`${BACKEND_URL}/api/contact`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,email,subject:`Hire Request: ${projectTypeMap[selectedType]}`,message:`
 HIRE REQUEST
 
 Project Type: ${projectTypeMap[selectedType]}
@@ -910,4 +1263,51 @@ Same on WhatsApp: ${sameOnWhatsapp?'Yes':'No'}
 PROJECT DESCRIPTION:
 ${description}
 `.trim(),website})});const result=await response.json();if(result.success){statusMsg.textContent='✓ Thank you! I will get back to you within 24 hours.';statusMsg.className='status-msg success';statusMsg.style.display='block';hireForm.reset();projectDesc.value='';charCount.textContent='0';projectOptions.forEach(o=>o.classList.remove('selected'));projectOptions[0].classList.add('selected');selectedType='mobile';methodChips.forEach(c=>c.classList.remove('selected'));methodChips[0].classList.add('selected');selectedMethod='whatsapp';window.scrollTo({top:0,behavior:'smooth'})}else{throw new Error(result.message||'Failed')}}catch(error){console.error('Error:',error);statusMsg.textContent='Something went wrong. Please try again or email me at abonejoseph@gmail.com';statusMsg.className='status-msg error';statusMsg.style.display='block'}finally{submitBtn.disabled=false;submitBtn.textContent='Send request'}})
-</script></body></html>
+</script>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <a href="/" class="footer-brand" aria-label="Mr Chima">
+        <img src="/brand/my-logo-for-footer.png.png" alt="Mr Chima" width="1030" height="400" loading="lazy" decoding="async"/>
+      </a>
+      <nav class="footer-col" aria-label="Work">
+        <h4>Work</h4>
+        <a href="/projects">Projects</a>
+        <a href="/source-code">Source code</a>
+        <a href="/classes">Classes</a>
+        <a href="/shop">Shop</a>
+      </nav>
+      <nav class="footer-col" aria-label="Get in touch">
+        <h4>Get in touch</h4>
+        <a href="/#contact">Contact</a>
+        <a href="/hire">Hire me</a>
+        <button type="button" class="nav-support footer-support">Support me</button>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Abone Chima</p>
+      <p>mrchima.dev</p>
+    </div>
+  </div>
+</footer>
+
+</div>
+
+<script>
+// Mobile menu toggle
+document.querySelector('.menu-btn')?.addEventListener('click', function() {
+  document.querySelector('.navbar')?.classList.toggle('open');
+  const expanded = this.getAttribute('aria-expanded') === 'true';
+  this.setAttribute('aria-expanded', !expanded);
+});
+
+// Support button handler
+document.querySelectorAll('.nav-support, .footer-support')?.forEach(btn => {
+  btn.addEventListener('click', () => {
+    alert('Support modal coming soon! For now, please contact via email.');
+  });
+});
+</script>
+
+</body></html>
