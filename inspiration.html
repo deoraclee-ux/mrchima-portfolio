@@ -119,15 +119,37 @@
             inset:0;
         }
         
-        .tree-line{
+        .tree-line,
+        .tree-fill{
             fill:#690202;
             stroke:#690202;
             stroke-width:3px;
             stroke-linejoin:round;
         }
         
-        .tree-fill{
-            fill:var(--white);
+        /* Animate tree paths growing */
+        .tree-line {
+            fill: none;
+            stroke-dasharray: 15000;
+            stroke-dashoffset: 15000;
+            animation: growTree 2.5s ease-out forwards;
+        }
+        
+        .tree-fill {
+            opacity: 0;
+            animation: fadeInFill 0.6s ease-out 2.3s forwards;
+        }
+        
+        @keyframes growTree {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+        
+        @keyframes fadeInFill {
+            to {
+                opacity: 1;
+            }
         }
         
         .tree-people{
@@ -325,15 +347,15 @@
     </footer>
 
     <script>
-        // Animate tree people appearing one by one (like mrbayo.dev)
+        // Animate tree growing then people appearing
         document.addEventListener('DOMContentLoaded', function() {
             const people = document.querySelectorAll('.tree-person:not(.tree-root)');
             
-            // Animate people appearing with delays
+            // Start people animation after tree finishes growing (2.5s)
             people.forEach((person, index) => {
                 setTimeout(() => {
                     person.classList.add('is-in');
-                }, 200 + (index * 600));  // Each person appears 600ms after previous
+                }, 2700 + (index * 500));  // Start at 2.7s, each person 500ms apart
             });
         });
     </script>
