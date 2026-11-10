@@ -4,365 +4,706 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="/favicon.ico"/>
-    <title>My Inspiration Tree | Abone Chima (Mr Chima)</title>
+    <title>My inspiration tree | Abone Chima (Mr Chima)</title>
     <meta name="description" content="The people who inspire Abone Chima (Mr Chima)">
-    <link rel="stylesheet" href="/_next/static/chunks/1htf0x35-w7ke.css">
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        * {
             margin: 0;
             padding: 0;
-            background: #f5f5f7;
+            box-sizing: border-box;
         }
-        
-        .page-wrapper {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+
+        :root {
+            --ink: #1d1d1f;
+            --ink-2: #48484a;
+            --ink-3: #6e6e73;
+            --ink-4: #a1a1a6;
+            --white: #fff;
+            --soft: #f5f5f7;
+            --fill: #eff1f4;
+            --fill-hover: #e6e9ee;
+            --hair: #00000014;
+            --shadow-card: 0 1px 2px rgba(0,0,0,0.05), 0 0 0 0.5px rgba(0,0,0,0.03);
+            --radius: 14px;
+            --head-h: 56px;
+            --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --branch-color: #a0522d;
         }
-        
-        .tree-section {
-            flex: 1;
-            padding: 60px 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+
+        body {
+            font-family: var(--font);
+            color: var(--ink);
+            background: var(--white);
+            -webkit-font-smoothing: antialiased;
+            font-size: 15px;
+            line-height: 1.5;
+            overflow-x: hidden;
         }
-        
-        h1 {
-            font-size: 32px;
-            font-weight: 600;
-            color: #1d1d1f;
-            margin-bottom: 10px;
-            text-align: center;
+
+        /* Navbar */
+        .site-head {
+            z-index: 100;
+            -webkit-backdrop-filter: saturate(180%) blur(18px);
+            backdrop-filter: saturate(180%) blur(18px);
+            box-shadow: inset 0 -1px 0 var(--hair);
+            background: rgba(255, 255, 255, 0.82);
+            position: sticky;
+            top: 0;
         }
-        
-        .subtitle {
-            color: #6e6e73;
-            font-size: 16px;
-            margin-bottom: 40px;
-            text-align: center;
-        }
-        
-        .tree-container {
-            position: relative;
-            width: 100%;
-            max-width: 900px;
-            height: 600px;
+
+        .container {
+            width: min(1100px, 100% - 40px);
             margin: 0 auto;
         }
-        
-        .tree-node {
-            position: absolute;
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background: white;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+
+        .navbar {
+            height: var(--head-h);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            text-decoration: none;
+            color: var(--ink);
+        }
+
+        .logo img {
+            width: 140px;
+            height: auto;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .nav-links a, .nav-support {
+            height: 32px;
+            color: var(--ink-3);
+            white-space: nowrap;
+            background: transparent;
+            border: 0;
+            border-radius: 8px;
+            padding: 0 11px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+        }
+
+        .nav-links a:hover, .nav-support:hover {
+            background: var(--fill);
+            color: var(--ink);
+        }
+
+        .nav-links a.active {
+            color: var(--ink);
+        }
+
+        .nav-links .nav-cta {
+            background: #000000 !important;
+            color: #fff !important;
+            border-radius: 9px;
+            height: 32px;
+            margin-left: 6px;
+            padding: 0 14px;
+            font-size: 13.5px;
+        }
+
+        .nav-links .nav-cta:hover {
+            background: #333336 !important;
+            color: #fff !important;
+        }
+
+        /* Page content */
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-shell {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .inspiration-section {
+            flex: 1;
+            background: var(--white);
+            padding: 80px 20px 100px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 10px;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--ink);
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: var(--ink-3);
+            font-size: 16px;
+            margin-bottom: 60px;
+            text-align: center;
+        }
+
+        /* Tree container */
+        .tree-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            height: 700px;
+            margin: 0 auto;
+        }
+
+        /* SVG tree */
+        .tree-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        .branch {
+            fill: none;
+            stroke: var(--branch-color);
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: drawBranch 2s ease-out forwards;
+        }
+
+        @keyframes drawBranch {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        /* Person nodes */
+        .person-node {
+            position: absolute;
+            width: 110px;
+            height: 110px;
+            opacity: 0;
+            animation: fadeInPerson 0.6s ease-out forwards;
             cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
+            transition: transform 0.3s ease;
+        }
+
+        .person-node:hover {
+            transform: scale(1.1);
             z-index: 10;
         }
-        
-        .tree-node:hover {
-            transform: scale(1.1);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-            z-index: 20;
+
+        @keyframes fadeInPerson {
+            to {
+                opacity: 1;
+            }
         }
-        
-        .tree-node.center {
-            width: 140px;
-            height: 140px;
-            background: #1d1d1f;
-            color: white;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
+
+        .person-node.root {
+            width: 130px;
+            height: 130px;
+            animation-delay: 1.5s;
         }
-        
-        .tree-node.center:hover {
-            transform: translate(-50%, -50%) scale(1.1);
+
+        .person-node.branch-person {
+            animation-delay: 1.8s;
         }
-        
-        .tree-node img {
-            width: 70px;
-            height: 70px;
+
+        .person-avatar {
+            width: 100%;
+            height: 100%;
             border-radius: 50%;
-            object-fit: cover;
-            margin-bottom: 8px;
-        }
-        
-        .tree-node.center img {
-            width: 90px;
-            height: 90px;
-        }
-        
-        .tree-node-name {
-            font-size: 11px;
-            font-weight: 600;
-            text-align: center;
-            line-height: 1.2;
-        }
-        
-        .tree-line {
-            position: absolute;
-            background: #d1d1d6;
-            height: 2px;
-            transform-origin: left center;
-            z-index: 1;
-        }
-        
-        .person-card {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.9);
-            width: 90%;
-            max-width: 500px;
             background: white;
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            padding: 30px;
-            opacity: 0;
-            pointer-events: none;
-            transition: all 0.3s;
-            z-index: 1000;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid white;
         }
-        
-        .person-card.active {
-            opacity: 1;
-            pointer-events: all;
-            transform: translate(-50%, -50%) scale(1);
+
+        .person-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
-        
-        .person-card-close {
+
+        .person-name {
             position: absolute;
-            top: 15px;
-            right: 15px;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--ink);
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-card {
+            background: white;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: modalSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            padding: 24px 24px 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            border-bottom: 1px solid var(--hair);
+        }
+
+        .modal-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .modal-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .modal-info {
+            flex: 1;
+        }
+
+        .modal-info h2 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--ink);
+        }
+
+        .modal-info .role {
+            color: var(--ink-3);
+            font-size: 14px;
+        }
+
+        .modal-close {
             width: 32px;
             height: 32px;
+            border-radius: 50%;
+            background: var(--fill);
             border: none;
-            background: #f5f5f7;
-            border-radius: 50%;
             cursor: pointer;
-            font-size: 18px;
-            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: var(--ink-2);
         }
-        
-        .person-card-img {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin: 0 auto 20px;
-            display: block;
+
+        .modal-close:hover {
+            background: var(--fill-hover);
         }
-        
-        .person-card h2 {
-            font-size: 24px;
-            margin-bottom: 10px;
-            text-align: center;
-            color: #1d1d1f;
+
+        .modal-body {
+            padding: 24px;
         }
-        
-        .person-card-about {
-            color: #48484a;
-            font-size: 14px;
-            line-height: 1.6;
-            margin-bottom: 15px;
+
+        .modal-section {
+            margin-bottom: 20px;
         }
-        
-        .person-card-why {
-            background: #f5f5f7;
-            padding: 15px;
-            border-radius: 10px;
-            border-left: 3px solid #15803d;
+
+        .modal-section:last-child {
+            margin-bottom: 0;
         }
-        
-        .person-card-why strong {
-            display: block;
+
+        .modal-section h3 {
+            font-size: 16px;
+            font-weight: 600;
             margin-bottom: 8px;
-            color: #15803d;
+            color: var(--ink);
         }
-        
-        .overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.5);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s;
-            z-index: 999;
+
+        .modal-section p {
+            color: var(--ink-2);
+            font-size: 15px;
+            line-height: 1.6;
         }
-        
-        .overlay.active {
-            opacity: 1;
-            pointer-events: all;
+
+        /* Footer */
+        .site-footer {
+            background: var(--white);
+            box-shadow: inset 0 1px 0 var(--hair);
+            padding: 56px 0 32px;
+            position: relative;
         }
-        
+
+        .footer-brand {
+            display: block;
+            margin-bottom: 16px;
+        }
+
+        .footer-brand img {
+            width: auto !important;
+            height: 90px !important;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 32px;
+            margin-bottom: 32px;
+        }
+
+        .footer-col {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .footer-col h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .footer-col a {
+            color: var(--ink-3);
+            font-size: 14px;
+            text-decoration: none;
+        }
+
+        .footer-col a:hover {
+            color: var(--ink);
+        }
+
+        .footer-legal {
+            padding-top: 16px;
+            border-top: 1px solid var(--hair);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .footer-legal p {
+            color: var(--ink-3);
+            font-size: 13px;
+        }
+
         @media (max-width: 768px) {
             .tree-container {
-                height: 500px;
+                height: 600px;
             }
-            .tree-node {
-                width: 100px;
-                height: 100px;
+
+            .person-node {
+                width: 90px;
+                height: 90px;
             }
-            .tree-node.center {
-                width: 120px;
-                height: 120px;
+
+            .person-node.root {
+                width: 110px;
+                height: 110px;
             }
-            .tree-node img {
-                width: 60px;
-                height: 60px;
-            }
-            .tree-node.center img {
-                width: 75px;
-                height: 75px;
+
+            .navbar {
+                flex-wrap: wrap;
             }
         }
     </style>
 </head>
 <body>
-    <div class="page-wrapper">
-        <div class="tree-section">
-            <h1>My Inspiration Tree</h1>
-            <p class="subtitle">The people who inspire my work and continuous learning</p>
-            
-            <div class="tree-container" id="treeContainer"></div>
+    <div class="page-shell">
+        <!-- Navbar -->
+        <header class="site-head">
+            <div class="container">
+                <nav class="navbar">
+                    <a href="/" class="logo">
+                        <img src="/brand/logo-blue-new.png" alt="Mr Chima" width="542" height="512">
+                    </a>
+                    <div class="nav-links">
+                        <a href="/source-code.html">Source code</a>
+                        <a href="/classes.html">Classes</a>
+                        <a href="/shop.html">Shop</a>
+                        <a href="/projects.html">Projects</a>
+                        <a href="/#contact">Contact</a>
+                        <button type="button" class="nav-support">Support me</button>
+                        <a href="/hire.html" class="nav-cta">Hire me</a>
+                    </div>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Main content -->
+        <main>
+            <section class="inspiration-section">
+                <h1>My inspiration tree</h1>
+                <p class="subtitle">The people who inspire my work and continuous learning</p>
+
+                <div class="tree-container">
+                    <!-- SVG Tree -->
+                    <svg class="tree-svg" viewBox="0 0 800 700" preserveAspectRatio="xMidYMid meet">
+                        <!-- Trunk -->
+                        <path class="branch" d="M 400 700 Q 400 650, 400 550" style="stroke-width: 4; animation-delay: 0s;"/>
+                        
+                        <!-- Root branches (ground level) -->
+                        <path class="branch" d="M 400 700 Q 350 690, 320 680" style="stroke-width: 3; animation-delay: 0.2s;"/>
+                        <path class="branch" d="M 400 700 Q 450 690, 480 680" style="stroke-width: 3; animation-delay: 0.3s;"/>
+                        <path class="branch" d="M 400 700 Q 380 695, 360 690" style="stroke-width: 2.5; animation-delay: 0.4s;"/>
+                        <path class="branch" d="M 400 700 Q 420 695, 440 690" style="stroke-width: 2.5; animation-delay: 0.5s;"/>
+                        
+                        <!-- Main branches going up -->
+                        <path class="branch" d="M 400 550 Q 300 500, 200 400" style="stroke-width: 3.5; animation-delay: 0.6s;"/>
+                        <path class="branch" d="M 400 550 Q 400 450, 400 350" style="stroke-width: 3.5; animation-delay: 0.7s;"/>
+                        <path class="branch" d="M 400 550 Q 500 500, 600 400" style="stroke-width: 3.5; animation-delay: 0.8s;"/>
+                        
+                        <!-- Sub-branches from left main branch -->
+                        <path class="branch" d="M 250 450 Q 220 420, 180 380" style="stroke-width: 2; animation-delay: 0.9s;"/>
+                        <path class="branch" d="M 200 400 Q 170 380, 150 350" style="stroke-width: 2; animation-delay: 1s;"/>
+                        
+                        <!-- Sub-branches from center main branch -->
+                        <path class="branch" d="M 400 400 Q 360 370, 330 340" style="stroke-width: 2; animation-delay: 1.1s;"/>
+                        <path class="branch" d="M 400 350 Q 420 320, 450 280" style="stroke-width: 2; animation-delay: 1.2s;"/>
+                        
+                        <!-- Sub-branches from right main branch -->
+                        <path class="branch" d="M 550 450 Q 580 420, 620 380" style="stroke-width: 2; animation-delay: 1.3s;"/>
+                        <path class="branch" d="M 600 400 Q 630 380, 650 350" style="stroke-width: 2; animation-delay: 1.4s;"/>
+                        
+                        <!-- Tiny twigs -->
+                        <path class="branch" d="M 180 380 L 160 360" style="stroke-width: 1.5; animation-delay: 1.5s;"/>
+                        <path class="branch" d="M 200 380 L 190 350" style="stroke-width: 1.5; animation-delay: 1.5s;"/>
+                        <path class="branch" d="M 400 300 L 380 270" style="stroke-width: 1.5; animation-delay: 1.6s;"/>
+                        <path class="branch" d="M 400 300 L 420 270" style="stroke-width: 1.5; animation-delay: 1.6s;"/>
+                        <path class="branch" d="M 620 380 L 640 360" style="stroke-width: 1.5; animation-delay: 1.7s;"/>
+                        <path class="branch" d="M 600 380 L 610 350" style="stroke-width: 1.5; animation-delay: 1.7s;"/>
+                    </svg>
+
+                    <!-- Person at root/base -->
+                    <div class="person-node root" style="left: 50%; bottom: 30px; transform: translateX(-50%);" data-person="me">
+                        <div class="person-avatar">
+                            <img src="/profile-nobg.png" alt="Abone Chima">
+                        </div>
+                        <div class="person-name">Abone Chima</div>
+                    </div>
+
+                    <!-- People on branches -->
+                    <div class="person-node branch-person" style="left: 15%; top: 30%;" data-person="person1">
+                        <div class="person-avatar">
+                            <img src="https://via.placeholder.com/110/4A90E2/fff?text=TWT" alt="Tech With Tim">
+                        </div>
+                        <div class="person-name">Tech With Tim</div>
+                    </div>
+
+                    <div class="person-node branch-person" style="left: 50%; top: 15%; transform: translateX(-50%);" data-person="person2">
+                        <div class="person-avatar">
+                            <img src="https://via.placeholder.com/110/E24A4A/fff?text=EM" alt="Elon Musk">
+                        </div>
+                        <div class="person-name">Elon Musk</div>
+                    </div>
+
+                    <div class="person-node branch-person" style="right: 15%; top: 30%;" data-person="person3">
+                        <div class="person-avatar">
+                            <img src="https://via.placeholder.com/110/4AE290/fff?text=GvR" alt="Guido van Rossum">
+                        </div>
+                        <div class="person-name">Guido van Rossum</div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="site-footer">
+            <div class="container">
+                <a href="/" class="footer-brand">
+                    <img src="/brand/logo-blue-new.png" alt="Mr Chima" width="542" height="512">
+                </a>
+                <div class="footer-grid">
+                    <div class="footer-col">
+                        <h4>Navigate</h4>
+                        <a href="/">Home</a>
+                        <a href="/source-code.html">Source code</a>
+                        <a href="/classes.html">Classes</a>
+                        <a href="/shop.html">Shop</a>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Explore</h4>
+                        <a href="/projects.html">Projects</a>
+                        <a href="/inspiration.html">Inspiration</a>
+                        <a href="/#contact">Contact</a>
+                        <a href="/hire.html">Hire me</a>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Connect</h4>
+                        <a href="https://github.com/" target="_blank">GitHub</a>
+                        <a href="https://www.instagram.com/adebayo_musturpha" target="_blank">Instagram</a>
+                        <a href="https://youtube.com/@adebayo_musturpha" target="_blank">YouTube</a>
+                    </div>
+                </div>
+                <div class="footer-legal">
+                    <p>&copy; 2024 Abone Chima. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="personModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-avatar">
+                    <img id="modalImage" src="" alt="">
+                </div>
+                <div class="modal-info">
+                    <h2 id="modalName"></h2>
+                    <p class="role" id="modalRole"></p>
+                </div>
+                <button class="modal-close" onclick="closeModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h3>About</h3>
+                    <p id="modalAbout"></p>
+                </div>
+                <div class="modal-section">
+                    <h3>Why they inspire me</h3>
+                    <p id="modalWhy"></p>
+                </div>
+            </div>
         </div>
     </div>
-    
-    <div class="overlay" id="overlay"></div>
-    <div class="person-card" id="personCard">
-        <button class="person-card-close" onclick="closeCard()">×</button>
-        <img class="person-card-img" id="cardImg" src="" alt="">
-        <h2 id="cardName"></h2>
-        <p class="person-card-about" id="cardAbout"></p>
-        <div class="person-card-why">
-            <strong>Why they inspire me:</strong>
-            <p id="cardWhy"></p>
-        </div>
-    </div>
-    
+
     <script>
-        const data = {
+        // Person data
+        const peopleData = {
             me: {
-                name: "Mr Chima",
-                image_url: "/profile-nobg.png",
+                name: "Abone Chima",
+                role: "Python Developer & Instructor",
+                image: "/profile-nobg.png",
+                about: "I build practical software with Python. Backend APIs, automation, AI-powered tools and the courses that teach you to build them yourself.",
+                why: "This is me - the foundation from which everything grows."
             },
-            people: [
-                {
-                    name: "Tech With Tim",
-                    image_url: "https://yt3.googleusercontent.com/ytc/AIdro_nWWAzM4cMlLpD0fWCGXfq7UF5m9CKfLYhCzJsZErvafg=s176-c-k-c0x00ffffff-no-rj",
-                    about: "Python YouTube educator who makes complex programming concepts simple and accessible for everyone.",
-                    why: "His clear teaching style and dedication to making programming approachable reminds me why I love teaching Python."
-                },
-                {
-                    name: "Elon Musk",
-                    image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Elon_Musk_Royal_Society_%28crop2%29.jpg/330px-Elon_Musk_Royal_Society_%28crop2%29.jpg",
-                    about: "Founder of SpaceX and Tesla, taking on rockets and electric cars when most people said it could not be done.",
-                    why: "He picks problems that look impossible and works from first principles until they are not. He reminds me to aim higher than feels comfortable."
-                },
-                {
-                    name: "Guido van Rossum",
-                    image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Guido-portrait-2014.jpg/330px-Guido-portrait-2014.jpg",
-                    about: "Creator of Python, the programming language that prioritizes readability and simplicity.",
-                    why: "He created a language that feels like writing in plain English. That philosophy shapes how I write code and teach others."
-                }
-            ]
+            person1: {
+                name: "Tech With Tim",
+                role: "YouTuber & Educator",
+                image: "https://via.placeholder.com/110/4A90E2/fff?text=TWT",
+                about: "Tech With Tim creates programming tutorials and educational content, making complex coding concepts accessible to millions of learners worldwide.",
+                why: "Tim's clear teaching style and dedication to making programming accessible inspired me to pursue education and share my knowledge with others."
+            },
+            person2: {
+                name: "Elon Musk",
+                role: "Entrepreneur & Innovator",
+                image: "https://via.placeholder.com/110/E24A4A/fff?text=EM",
+                about: "Elon Musk is the CEO of Tesla, SpaceX, and several other innovative companies, pushing the boundaries of technology and human achievement.",
+                why: "Elon's audacious goals and relentless pursuit of innovation remind me to think big and never settle for the status quo."
+            },
+            person3: {
+                name: "Guido van Rossum",
+                role: "Creator of Python",
+                image: "https://via.placeholder.com/110/4AE290/fff?text=GvR",
+                about: "Guido van Rossum created the Python programming language in 1991, which has become one of the most popular and versatile programming languages in the world.",
+                why: "Guido created the language that powers my career. His philosophy of code readability and simplicity shapes how I write software every day."
+            }
         };
-        
-        const container = document.getElementById('treeContainer');
-        const overlay = document.getElementById('overlay');
-        const personCard = document.getElementById('personCard');
-        
-        function createTree() {
-            container.innerHTML = '';
-            
-            const rect = container.getBoundingClientRect();
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            
-            const radius = Math.min(rect.width, rect.height) * 0.35;
-            const angleStep = (Math.PI * 2) / data.people.length;
-            
-            // Draw lines
-            data.people.forEach((person, i) => {
-                const angle = angleStep * i - Math.PI / 2;
-                const x = centerX + Math.cos(angle) * radius;
-                const y = centerY + Math.sin(angle) * radius;
+
+        // Click handler
+        document.querySelectorAll('.person-node').forEach(node => {
+            node.addEventListener('click', function() {
+                const personId = this.getAttribute('data-person');
+                const person = peopleData[personId];
                 
-                const line = document.createElement('div');
-                line.className = 'tree-line';
-                const length = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2));
-                const lineAngle = Math.atan2(y - centerY, x - centerX);
-                
-                line.style.width = length + 'px';
-                line.style.left = centerX + 'px';
-                line.style.top = centerY + 'px';
-                line.style.transform = `rotate(${lineAngle}rad)`;
-                
-                container.appendChild(line);
+                if (person) {
+                    document.getElementById('modalImage').src = person.image;
+                    document.getElementById('modalName').textContent = person.name;
+                    document.getElementById('modalRole').textContent = person.role;
+                    document.getElementById('modalAbout').textContent = person.about;
+                    document.getElementById('modalWhy').textContent = person.why;
+                    document.getElementById('personModal').classList.add('active');
+                }
             });
-            
-            // Center node
-            const centerNode = document.createElement('div');
-            centerNode.className = 'tree-node center';
-            centerNode.innerHTML = `
-                <img src="${data.me.image_url}" alt="${data.me.name}">
-                <div class="tree-node-name">${data.me.name}</div>
-            `;
-            container.appendChild(centerNode);
-            
-            // Person nodes
-            data.people.forEach((person, i) => {
-                const angle = angleStep * i - Math.PI / 2;
-                const x = centerX + Math.cos(angle) * radius;
-                const y = centerY + Math.sin(angle) * radius;
-                
-                const node = document.createElement('div');
-                node.className = 'tree-node';
-                node.style.left = (x - 60) + 'px';
-                node.style.top = (y - 60) + 'px';
-                node.innerHTML = `
-                    <img src="${person.image_url}" alt="${person.name}">
-                    <div class="tree-node-name">${person.name}</div>
-                `;
-                
-                node.onclick = () => showCard(person);
-                container.appendChild(node);
-            });
+        });
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('personModal').classList.remove('active');
         }
-        
-        function showCard(person) {
-            document.getElementById('cardImg').src = person.image_url;
-            document.getElementById('cardName').textContent = person.name;
-            document.getElementById('cardAbout').textContent = person.about;
-            document.getElementById('cardWhy').textContent = person.why;
-            
-            overlay.classList.add('active');
-            personCard.classList.add('active');
-        }
-        
-        function closeCard() {
-            overlay.classList.remove('active');
-            personCard.classList.remove('active');
-        }
-        
-        overlay.onclick = closeCard;
-        
-        createTree();
-        
-        let resizeTimer;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(createTree, 250);
+
+        // Close on overlay click
+        document.getElementById('personModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Close on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Support button (reuse from index.html)
+        document.querySelector('.nav-support')?.addEventListener('click', function() {
+            // Add support modal logic here if needed
+            alert('Support modal - to be implemented');
         });
     </script>
 </body>
