@@ -124,11 +124,33 @@
         }
         
         .tree-art {
-            width: 100%;
-            height: 100%;
+            width: 992px;
+            height: 680px;
             display: block;
             position: absolute;
-            inset: 0;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%) scale(1);
+            transform-origin: top center;
+        }
+        
+        /* Scale tree on mobile - responsive behavior */
+        @media (max-width: 992px) {
+            .tree-art {
+                transform: translateX(-50%) scale(calc(100vw / 992));
+            }
+            
+            .tree-stage {
+                height: calc((100vw / 992) * 680px);
+                max-height: 680px;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .tree-stage {
+                height: auto;
+                min-height: 500px;
+            }
         }
         
         .tree-line{
