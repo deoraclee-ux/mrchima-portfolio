@@ -20,4 +20,46 @@ fetch('shared/footer.html')
     }
   });
 </script>
-</body></html>
+<script>
+// Mobile menu toggle
+const menuBtn = document.querySelector('.menu-btn');
+const navbar = document.querySelector('.navbar');
+
+if (menuBtn && navbar) {
+  menuBtn.addEventListener('click', function() {
+    navbar.classList.toggle('open');
+    const isExpanded = this.getAttribute('aria-expanded') === 'true';
+    this.setAttribute('aria-expanded', !isExpanded);
+  });
+}
+
+// Support button handler
+const supportBtn = document.querySelector('.nav-support');
+if (supportBtn) {
+  supportBtn.addEventListener('click', () => {
+    window.location.href = 'support.html';
+  });
+}
+</script></body></html>
+
+<script>
+// Mobile menu toggle
+const menuBtn = document.querySelector('.menu-btn');
+const navbar = document.querySelector('.navbar');
+
+if (menuBtn && navbar) {
+  menuBtn.addEventListener('click', function() {
+    navbar.classList.toggle('open');
+    const isExpanded = this.getAttribute('aria-expanded') === 'true';
+    this.setAttribute('aria-expanded', !isExpanded);
+  });
+}
+
+// Support button handler
+const supportBtn = document.querySelector('.nav-support');
+if (supportBtn) {
+  supportBtn.addEventListener('click', () => {
+    window.location.href = 'support.html';
+  });
+}
+</script>
