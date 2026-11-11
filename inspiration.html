@@ -379,70 +379,46 @@
             font-style:italic;
         }
         
-        /* Responsive Design */
-        @media (max-width: 1000px) {
-            .tree-stage {
-                --face: 76px;
-                --cell: 107px;
-                --root: 103px;
-            }
-            
+        /* Responsive Design - FROM REA */
+        @media (max-width: 640px) {
             .tree-page {
-                padding: 60px 0 50px;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .tree-stage {
-                --face: 68px;
-                --cell: 95px;
-                --root: 92px;
-            }
-            
-            .tree-page {
-                padding: 50px 0 40px;
+                padding: 24px 0 32px;
             }
             
             .tree-page h1 {
-                font-size: 28px;
-                margin-bottom: 24px;
+                margin-bottom: 12px;
+                font-size: 26px;
             }
-        }
-        
-        @media (max-width: 640px) {
+            
             .tree-stage {
                 --face: 60px;
-                --cell: 84px;
+                --cell: 82px;
                 --root: 81px;
+                height: clamp(420px, 100svh - 170px, 130vw);
             }
             
-            .tree-page {
-                padding: 40px 0 35px;
+            .tree-name {
+                font-size: 12px;
+            }
+            
+            .tree-root .tree-name {
+                font-size: 13px;
             }
         }
         
-        @media (max-width: 480px) {
+        @media (min-width: 641px) and (max-width: 930px) {
             .tree-stage {
-                --face: 52px;
-                --cell: 73px;
-                --root: 70px;
-            }
-            
-            .tree-page {
-                padding: 35px 0 30px;
-            }
-            
-            .tree-page h1 {
-                font-size: 24px;
-                margin-bottom: 20px;
+                --face: 76px;
+                --cell: 100px;
+                --root: 103px;
             }
         }
         
-        @media (max-width: 375px) {
-            .tree-stage {
-                --face: 46px;
-                --cell: 64px;
-                --root: 62px;
+        @media (prefers-reduced-motion: reduce) {
+            .tree-person {
+                transition: none;
+            }
+        }
             }
             
             .tree-page {
