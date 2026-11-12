@@ -21,6 +21,35 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* Checkmark styling for better compatibility */
+.hf-chip .check {
+  display: inline-block;
+  font-weight: bold;
+  color: inherit;
+}
+
+.hf-chip.selected .check {
+  color: var(--green-ink);
+}
+
+/* Alternative: Use CSS checkmark if Unicode fails */
+.hf-chip.selected::before {
+  content: '';
+  display: none; /* Hidden by default, used as fallback */
+}
+
+@supports not (content: '✓') {
+  .hf-chip.selected .check {
+    display: none;
+  }
+  .hf-chip.selected::before {
+    content: '✓ ';
+    display: inline;
+    color: var(--green-ink);
+    font-weight: bold;
+  }
+}
+
 /* Loading state */
 .hf-submit.loading {
   pointer-events: none;
@@ -85,7 +114,7 @@
 
 <!-- Success Message -->
 <div class="hf-success" id="success-message">
-✓ Request sent successfully! I'll get back to you within 24 hours.
+&#x2713; Request sent successfully! I'll get back to you within 24 hours.
 </div>
 
 <!-- Error Message -->
@@ -162,7 +191,7 @@
 <div class="hf-field">
 <label class="hf-label">How should I contact you?</label>
 <div class="hf-chips">
-<button type="button" class="hf-chip selected" data-method="whatsapp" onclick="toggleContactMethod(event)">✓ WhatsApp</button>
+<button type="button" class="hf-chip selected" data-method="whatsapp" onclick="toggleContactMethod(event)"><span class="check">&#x2713;</span> WhatsApp</button>
 <button type="button" class="hf-chip" data-method="email" onclick="toggleContactMethod(event)">Email</button>
 <button type="button" class="hf-chip" data-method="phone" onclick="toggleContactMethod(event)">Phone call</button>
 </div>
@@ -289,13 +318,15 @@ function toggleContactMethod(event) {
     const selectedMethods = document.querySelectorAll('.hf-chip.selected');
     if (selectedMethods.length > 1) {
       button.classList.remove('selected');
-      button.textContent = button.dataset.method === 'whatsapp' ? 'WhatsApp' : 
+      const methodName = button.dataset.method === 'whatsapp' ? 'WhatsApp' : 
                           button.dataset.method === 'email' ? 'Email' : 'Phone call';
+      button.innerHTML = methodName;
     }
   } else {
     button.classList.add('selected');
-    button.textContent = '✓ ' + (button.dataset.method === 'whatsapp' ? 'WhatsApp' : 
-                                 button.dataset.method === 'email' ? 'Email' : 'Phone call');
+    const methodName = button.dataset.method === 'whatsapp' ? 'WhatsApp' : 
+                                 button.dataset.method === 'email' ? 'Email' : 'Phone call';
+    button.innerHTML = '<span class="check">&#x2713;</span> ' + methodName;
   }
 }
 
@@ -395,13 +426,16 @@ async function submitHireForm(event) {
       document.querySelectorAll('.hf-option').forEach(el => el.classList.remove('selected'));
       document.querySelectorAll('.hf-chip').forEach(el => {
         el.classList.remove('selected');
-        el.textContent = el.textContent.replace('✓ ', '');
+        // Remove checkmark by getting just the text
+        const methodName = el.dataset.method === 'whatsapp' ? 'WhatsApp' : 
+                           el.dataset.method === 'email' ? 'Email' : 'Phone call';
+        el.innerHTML = methodName;
       });
       
       // Re-select WhatsApp as default
       const whatsappBtn = document.querySelector('[data-method="whatsapp"]');
       whatsappBtn.classList.add('selected');
-      whatsappBtn.textContent = '✓ WhatsApp';
+      whatsappBtn.innerHTML = '<span class="check">&#x2713;</span> WhatsApp';
       
       updateCharCount();
       
