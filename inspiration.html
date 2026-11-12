@@ -57,11 +57,11 @@
       }, true);
     }
 
-    // Support button handler
+    // Support button handler - redirect to home page since support modal doesn't exist here
     const supportBtn = document.querySelector('.nav-support');
     if (supportBtn) {
       supportBtn.addEventListener('click', function() {
-        window.location.href = '/support.html';
+        window.location.href = '/';
       });
     }
   }
