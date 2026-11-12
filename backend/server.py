@@ -1502,6 +1502,157 @@ async def download_file(token: str, request: Request, user_agent: Optional[str] 
     )
 
 
+@app.post('/api/hire')
+async def hire_request(request: Request):
+    """
+    Handle hire/contact form submissions with SECURE email delivery
+    
+    Security:
+    - Rate limiting per IP
+    - Input validation and sanitization
+    - XSS/injection prevention
+    - SMTP secure delivery
+    """
+    
+    client_ip = get_client_ip(request)
+    
+    # Rate limiting - max 3 submissions per hour per IP
+    if not check_rate_limit(client_ip, max_requests=3):
+        raise HTTPException(
+            status_code=429,
+            detail='Too many requests. Please try again later.'
+        )
+    
+    try:
+        # Parse and validate request
+        data = await request.json()
+        
+        # Required fields
+        name = data.get('name', '').strip()
+        email = data.get('email', '').strip().lower()
+        message = data.get('message', '').strip()
+        
+        # Optional fields
+        company = data.get('company', '').strip()
+        preferred_contact = data.get('preferredContact', [])
+        
+        # Validation
+        if not name or len(name) < 2:
+            raise HTTPException(status_code=400, detail='Name is required (min 2 characters)')
+        
+        if not email or '@' not in email:
+            raise HTTPException(status_code=400, detail='Valid email is required')
+        
+        if not message or len(message) < 10:
+            raise HTTPException(status_code=400, detail='Message is required (min 10 characters)')
+        
+        # Sanitize inputs (remove potential XSS/injection)
+        import re
+        name = re.sub(r'[<>{}]', '', name)[:100]
+        email = re.sub(r'[<>{}]', '', email)[:100]
+        company = re.sub(r'[<>{}]', '', company)[:100]
+        message = re.sub(r'[<>{}]', '', message)[:5000]
+        
+        # Contact methods
+        contact_methods = ', '.join(preferred_contact) if preferred_contact else 'Email'
+        
+        # Compose email
+        email_subject = f'🔔 New Hire Request from {name}'
+        
+        email_body = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+                .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
+                .header {{ background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px 8px 0 0; }}
+                .content {{ background: #f9f9f9; padding: 20px; border: 1px solid #ddd; border-top: none; border-radius: 0 0 8px 8px; }}
+                .field {{ margin-bottom: 15px; }}
+                .label {{ font-weight: bold; color: #667eea; }}
+                .value {{ margin-top: 5px; padding: 10px; background: white; border-left: 3px solid #667eea; }}
+                .footer {{ margin-top: 20px; padding-top: 20px; border-top: 2px solid #ddd; font-size: 12px; color: #666; }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h2>🔔 New Hire Request</h2>
+                    <p>Someone wants to work with you!</p>
+                </div>
+                <div class="content">
+                    <div class="field">
+                        <div class="label">👤 Name:</div>
+                        <div class="value">{name}</div>
+                    </div>
+                    
+                    <div class="field">
+                        <div class="label">📧 Email:</div>
+                        <div class="value">{email}</div>
+                    </div>
+                    
+                    {f'<div class="field"><div class="label">🏢 Company:</div><div class="value">{company}</div></div>' if company else ''}
+                    
+                    <div class="field">
+                        <div class="label">📞 Preferred Contact:</div>
+                        <div class="value">{contact_methods}</div>
+                    </div>
+                    
+                    <div class="field">
+                        <div class="label">💬 Message:</div>
+                        <div class="value">{message}</div>
+                    </div>
+                    
+                    <div class="footer">
+                        <p>📍 Sent from IP: {client_ip}</p>
+                        <p>🕐 Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S UTC')}</p>
+                    </div>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        
+        # Send email via SMTP
+        try:
+            msg = MIMEMultipart('alternative')
+            msg['From'] = FROM_EMAIL
+            msg['To'] = 'abonejoseph@gmail.com'  # Your admin email
+            msg['Subject'] = email_subject
+            msg['Reply-To'] = email  # Allow easy reply to customer
+            
+            # Attach HTML body
+            msg.attach(MIMEText(email_body, 'html'))
+            
+            # Connect and send
+            with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as server:
+                server.starttls()
+                server.login(SMTP_USER, SMTP_PASSWORD)
+                server.send_message(msg)
+            
+            print(f"✓ Hire request email sent to abonejoseph@gmail.com")
+            print(f"  From: {name} <{email}>")
+            print(f"  Contact: {contact_methods}")
+            
+            return {
+                'success': True,
+                'message': 'Your message has been sent successfully! I\'ll get back to you soon.'
+            }
+            
+        except Exception as smtp_error:
+            print(f"❌ SMTP Error: {smtp_error}")
+            raise HTTPException(
+                status_code=500,
+                detail='Failed to send email. Please try again or contact directly.'
+            )
+    
+    except HTTPException as he:
+        raise he
+    except Exception as e:
+        print(f"❌ Error in hire_request: {e}")
+        raise HTTPException(status_code=500, detail='Server error. Please try again.')
+
+
 @app.post('/paystack-webhook')
 async def paystack_webhook(request: Request):
     """Handle Paystack webhook events - SECURE VERSION"""

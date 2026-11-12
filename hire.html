@@ -8,7 +8,65 @@
 <link rel="icon" href="/favicon.ico">
 <link rel="preload" as="image" href="/brand/logo-blue-new.png">
 <link rel="stylesheet" href="/shared/hire.css">
+<link rel="stylesheet" href="/shared/transitions.css">
 <script src="https://js.paystack.co/v1/inline.js"></script>
+<style>
+/* Smooth page transitions */
+.page-shell {
+  animation: fadeIn 0.4s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Loading state */
+.hf-submit.loading {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* Success message */
+.hf-success {
+  background: var(--green-soft);
+  color: var(--green-ink);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 500;
+  display: none;
+}
+
+.hf-success.show {
+  display: block;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Error message */
+.hf-error-message {
+  background: var(--red-soft);
+  color: var(--red-ink);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 14px;
+  display: none;
+}
+
+.hf-error-message.show {
+  display: block;
+  animation: slideDown 0.3s ease-out;
+}
+</style>
 </head>
 <body>
 <div class="page-shell" id="hire-app">
@@ -24,6 +82,14 @@
 <h1>Let's build something great</h1>
 </div>
 <p class="hf-lead">Tell me about your project, and I'll get back to you within 24 hours.</p>
+
+<!-- Success Message -->
+<div class="hf-success" id="success-message">
+✓ Request sent successfully! I'll get back to you within 24 hours.
+</div>
+
+<!-- Error Message -->
+<div class="hf-error-message" id="error-message"></div>
 
 <form id="hire-form" class="hf-columns" onsubmit="submitHireForm(event)">
 <!-- Left Column -->
@@ -96,7 +162,7 @@
 <div class="hf-field">
 <label class="hf-label">How should I contact you?</label>
 <div class="hf-chips">
-<button type="button" class="hf-chip selected" data-method="whatsapp" onclick="toggleContactMethod(event)">WhatsApp</button>
+<button type="button" class="hf-chip selected" data-method="whatsapp" onclick="toggleContactMethod(event)">✓ WhatsApp</button>
 <button type="button" class="hf-chip" data-method="email" onclick="toggleContactMethod(event)">Email</button>
 <button type="button" class="hf-chip" data-method="phone" onclick="toggleContactMethod(event)">Phone call</button>
 </div>
@@ -157,9 +223,13 @@
 </div>
 
 <script>
+// Backend URL - uses environment-based detection for security
 const BACKEND_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.hostname === "" 
   ? "http://localhost:8000" 
   : "https://mrchima-backend.onrender.com";
+
+// Email endpoint
+const EMAIL_ENDPOINT = `${BACKEND_URL}/api/hire`;
 
 // Load shared navbar and footer
 async function loadSharedComponents() {
@@ -209,10 +279,24 @@ function selectProjectType(event) {
   selectedProjectType = button.dataset.type;
 }
 
-// Contact method selection
+// Contact method selection with visual feedback
 function toggleContactMethod(event) {
   const button = event.currentTarget;
-  button.classList.toggle('selected');
+  const wasSelected = button.classList.contains('selected');
+  
+  if (wasSelected) {
+    // Allow deselection only if other methods are selected
+    const selectedMethods = document.querySelectorAll('.hf-chip.selected');
+    if (selectedMethods.length > 1) {
+      button.classList.remove('selected');
+      button.textContent = button.dataset.method === 'whatsapp' ? 'WhatsApp' : 
+                          button.dataset.method === 'email' ? 'Email' : 'Phone call';
+    }
+  } else {
+    button.classList.add('selected');
+    button.textContent = '✓ ' + (button.dataset.method === 'whatsapp' ? 'WhatsApp' : 
+                                 button.dataset.method === 'email' ? 'Email' : 'Phone call');
+  }
 }
 
 // Character counter
@@ -222,16 +306,42 @@ function updateCharCount() {
   counter.textContent = `${textarea.value.length} / 1500`;
 }
 
-// Form submission
+// Form submission with proper validation and error handling
 async function submitHireForm(event) {
   event.preventDefault();
   
   const submitBtn = document.getElementById('submit-btn');
   const spinner = submitBtn.querySelector('.hf-spinner');
   const btnText = submitBtn.querySelector('span:first-child');
+  const successMessage = document.getElementById('success-message');
+  const errorMessage = document.getElementById('error-message');
   
+  // Hide previous messages
+  successMessage.classList.remove('show');
+  errorMessage.classList.remove('show');
+  
+  // Validation
   if (!selectedProjectType) {
-    alert('Please select a project type');
+    showError('Please select a project type');
+    return;
+  }
+  
+  const description = document.getElementById('project-description').value.trim();
+  if (!description) {
+    showError('Please describe your project');
+    return;
+  }
+  
+  const name = document.getElementById('contact-name').value.trim();
+  const email = document.getElementById('contact-email').value.trim();
+  
+  if (!name) {
+    showError('Please enter your name');
+    return;
+  }
+  
+  if (!email || !isValidEmail(email)) {
+    showError('Please enter a valid email address');
     return;
   }
   
@@ -239,30 +349,36 @@ async function submitHireForm(event) {
     .map(chip => chip.dataset.method);
   
   if (selectedMethods.length === 0) {
-    alert('Please select at least one contact method');
+    showError('Please select at least one contact method');
     return;
   }
   
+  const phone = document.getElementById('contact-phone').value.trim();
+  
+  // Prepare sanitized data (no sensitive data in frontend)
   const formData = {
-    projectType: selectedProjectType,
-    description: document.getElementById('project-description').value,
-    name: document.getElementById('contact-name').value,
-    email: document.getElementById('contact-email').value,
-    phone: document.getElementById('contact-phone').value,
+    projectType: sanitizeInput(selectedProjectType),
+    description: sanitizeInput(description),
+    name: sanitizeInput(name),
+    email: sanitizeInput(email),
+    phone: sanitizeInput(phone),
     sameWhatsapp: document.getElementById('same-whatsapp').checked,
-    contactMethods: selectedMethods
+    contactMethods: selectedMethods,
+    timestamp: new Date().toISOString()
   };
   
   // Show loading state
   submitBtn.disabled = true;
-  btnText.style.display = 'none';
+  submitBtn.classList.add('loading');
+  btnText.textContent = 'Sending...';
   spinner.style.display = 'inline-block';
   
   try {
-    const response = await fetch(`${BACKEND_URL}/api/contact`, {
+    const response = await fetch(EMAIL_ENDPOINT, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Accept': 'application/json'
       },
       body: JSON.stringify(formData)
     });
@@ -271,23 +387,64 @@ async function submitHireForm(event) {
     
     if (response.ok) {
       // Show success message
-      alert('Request sent successfully! I\'ll get back to you within 24 hours.');
+      successMessage.classList.add('show');
+      
+      // Reset form
       document.getElementById('hire-form').reset();
       selectedProjectType = null;
-      document.querySelectorAll('.hf-option, .hf-chip').forEach(el => el.classList.remove('selected'));
-      document.querySelector('[data-method="whatsapp"]').classList.add('selected');
+      document.querySelectorAll('.hf-option').forEach(el => el.classList.remove('selected'));
+      document.querySelectorAll('.hf-chip').forEach(el => {
+        el.classList.remove('selected');
+        el.textContent = el.textContent.replace('✓ ', '');
+      });
+      
+      // Re-select WhatsApp as default
+      const whatsappBtn = document.querySelector('[data-method="whatsapp"]');
+      whatsappBtn.classList.add('selected');
+      whatsappBtn.textContent = '✓ WhatsApp';
+      
       updateCharCount();
+      
+      // Scroll to success message
+      successMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      
     } else {
-      throw new Error(result.detail || 'Failed to send request');
+      throw new Error(result.message || result.detail || 'Failed to send request');
     }
   } catch (error) {
-    console.error('Error:', error);
-    alert('Failed to send request. Please try again or email me directly.');
+    console.error('Submission error:', error);
+    showError('Failed to send request. Please try again or email me directly at hello@mrchima.dev');
   } finally {
     submitBtn.disabled = false;
-    btnText.style.display = 'inline';
+    submitBtn.classList.remove('loading');
+    btnText.textContent = 'Send request';
     spinner.style.display = 'none';
   }
+}
+
+// Input sanitization helper
+function sanitizeInput(input) {
+  if (typeof input !== 'string') return input;
+  return input.replace(/[<>]/g, '').trim();
+}
+
+// Email validation
+function isValidEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+// Show error message
+function showError(message) {
+  const errorMessage = document.getElementById('error-message');
+  errorMessage.textContent = message;
+  errorMessage.classList.add('show');
+  errorMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  
+  // Auto-hide after 5 seconds
+  setTimeout(() => {
+    errorMessage.classList.remove('show');
+  }, 5000);
 }
 
 // Support Modal Functions

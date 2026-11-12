@@ -1,0 +1,88 @@
+/* Smooth Page Transitions and Loading States */
+
+/* Page load animation */
+body {
+  animation: pageLoad 0.4s ease-out;
+}
+
+@keyframes pageLoad {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Prevent FOUC (Flash of Unstyled Content) */
+.loading-content {
+  opacity: 0;
+  transition: opacity 0.3s ease-in;
+}
+
+.loading-content.loaded {
+  opacity: 1;
+}
+
+/* Skeleton loader */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(230, 230, 230, 0.6) 25%,
+    rgba(245, 245, 245, 0.9) 50%,
+    rgba(230, 230, 230, 0.6) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Skeleton elements */
+.skeleton-text {
+  height: 16px;
+  margin: 8px 0;
+}
+
+.skeleton-heading {
+  height: 32px;
+  width: 60%;
+  margin: 16px 0;
+}
+
+.skeleton-avatar {
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+}
+
+/* Link transitions */
+a {
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+a:hover {
+  transform: translateX(2px);
+}
+
+/* Button transitions */
+button,
+.btn-dark,
+.btn-grey {
+  transition: all 0.2s ease;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
