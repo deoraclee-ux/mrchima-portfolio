@@ -142,6 +142,7 @@ footer .footer-brand img.corrected {
         const text = link.textContent.trim();
         if (text === 'E-book' || text === 'E-books' || text === 'Ebook' || text === 'EBOOK' || text === 'E-BOOK') {
           link.textContent = 'Shop';
+          link.href = 'shop.html';
           link.setAttribute('data-text-fixed', 'true');
           changesNeeded = true;
         }
