@@ -20,25 +20,36 @@
 <next-route-announcer style="position: absolute;"></next-route-announcer>
 
 <script>
-// Mobile menu toggle
-const menuBtn = document.querySelector('.menu-btn');
-const navbar = document.querySelector('.navbar');
+// Mobile menu toggle - wait for DOM to be ready
+(function() {
+  function initMobileMenu() {
+    const menuBtn = document.querySelector('.menu-btn');
+    const navbar = document.querySelector('.navbar');
 
-if (menuBtn && navbar) {
-  menuBtn.addEventListener('click', function() {
-    navbar.classList.toggle('open');
-    const isExpanded = this.getAttribute('aria-expanded') === 'true';
-    this.setAttribute('aria-expanded', !isExpanded);
-  });
-}
+    if (menuBtn && navbar) {
+      menuBtn.addEventListener('click', function() {
+        navbar.classList.toggle('open');
+        const isExpanded = this.getAttribute('aria-expanded') === 'true';
+        this.setAttribute('aria-expanded', !isExpanded);
+      });
+    }
 
-// Support button handler
-const supportBtn = document.querySelector('.nav-support');
-if (supportBtn) {
-  supportBtn.addEventListener('click', () => {
-    window.location.href = 'support.html';
-  });
-}
+    // Support button handler
+    const supportBtn = document.querySelector('.nav-support');
+    if (supportBtn) {
+      supportBtn.addEventListener('click', function() {
+        window.location.href = 'support.html';
+      });
+    }
+  }
+
+  // Run when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMobileMenu);
+  } else {
+    initMobileMenu();
+  }
+})();
 </script>
 <style>
 /* Prevent flash by hiding elements until corrected */
@@ -119,8 +130,19 @@ footer .footer-brand img.corrected {
   window.addEventListener('load', enforceCorrectElements);
   
   // Watch for React/Next.js hydration changes with MutationObserver
-  const observer = new MutationObserver(function() {
-    enforceCorrectElements();
+  // Only react to actual content changes, not class toggles (for mobile menu)
+  const observer = new MutationObserver(function(mutations) {
+    let shouldEnforce = false;
+    mutations.forEach(function(mutation) {
+      // Only enforce if src attributes or text content changed, not class changes
+      if (mutation.type === 'childList' || 
+          (mutation.type === 'attributes' && mutation.attributeName === 'src')) {
+        shouldEnforce = true;
+      }
+    });
+    if (shouldEnforce) {
+      enforceCorrectElements();
+    }
   });
   
   // Start observing immediately
@@ -128,10 +150,20 @@ footer .footer-brand img.corrected {
     const header = document.querySelector('header');
     const footer = document.querySelector('footer');
     if (header) {
-      observer.observe(header, { attributes: true, childList: true, subtree: true });
+      observer.observe(header, { 
+        attributes: true, 
+        attributeFilter: ['src'], // Only watch src changes, not class changes
+        childList: true, 
+        subtree: true 
+      });
     }
     if (footer) {
-      observer.observe(footer, { attributes: true, childList: true, subtree: true });
+      observer.observe(footer, { 
+        attributes: true, 
+        attributeFilter: ['src'], // Only watch src changes
+        childList: true, 
+        subtree: true 
+      });
     }
     enforceCorrectElements();
   }, 0);
