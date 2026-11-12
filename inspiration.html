@@ -39,4 +39,39 @@ if (supportBtn) {
     window.location.href = 'support.html';
   });
 }
-</script></body></html>
+</script>
+<script>
+// Force correct navbar logo and prevent JavaScript overrides
+(function() {
+  const CORRECT_LOGO = '/brand/logo-blue-new.png';
+  
+  function enforceCorrectLogo() {
+    const logoImg = document.querySelector('.logo img, .navbar .logo img, header img[alt="Mr Chima"]');
+    if (logoImg && logoImg.src && !logoImg.src.includes('logo-blue-new.png')) {
+      logoImg.src = CORRECT_LOGO;
+      logoImg.setAttribute('src', CORRECT_LOGO);
+      logoImg.style.cssText = 'width: 120px !important; max-width: 120px !important; height: auto !important;';
+    }
+  }
+  
+  // Enforce immediately, on load, and watch for changes
+  enforceCorrectLogo();
+  window.addEventListener('load', enforceCorrectLogo);
+  
+  // Watch for React/Next.js hydration changes
+  const observer = new MutationObserver(enforceCorrectLogo);
+  setTimeout(function() {
+    const header = document.querySelector('header');
+    if (header) {
+      observer.observe(header, { attributes: true, childList: true, subtree: true });
+    }
+    enforceCorrectLogo();
+  }, 100);
+  
+  // Additional checks for late hydration
+  setTimeout(enforceCorrectLogo, 500);
+  setTimeout(enforceCorrectLogo, 1000);
+  setTimeout(enforceCorrectLogo, 2000);
+})();
+</script>
+</body></html>
