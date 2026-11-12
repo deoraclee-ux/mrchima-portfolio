@@ -287,14 +287,14 @@
       <div class="field">
         <label>Amount</label>
         <div class="sup-amount">
-          <span>&#8358;</span>
+          <span>₦</span>
           <input type="number" id="support-amount" value="5000" min="100" />
         </div>
       </div>
       <div class="sup-quick">
-        <button type="button" data-amount="5000">&#8358;5,000</button>
-        <button type="button" data-amount="10000">&#8358;10,000</button>
-        <button type="button" data-amount="20000">&#8358;20,000</button>
+        <button type="button" data-amount="5000">₦5,000</button>
+        <button type="button" data-amount="10000">₦10,000</button>
+        <button type="button" data-amount="20000">₦20,000</button>
       </div>
       <div class="field">
         <input type="email" id="support-email" placeholder="Email" />
@@ -304,7 +304,7 @@
       </div>
     </div>
     <div class="co-foot">
-      <button class="co-pay-btn" id="support-pay-btn" onclick="confirmSupportPayment()">Support with &#8358;5,000</button>
+      <button class="co-pay-btn" id="support-pay-btn" onclick="confirmSupportPayment()">Support with ₦5,000</button>
     </div>
   </div>
 </div>
@@ -557,7 +557,7 @@ document.addEventListener('click', (e) => {
     
     // Update pay button text
     const payBtn = document.getElementById('support-pay-btn');
-    payBtn.textContent = `Support with &#8358;${parseInt(amount).toLocaleString()}`;
+    payBtn.textContent = `Support with ₦${parseInt(amount).toLocaleString()}`;
     
     // Toggle button state
     document.querySelectorAll('.sup-quick button').forEach(btn => {
@@ -570,7 +570,7 @@ document.addEventListener('click', (e) => {
 document.getElementById('support-amount')?.addEventListener('input', (e) => {
   const amount = parseInt(e.target.value) || 5000;
   const payBtn = document.getElementById('support-pay-btn');
-  payBtn.textContent = `Support with &#8358;${amount.toLocaleString()}`;
+  payBtn.textContent = `Support with ₦${amount.toLocaleString()}`;
 });
 
 function confirmSupportPayment() {
