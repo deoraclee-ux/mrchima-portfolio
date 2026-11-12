@@ -1,0 +1,176 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hire Me | Abone Chima (Mr Chima)</title>
+<meta name="description" content="Looking to hire a Python developer? Let's work together on your next project.">
+<link rel="icon" href="/favicon.ico">
+<link rel="stylesheet" href="/shared/hire.css">
+</head>
+<body>
+<div class="page-shell">
+<!-- Navbar (same as other pages) -->
+<header class="site-head">
+<div class="container">
+<nav class="navbar">
+<a href="/" class="logo">
+<img src="/brand/logo-blue-new.png" alt="Mr Chima" width="24" height="24">
+Abone Chima
+</a>
+<div class="nav-links">
+<a href="/source-code.html">Source code</a>
+<a href="/classes.html">Classes</a>
+<a href="/shop.html">Shop</a>
+<a href="/projects.html">Projects</a>
+<a href="/inspiration.html">Inspiration</a>
+<a href="/#contact">Contact</a>
+<button type="button" class="nav-support">Support me</button>
+<a href="/hire.html" class="btn-dark nav-cta active">Hire me</a>
+</div>
+<button type="button" class="menu-btn">
+<span class="menu-icon">☰</span>
+</button>
+</nav>
+</div>
+</header>
+
+<main class="hire-page">
+<div class="container">
+<div class="hire-card">
+<span class="hf-eyebrow">Let's work together</span>
+<div class="hf-head">
+<h1>Hire me for your project</h1>
+</div>
+<p class="hf-lead">I build backend APIs, automation systems, and AI-powered tools with Python. Let's discuss your project.</p>
+
+<form id="hire-form" class="hire-form" novalidate>
+<div class="hf-columns">
+<div class="hf-col hf-field-grow">
+<div class="hf-field">
+<label class="hf-label" for="hf-message">Your message *</label>
+<div class="hf-textarea-wrap">
+<textarea id="hf-message" name="message" placeholder="Tell me about your project" required maxlength="5000" class="hf-input"></textarea>
+<span class="hf-count">0 / 5000</span>
+</div>
+</div>
+</div>
+
+<div class="hf-col hf-col-right">
+<div class="hf-field">
+<label class="hf-label" for="hf-email">Email *</label>
+<input type="email" id="hf-email" name="email" placeholder="you@company.com" required class="hf-input">
+</div>
+<div class="hf-field">
+<label class="hf-label" for="hf-name">Name *</label>
+<input type="text" id="hf-name" name="name" placeholder="Your name" required class="hf-input">
+</div>
+<div class="hf-field">
+<label class="hf-label" for="hf-company">Company <span class="hf-label-opt">(optional)</span></label>
+<input type="text" id="hf-company" name="company" placeholder="Company name" class="hf-input">
+</div>
+<div class="hf-field hf-field-last">
+<label class="hf-label" for="hf-budget">Budget <span class="hf-label-opt">(optional)</span></label>
+<input type="text" id="hf-budget" name="budget" placeholder="e.g., ₦500,000" class="hf-input">
+</div>
+
+<button type="submit" class="hf-submit">Send message</button>
+</div>
+</div>
+</form>
+</div>
+</div>
+</main>
+
+<footer class="site-footer">
+<div class="container">
+<div class="footer-inner">
+<a href="/" class="footer-brand">
+<img src="/brand/my-logo-for-footer.png.png" alt="Mr Chima" style="width: 200px; height: auto;">
+</a>
+<p>© 2026 Abone Chima — mrchima.dev</p>
+</div>
+</div>
+</footer>
+</div>
+
+<script>
+const BACKEND_URL = 'https://mrchima-backend.onrender.com';
+
+// Character counter
+const textarea = document.getElementById('hf-message');
+const counter = document.querySelector('.hf-count');
+if (textarea && counter) {
+  textarea.addEventListener('input', () => {
+    counter.textContent = ${textarea.value.length} / 5000;
+  });
+}
+
+// Form submission
+const form = document.getElementById('hire-form');
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const submitBtn = form.querySelector('.hf-submit');
+  const email = document.getElementById('hf-email').value.trim();
+  const name = document.getElementById('hf-name').value.trim();
+  const message = document.getElementById('hf-message').value.trim();
+  const company = document.getElementById('hf-company').value.trim();
+  const budget = document.getElementById('hf-budget').value.trim();
+  
+  if (!email || !name || !message) {
+    alert('Please fill in all required fields');
+    return;
+  }
+  
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Sending...';
+  
+  try {
+    const response = await fetch(${BACKEND_URL}/api/contact, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email, name, message,
+        subject: 'Hire Request' + (company ?  from  : ''),
+        budget
+      })
+    });
+    
+    const data = await response.json();
+    
+    if (response.ok) {
+      alert('Message sent! I\'ll get back to you soon.');
+      form.reset();
+      counter.textContent = '0 / 5000';
+    } else {
+      alert(data.message || 'Failed to send message. Please try again.');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    alert('Failed to send message. Please email me directly at abonejoseph@gmail.com');
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Send message';
+  }
+});
+
+// Mobile menu
+const menuBtn = document.querySelector('.menu-btn');
+const navbar = document.querySelector('.navbar');
+if (menuBtn) {
+  menuBtn.addEventListener('click', () => {
+    navbar.classList.toggle('open');
+  });
+}
+
+// Support button
+const supportBtn = document.querySelector('.nav-support');
+if (supportBtn) {
+  supportBtn.addEventListener('click', () => {
+    window.location.href = '/#support';
+  });
+}
+</script>
+</body>
+</html>

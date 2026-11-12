@@ -2,6 +2,7 @@
   "buildCommand": null,
   "framework": null,
   "rewrites": [
+    { "source": "/hire", "destination": "/hire.html" },
     { "source": "/source-code", "destination": "/source-code.html" },
     { "source": "/classes", "destination": "/classes.html" },
     { "source": "/shop", "destination": "/shop.html" },
