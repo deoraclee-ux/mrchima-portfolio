@@ -1470,8 +1470,8 @@ function openCheckout(productId) {
   document.getElementById('product-initial').textContent = product.initial;
   document.getElementById('product-name').textContent = product.name;
   document.getElementById('product-type').textContent = product.type;
-  document.getElementById('product-price').textContent = `?${product.price.toLocaleString()}`;
-  document.getElementById('pay-btn').textContent = `Pay ?${product.price.toLocaleString()}`;
+  document.getElementById('product-price').textContent = `₦${product.price.toLocaleString()}`;
+  document.getElementById('pay-btn').textContent = `Pay ₦${product.price.toLocaleString()}`;
   
   // Show modal
   document.getElementById('checkout-modal').style.display = 'flex';
@@ -1558,7 +1558,7 @@ function processPayment() {
       console.log('Payment cancelled');
       // Re-enable button
       payBtn.disabled = false;
-      payBtn.textContent = `Pay ?${product.price.toLocaleString()} only`;
+      payBtn.textContent = `Pay ₦${product.price.toLocaleString()} only`;
     }
   });
   
@@ -1569,7 +1569,7 @@ function processPayment() {
     alert('Could not start transaction. Please check your internet connection and try again.');
     // Re-enable button
     payBtn.disabled = false;
-    payBtn.textContent = `Pay ?${product.price.toLocaleString()} only`;
+    payBtn.textContent = `Pay ₦${product.price.toLocaleString()} only`;
   }
 }
 
