@@ -68,17 +68,29 @@ footer .footer-brand img.corrected {
 (function() {
   const CORRECT_NAVBAR_LOGO = '/brand/logo-blue-new.png';
   const CORRECT_FOOTER_LOGO = '/brand/my-logo-for-footer.png';
+  let isEnforcing = false;
+  let enforcementCount = 0;
+  const MAX_ENFORCEMENTS = 5; // Stop after 5 successful enforcements
   
   function enforceCorrectElements() {
+    // Prevent recursive calls and stop after elements are stable
+    if (isEnforcing) return;
+    isEnforcing = true;
+    
+    let changesNeeded = false;
+    
     // Fix navbar logo
     const navLogoImg = document.querySelector('.logo img, .navbar .logo img, header img[alt="Mr Chima"]');
     if (navLogoImg) {
       if (!navLogoImg.src.includes('logo-blue-new.png')) {
         navLogoImg.src = CORRECT_NAVBAR_LOGO;
         navLogoImg.setAttribute('src', CORRECT_NAVBAR_LOGO);
+        changesNeeded = true;
       }
-      navLogoImg.style.cssText = 'width: 120px !important; max-width: 120px !important; height: auto !important; opacity: 1 !important;';
-      navLogoImg.classList.add('corrected');
+      if (!navLogoImg.classList.contains('corrected')) {
+        navLogoImg.style.cssText = 'width: 120px !important; max-width: 120px !important; height: auto !important; opacity: 1 !important;';
+        navLogoImg.classList.add('corrected');
+      }
     }
     
     // Fix footer logo
@@ -87,72 +99,89 @@ footer .footer-brand img.corrected {
       if (!footerLogoImg.src.includes('my-logo-for-footer.png')) {
         footerLogoImg.src = CORRECT_FOOTER_LOGO;
         footerLogoImg.setAttribute('src', CORRECT_FOOTER_LOGO);
+        changesNeeded = true;
       }
-      footerLogoImg.style.opacity = '1';
-      footerLogoImg.classList.add('corrected');
+      if (!footerLogoImg.classList.contains('corrected')) {
+        footerLogoImg.style.opacity = '1';
+        footerLogoImg.classList.add('corrected');
+      }
     }
     
     // Change all "E-book" / "E-books" / "Ebook" to "Shop" in navbar and footer
     const allLinks = document.querySelectorAll('nav a, header a, footer a, .navbar a, .footer-links a');
     allLinks.forEach(function(link) {
-      if (link.textContent) {
+      if (link.textContent && !link.hasAttribute('data-text-fixed')) {
         const text = link.textContent.trim();
         if (text === 'E-book' || text === 'E-books' || text === 'Ebook' || text === 'EBOOK' || text === 'E-BOOK') {
           link.textContent = 'Shop';
+          link.setAttribute('data-text-fixed', 'true');
+          changesNeeded = true;
         }
       }
     });
     
     // Fix footer encoding - replace hyphens with em dash
     const footerBottom = document.querySelector('.footer-bottom p, footer p');
-    if (footerBottom && footerBottom.textContent) {
-      footerBottom.innerHTML = footerBottom.innerHTML.replace(/\s-\s/g, ' — ');
+    if (footerBottom && footerBottom.textContent && !footerBottom.hasAttribute('data-encoding-fixed')) {
+      if (footerBottom.innerHTML.includes(' - ')) {
+        footerBottom.innerHTML = footerBottom.innerHTML.replace(/\s-\s/g, ' — ');
+        footerBottom.setAttribute('data-encoding-fixed', 'true');
+        changesNeeded = true;
+      }
     }
     
     // Remove any "Mr Bayo" text
-    const allText = document.querySelectorAll('nav, header, .navbar');
-    allText.forEach(function(element) {
-      if (element.textContent && element.textContent.includes('Mr Bayo')) {
-        element.innerHTML = element.innerHTML.replace(/Mr\s+Bayo/gi, '');
+    const header = document.querySelector('header');
+    if (header && !header.hasAttribute('data-bayo-removed')) {
+      if (header.textContent && header.textContent.includes('Mr Bayo')) {
+        header.innerHTML = header.innerHTML.replace(/Mr\s+Bayo/gi, '');
+        header.setAttribute('data-bayo-removed', 'true');
+        changesNeeded = true;
       }
-    });
+    }
+    
+    if (changesNeeded) {
+      enforcementCount++;
+    }
+    
+    // Stop observing after elements are stable
+    if (enforcementCount >= MAX_ENFORCEMENTS && observer) {
+      observer.disconnect();
+    }
+    
+    isEnforcing = false;
   }
   
-  // Enforce immediately and continuously
+  // Enforce immediately
   enforceCorrectElements();
-  
-  // Enforce on DOM ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', enforceCorrectElements);
-  }
   
   // Enforce on full load
   window.addEventListener('load', enforceCorrectElements);
   
   // Watch for React/Next.js hydration changes with MutationObserver
   // Only react to actual content changes, not class toggles (for mobile menu)
-  const observer = new MutationObserver(function(mutations) {
+  let observer = new MutationObserver(function(mutations) {
     let shouldEnforce = false;
     mutations.forEach(function(mutation) {
-      // Only enforce if src attributes or text content changed, not class changes
+      // Only enforce if src attributes or DOM structure changed
       if (mutation.type === 'childList' || 
           (mutation.type === 'attributes' && mutation.attributeName === 'src')) {
         shouldEnforce = true;
       }
     });
-    if (shouldEnforce) {
+    if (shouldEnforce && enforcementCount < MAX_ENFORCEMENTS) {
       enforceCorrectElements();
     }
   });
   
-  // Start observing immediately
+  // Start observing after initial load
   setTimeout(function() {
     const header = document.querySelector('header');
     const footer = document.querySelector('footer');
     if (header) {
       observer.observe(header, { 
         attributes: true, 
-        attributeFilter: ['src'], // Only watch src changes, not class changes
+        attributeFilter: ['src'], // Only watch src changes
         childList: true, 
         subtree: true 
       });
@@ -166,13 +195,11 @@ footer .footer-brand img.corrected {
       });
     }
     enforceCorrectElements();
-  }, 0);
+  }, 100);
   
-  // Additional aggressive enforcement at multiple intervals
-  const intervals = [50, 100, 200, 300, 500, 800, 1000, 1500, 2000, 3000];
-  intervals.forEach(function(delay) {
-    setTimeout(enforceCorrectElements, delay);
-  });
+  // Targeted enforcement only during likely hydration window
+  setTimeout(enforceCorrectElements, 500);
+  setTimeout(enforceCorrectElements, 1500);
 })();
 </script>
 </body></html>
