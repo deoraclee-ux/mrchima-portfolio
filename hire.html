@@ -11,6 +11,13 @@
 <link rel="stylesheet" href="/shared/transitions.css">
 <script src="https://js.paystack.co/v1/inline.js"></script>
 <style>
+/* Define blue color for hire page (matching logo) */
+:root {
+  --blue-primary: #2563eb;
+  --blue-ink: #1e40af;
+  --blue-soft: #dbeafe;
+}
+
 /* iOS and Mobile Responsive Design */
 * {
   -webkit-font-smoothing: antialiased;
@@ -27,15 +34,31 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Checkmark styling for better compatibility */
-.hf-chip .check {
-  display: inline-block;
-  font-weight: bold;
-  color: inherit;
+/* Override green-ink with blue for hire page */
+.hf-eyebrow {
+  color: var(--blue-ink) !important;
+}
+
+/* Checkboxes should use blue accent */
+.hf-check input[type="checkbox"] {
+  accent-color: var(--blue-primary) !important;
+}
+
+/* Selected contact method chips - blue instead of green */
+.hf-chip.selected {
+  color: var(--blue-ink) !important;
+  background: var(--blue-soft) !important;
 }
 
 .hf-chip.selected .check {
-  color: var(--green-ink);
+  color: var(--blue-ink) !important;
+}
+
+/* Input focus - blue instead of green */
+.hf-input:focus,
+textarea.hf-input:focus {
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2) !important;
+  caret-color: var(--blue-primary) !important;
 }
 
 /* iOS-specific improvements */
