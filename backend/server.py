@@ -1531,10 +1531,11 @@ async def hire_request(request: Request):
         name = data.get('name', '').strip()
         email = data.get('email', '').strip().lower()
         message = data.get('message', '').strip()
+        project_type = data.get('projectType', '').strip()
         
         # Optional fields
         company = data.get('company', '').strip()
-        preferred_contact = data.get('preferredContact', [])
+        preferred_contact = data.get('contactMethods', [])
         
         # Validation
         if not name or len(name) < 2:
@@ -1542,6 +1543,9 @@ async def hire_request(request: Request):
         
         if not email or '@' not in email:
             raise HTTPException(status_code=400, detail='Valid email is required')
+        
+        if not project_type:
+            raise HTTPException(status_code=400, detail='Project type is required')
         
         if not message or len(message) < 10:
             raise HTTPException(status_code=400, detail='Message is required (min 10 characters)')
@@ -1552,6 +1556,16 @@ async def hire_request(request: Request):
         email = re.sub(r'[<>{}]', '', email)[:100]
         company = re.sub(r'[<>{}]', '', company)[:100]
         message = re.sub(r'[<>{}]', '', message)[:5000]
+        project_type = re.sub(r'[<>{}]', '', project_type)[:50]
+        
+        # Format project type for display
+        project_type_labels = {
+            'mobile': '📱 Mobile App (iOS, Android, or cross-platform)',
+            'web': '🌐 Web App (Frontend, backend, or full-stack)',
+            'ai': '🤖 AI System (AI agents, automation, or integrations)',
+            'other': '💡 Other (API, bot, or something else)'
+        }
+        project_type_display = project_type_labels.get(project_type, project_type)
         
         # Contact methods
         contact_methods = ', '.join(preferred_contact) if preferred_contact else 'Email'
@@ -1571,6 +1585,7 @@ async def hire_request(request: Request):
                 .field {{ margin-bottom: 15px; }}
                 .label {{ font-weight: bold; color: #667eea; }}
                 .value {{ margin-top: 5px; padding: 10px; background: white; border-left: 3px solid #667eea; }}
+                .project-type {{ background: #e7f3ff; border-left: 4px solid #667eea; padding: 15px; margin: 15px 0; border-radius: 6px; font-size: 16px; }}
                 .footer {{ margin-top: 20px; padding-top: 20px; border-top: 2px solid #ddd; font-size: 12px; color: #666; }}
             </style>
         </head>
@@ -1581,6 +1596,11 @@ async def hire_request(request: Request):
                     <p>Someone wants to work with you!</p>
                 </div>
                 <div class="content">
+                    <div class="project-type">
+                        <strong>Project Type:</strong><br>
+                        {project_type_display}
+                    </div>
+                    
                     <div class="field">
                         <div class="label">👤 Name:</div>
                         <div class="value">{name}</div>
@@ -1599,7 +1619,7 @@ async def hire_request(request: Request):
                     </div>
                     
                     <div class="field">
-                        <div class="label">💬 Message:</div>
+                        <div class="label">💬 Project Description:</div>
                         <div class="value">{message}</div>
                     </div>
                     
@@ -1632,6 +1652,7 @@ async def hire_request(request: Request):
             
             print(f"✓ Hire request email sent to abonejoseph@gmail.com")
             print(f"  From: {name} <{email}>")
+            print(f"  Project: {project_type_display}")
             print(f"  Contact: {contact_methods}")
             
             return {

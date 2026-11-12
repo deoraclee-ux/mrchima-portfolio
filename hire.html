@@ -209,9 +209,6 @@
 </div>
 </main>
 
-<!-- Shared Footer -->
-<div id="footer-container"></div>
-
 </div>
 
 <!-- Support Modal (moved from index.html) -->
@@ -260,19 +257,13 @@ const BACKEND_URL = window.location.hostname === "localhost" || window.location.
 // Email endpoint
 const EMAIL_ENDPOINT = `${BACKEND_URL}/api/hire`;
 
-// Load shared navbar and footer
+// Load shared navbar
 async function loadSharedComponents() {
   try {
-    const [navbarRes, footerRes] = await Promise.all([
-      fetch('/shared/navbar.html'),
-      fetch('/shared/footer.html')
-    ]);
-    
+    const navbarRes = await fetch('/shared/navbar.html');
     const navbar = await navbarRes.text();
-    const footer = await footerRes.text();
     
     document.getElementById('navbar-container').innerHTML = navbar;
-    document.getElementById('footer-container').innerHTML = footer;
     
     // Initialize navbar
     initNavbar();
