@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <title>Hire Me | Abone Chima (Mr Chima)</title>
 <meta name="description" content="Looking to hire a Python developer? Let's work together on your next project.">
 <link rel="icon" href="/favicon.ico">
@@ -10,15 +10,14 @@
 </head>
 <body>
 <div class="page-shell">
-<!-- Navbar (same as other pages) -->
+<!-- Navbar -->
 <header class="site-head">
 <div class="container">
-<nav class="navbar">
-<a href="/" class="logo">
-<img src="/brand/logo-blue-new.png" alt="Mr Chima" width="24" height="24">
-Abone Chima
+<nav class="navbar" aria-label="Main">
+<a href="/" class="logo" aria-label="Abone Chima — home">
+<img src="/brand/logo-blue-new.png" alt="Mr Chima" width="542" height="512" decoding="async">
 </a>
-<div class="nav-links">
+<div class="nav-links" id="site-menu">
 <a href="/source-code.html">Source code</a>
 <a href="/classes.html">Classes</a>
 <a href="/shop.html">Shop</a>
@@ -26,69 +25,78 @@ Abone Chima
 <a href="/inspiration.html">Inspiration</a>
 <a href="/#contact">Contact</a>
 <button type="button" class="nav-support">Support me</button>
-<a href="/hire.html" class="btn-dark nav-cta active">Hire me</a>
+<a href="/hire.html" class="btn-dark nav-cta">Hire me</a>
 </div>
-<button type="button" class="menu-btn">
-<span class="menu-icon">☰</span>
+<button type="button" class="menu-btn" aria-label="Open menu" aria-expanded="false" aria-controls="site-menu">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu icon-open" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x icon-close" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
 </button>
 </nav>
 </div>
 </header>
 
-<main class="hire-page">
+<main id="content">
+<section class="section grey contact hire" id="hire">
 <div class="container">
-<div class="hire-card">
-<span class="hf-eyebrow">Let's work together</span>
-<div class="hf-head">
-<h1>Hire me for your project</h1>
+<div class="section-head center">
+<h2>Let's work together</h2>
 </div>
-<p class="hf-lead">I build backend APIs, automation systems, and AI-powered tools with Python. Let's discuss your project.</p>
-
-<form id="hire-form" class="hire-form" novalidate>
+<p class="contact-facts center">abonejoseph@gmail.com</p>
+<form class="hire-card contact-card" noValidate id="hire-form">
 <div class="hf-columns">
-<div class="hf-col hf-field-grow">
-<div class="hf-field">
-<label class="hf-label" for="hf-message">Your message *</label>
+<div class="hf-col">
+<div class="hf-field hf-field-grow">
 <div class="hf-textarea-wrap">
-<textarea id="hf-message" name="message" placeholder="Tell me about your project" required maxlength="5000" class="hf-input"></textarea>
-<span class="hf-count">0 / 5000</span>
+<textarea id="cf-message" name="message" placeholder="Your message" aria-label="Your message" maxlength="5000" class="hf-input" required></textarea>
+<span class="hf-count" aria-hidden="true">0/5000</span>
 </div>
 </div>
 </div>
-
 <div class="hf-col hf-col-right">
 <div class="hf-field">
-<label class="hf-label" for="hf-email">Email *</label>
-<input type="email" id="hf-email" name="email" placeholder="you@company.com" required class="hf-input">
+<input type="text" id="cf-name" placeholder="Your name" aria-label="Your name" autocomplete="name" maxlength="200" class="hf-input" name="name" required>
 </div>
 <div class="hf-field">
-<label class="hf-label" for="hf-name">Name *</label>
-<input type="text" id="hf-name" name="name" placeholder="Your name" required class="hf-input">
-</div>
-<div class="hf-field">
-<label class="hf-label" for="hf-company">Company <span class="hf-label-opt">(optional)</span></label>
-<input type="text" id="hf-company" name="company" placeholder="Company name" class="hf-input">
+<input type="email" id="cf-email" placeholder="Email" aria-label="Email" autocomplete="email" inputmode="email" maxlength="200" class="hf-input" name="email" required>
 </div>
 <div class="hf-field hf-field-last">
-<label class="hf-label" for="hf-budget">Budget <span class="hf-label-opt">(optional)</span></label>
-<input type="text" id="hf-budget" name="budget" placeholder="e.g., ₦500,000" class="hf-input">
+<input type="text" id="cf-subject" class="hf-input" placeholder="Subject (optional)" aria-label="Subject" maxlength="300" name="subject">
 </div>
-
+<div class="field field-website" aria-hidden="true">
+<label for="cf-website">Website</label>
+<input type="text" id="cf-website" tabindex="-1" autocomplete="off" name="website" value="">
+</div>
 <button type="submit" class="hf-submit">Send message</button>
 </div>
 </div>
 </form>
 </div>
-</div>
+</section>
 </main>
 
 <footer class="site-footer">
 <div class="container">
-<div class="footer-inner">
-<a href="/" class="footer-brand">
-<img src="/brand/my-logo-for-footer.png.png" alt="Mr Chima" style="width: 200px; height: auto;">
+<div class="footer-grid">
+<a href="/" class="footer-brand" aria-label="Mr Chima">
+<img src="/brand/my-logo-for-footer.png.png" alt="Mr Chima" width="1030" height="400" loading="lazy" decoding="async" style="width: 200px; height: auto;">
 </a>
-<p>© 2026 Abone Chima — mrchima.dev</p>
+<nav class="footer-col" aria-label="Work">
+<h4>Work</h4>
+<a href="/projects.html">Projects</a>
+<a href="/source-code.html">Source code</a>
+<a href="/classes.html">Classes</a>
+<a href="/shop.html">Shop</a>
+</nav>
+<nav class="footer-col" aria-label="Get in touch">
+<h4>Get in touch</h4>
+<a href="/#contact">Contact</a>
+<a href="/hire.html">Hire me</a>
+<a href="/support">Support me</a>
+</nav>
+</div>
+<div class="footer-bottom">
+<p>© 2026 Abone Chima</p>
+<p>mrchima.dev</p>
 </div>
 </div>
 </footer>
@@ -98,11 +106,11 @@ Abone Chima
 const BACKEND_URL = 'https://mrchima-backend.onrender.com';
 
 // Character counter
-const textarea = document.getElementById('hf-message');
+const textarea = document.getElementById('cf-message');
 const counter = document.querySelector('.hf-count');
 if (textarea && counter) {
   textarea.addEventListener('input', () => {
-    counter.textContent = ${textarea.value.length} / 5000;
+    counter.textContent = `${textarea.value.length}/5000`;
   });
 }
 
@@ -112,11 +120,17 @@ form.addEventListener('submit', async (e) => {
   e.preventDefault();
   
   const submitBtn = form.querySelector('.hf-submit');
-  const email = document.getElementById('hf-email').value.trim();
-  const name = document.getElementById('hf-name').value.trim();
-  const message = document.getElementById('hf-message').value.trim();
-  const company = document.getElementById('hf-company').value.trim();
-  const budget = document.getElementById('hf-budget').value.trim();
+  const email = document.getElementById('cf-email').value.trim();
+  const name = document.getElementById('cf-name').value.trim();
+  const message = document.getElementById('cf-message').value.trim();
+  const subject = document.getElementById('cf-subject').value.trim();
+  const website = document.getElementById('cf-website').value.trim();
+  
+  // Honeypot check
+  if (website) {
+    console.log('Bot detected');
+    return;
+  }
   
   if (!email || !name || !message) {
     alert('Please fill in all required fields');
@@ -127,13 +141,14 @@ form.addEventListener('submit', async (e) => {
   submitBtn.textContent = 'Sending...';
   
   try {
-    const response = await fetch(${BACKEND_URL}/api/contact, {
+    const response = await fetch(`${BACKEND_URL}/api/contact`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        email, name, message,
-        subject: 'Hire Request' + (company ?  from  : ''),
-        budget
+        email, 
+        name, 
+        message,
+        subject: subject || 'Hire Request'
       })
     });
     
@@ -142,7 +157,7 @@ form.addEventListener('submit', async (e) => {
     if (response.ok) {
       alert('Message sent! I\'ll get back to you soon.');
       form.reset();
-      counter.textContent = '0 / 5000';
+      counter.textContent = '0/5000';
     } else {
       alert(data.message || 'Failed to send message. Please try again.');
     }
@@ -156,21 +171,27 @@ form.addEventListener('submit', async (e) => {
 });
 
 // Mobile menu
-const menuBtn = document.querySelector('.menu-btn');
-const navbar = document.querySelector('.navbar');
-if (menuBtn) {
-  menuBtn.addEventListener('click', () => {
-    navbar.classList.toggle('open');
-  });
-}
-
-// Support button
-const supportBtn = document.querySelector('.nav-support');
-if (supportBtn) {
-  supportBtn.addEventListener('click', () => {
-    window.location.href = '/#support';
-  });
-}
+document.addEventListener('DOMContentLoaded', function() {
+  const menuBtn = document.querySelector('.menu-btn');
+  const navbar = document.querySelector('.navbar');
+  
+  if (menuBtn && navbar) {
+    menuBtn.addEventListener('click', function() {
+      navbar.classList.toggle('open');
+      const isExpanded = this.getAttribute('aria-expanded') === 'true';
+      this.setAttribute('aria-expanded', !isExpanded);
+    });
+  }
+  
+  // Support button
+  const supportBtn = document.querySelector('.nav-support');
+  if (supportBtn) {
+    supportBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.location.href = '/#support';
+    });
+  }
+});
 </script>
 </body>
 </html>
