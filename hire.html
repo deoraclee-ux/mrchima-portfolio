@@ -179,8 +179,8 @@
 </div>
 
 <div class="hf-field">
-<label class="hf-label">Phone <span class="hf-label-opt">(optional)</span></label>
-<input type="tel" class="hf-input" id="contact-phone" placeholder="+234...">
+<label class="hf-label">Phone <span class="hf-label-opt">(required for WhatsApp/Phone)</span></label>
+<input type="tel" class="hf-input" id="contact-phone" placeholder="+234 800 123 4567">
 </div>
 
 <div class="hf-check">
@@ -376,6 +376,12 @@ async function submitHireForm(event) {
   }
   
   const phone = document.getElementById('contact-phone').value.trim();
+  
+  // Validate phone number if WhatsApp or Phone is selected
+  if ((selectedMethods.includes('whatsapp') || selectedMethods.includes('phone')) && !phone) {
+    showError('Phone number is required when selecting WhatsApp or Phone call');
+    return;
+  }
   
   // Prepare sanitized data (no sensitive data in frontend)
   const formData = {

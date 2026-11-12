@@ -1530,11 +1530,13 @@ async def hire_request(request: Request):
         # Required fields
         name = data.get('name', '').strip()
         email = data.get('email', '').strip().lower()
-        message = data.get('message', '').strip()
+        description = data.get('description', '').strip()
         project_type = data.get('projectType', '').strip()
         
         # Optional fields
         company = data.get('company', '').strip()
+        phone = data.get('phone', '').strip()
+        same_whatsapp = data.get('sameWhatsapp', False)
         preferred_contact = data.get('contactMethods', [])
         
         # Validation
@@ -1547,15 +1549,16 @@ async def hire_request(request: Request):
         if not project_type:
             raise HTTPException(status_code=400, detail='Project type is required')
         
-        if not message or len(message) < 10:
-            raise HTTPException(status_code=400, detail='Message is required (min 10 characters)')
+        if not description or len(description) < 10:
+            raise HTTPException(status_code=400, detail='Project description is required (min 10 characters)')
         
         # Sanitize inputs (remove potential XSS/injection)
         import re
         name = re.sub(r'[<>{}]', '', name)[:100]
         email = re.sub(r'[<>{}]', '', email)[:100]
         company = re.sub(r'[<>{}]', '', company)[:100]
-        message = re.sub(r'[<>{}]', '', message)[:5000]
+        phone = re.sub(r'[<>{}]', '', phone)[:50]
+        description = re.sub(r'[<>{}]', '', description)[:5000]
         project_type = re.sub(r'[<>{}]', '', project_type)[:50]
         
         # Format project type for display
@@ -1611,16 +1614,18 @@ async def hire_request(request: Request):
                         <div class="value">{email}</div>
                     </div>
                     
+                    {f'<div class="field"><div class="label">📞 Phone:</div><div class="value">{phone}{" (Same as WhatsApp)" if same_whatsapp else ""}</div></div>' if phone else ''}
+                    
                     {f'<div class="field"><div class="label">🏢 Company:</div><div class="value">{company}</div></div>' if company else ''}
                     
                     <div class="field">
-                        <div class="label">📞 Preferred Contact:</div>
+                        <div class="label">💬 Preferred Contact:</div>
                         <div class="value">{contact_methods}</div>
                     </div>
                     
                     <div class="field">
                         <div class="label">💬 Project Description:</div>
-                        <div class="value">{message}</div>
+                        <div class="value">{description}</div>
                     </div>
                     
                     <div class="footer">
