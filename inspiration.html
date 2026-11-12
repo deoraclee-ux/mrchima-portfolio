@@ -40,8 +40,20 @@ if (supportBtn) {
   });
 }
 </script>
+<style>
+/* Prevent flash by hiding elements until corrected */
+header .logo img,
+footer .footer-brand img {
+  opacity: 0 !important;
+  transition: opacity 0.1s ease-in !important;
+}
+header .logo img.corrected,
+footer .footer-brand img.corrected {
+  opacity: 1 !important;
+}
+</style>
 <script>
-// Force correct navbar/footer logos and links, prevent JavaScript overrides
+// Force correct navbar/footer logos and links, prevent JavaScript overrides and flash
 (function() {
   const CORRECT_NAVBAR_LOGO = '/brand/logo-blue-new.png';
   const CORRECT_FOOTER_LOGO = '/brand/my-logo-for-footer.png';
@@ -49,17 +61,24 @@ if (supportBtn) {
   function enforceCorrectElements() {
     // Fix navbar logo
     const navLogoImg = document.querySelector('.logo img, .navbar .logo img, header img[alt="Mr Chima"]');
-    if (navLogoImg && navLogoImg.src && !navLogoImg.src.includes('logo-blue-new.png')) {
-      navLogoImg.src = CORRECT_NAVBAR_LOGO;
-      navLogoImg.setAttribute('src', CORRECT_NAVBAR_LOGO);
-      navLogoImg.style.cssText = 'width: 120px !important; max-width: 120px !important; height: auto !important;';
+    if (navLogoImg) {
+      if (!navLogoImg.src.includes('logo-blue-new.png')) {
+        navLogoImg.src = CORRECT_NAVBAR_LOGO;
+        navLogoImg.setAttribute('src', CORRECT_NAVBAR_LOGO);
+      }
+      navLogoImg.style.cssText = 'width: 120px !important; max-width: 120px !important; height: auto !important; opacity: 1 !important;';
+      navLogoImg.classList.add('corrected');
     }
     
     // Fix footer logo
     const footerLogoImg = document.querySelector('footer .footer-brand img, footer img[alt*="logo"], .footer-brand img');
-    if (footerLogoImg && footerLogoImg.src && !footerLogoImg.src.includes('my-logo-for-footer.png')) {
-      footerLogoImg.src = CORRECT_FOOTER_LOGO;
-      footerLogoImg.setAttribute('src', CORRECT_FOOTER_LOGO);
+    if (footerLogoImg) {
+      if (!footerLogoImg.src.includes('my-logo-for-footer.png')) {
+        footerLogoImg.src = CORRECT_FOOTER_LOGO;
+        footerLogoImg.setAttribute('src', CORRECT_FOOTER_LOGO);
+      }
+      footerLogoImg.style.opacity = '1';
+      footerLogoImg.classList.add('corrected');
     }
     
     // Change all "E-book" / "E-books" / "Ebook" to "Shop" in navbar and footer
@@ -73,6 +92,12 @@ if (supportBtn) {
       }
     });
     
+    // Fix footer encoding - replace hyphens with em dash
+    const footerBottom = document.querySelector('.footer-bottom p, footer p');
+    if (footerBottom && footerBottom.textContent) {
+      footerBottom.innerHTML = footerBottom.innerHTML.replace(/\s-\s/g, ' — ');
+    }
+    
     // Remove any "Mr Bayo" text
     const allText = document.querySelectorAll('nav, header, .navbar');
     allText.forEach(function(element) {
@@ -82,12 +107,23 @@ if (supportBtn) {
     });
   }
   
-  // Enforce immediately, on load, and watch for changes
+  // Enforce immediately and continuously
   enforceCorrectElements();
+  
+  // Enforce on DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', enforceCorrectElements);
+  }
+  
+  // Enforce on full load
   window.addEventListener('load', enforceCorrectElements);
   
-  // Watch for React/Next.js hydration changes
-  const observer = new MutationObserver(enforceCorrectElements);
+  // Watch for React/Next.js hydration changes with MutationObserver
+  const observer = new MutationObserver(function() {
+    enforceCorrectElements();
+  });
+  
+  // Start observing immediately
   setTimeout(function() {
     const header = document.querySelector('header');
     const footer = document.querySelector('footer');
@@ -98,13 +134,13 @@ if (supportBtn) {
       observer.observe(footer, { attributes: true, childList: true, subtree: true });
     }
     enforceCorrectElements();
-  }, 100);
+  }, 0);
   
-  // Additional checks for late hydration
-  setTimeout(enforceCorrectElements, 500);
-  setTimeout(enforceCorrectElements, 1000);
-  setTimeout(enforceCorrectElements, 2000);
-  setTimeout(enforceCorrectElements, 3000);
+  // Additional aggressive enforcement at multiple intervals
+  const intervals = [50, 100, 200, 300, 500, 800, 1000, 1500, 2000, 3000];
+  intervals.forEach(function(delay) {
+    setTimeout(enforceCorrectElements, delay);
+  });
 })();
 </script>
 </body></html>
