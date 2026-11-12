@@ -1661,14 +1661,14 @@ function processSupportPaymentWithDetails(amount, email, name) {
       .then(res => res.json())
       .then(result => {
         if (result.success) {
-          alert(`Thank you for your support!\n\nAmount: ?${amount.toLocaleString()}\n\nA confirmation email has been sent to ${email}`);
+          alert(`Thank you for your support!\n\nAmount: ₦${amount.toLocaleString()}\n\nA confirmation email has been sent to ${email}`);
         } else {
-          alert(`Payment successful!\n\nAmount: ?${amount.toLocaleString()}\nReference: ${response.reference}\n\nNote: Confirmation email may be delayed.`);
+          alert(`Payment successful!\n\nAmount: ₦${amount.toLocaleString()}\nReference: ${response.reference}\n\nNote: Confirmation email may be delayed.`);
         }
       })
       .catch(error => {
         console.error('Error verifying support payment:', error);
-        alert(`Payment successful!\n\nAmount: ?${amount.toLocaleString()}\nReference: ${response.reference}\n\nPlease keep this reference for your records.`);
+        alert(`Payment successful!\n\nAmount: ₦${amount.toLocaleString()}\nReference: ${response.reference}\n\nPlease keep this reference for your records.`);
       });
     },
     onClose: function() {
