@@ -17,8 +17,15 @@
     height: 56px !important;
   }
   
-  /* Prevent flash by hiding elements until corrected */
-  /* Tree visibility handled by JavaScript */
+  /* Prevent flash by hiding tree until page loads */
+  .tree-stage {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .tree-stage.visible {
+    opacity: 1;
+  }
   
   /* Footer logo size and alignment */
   footer .footer-brand img {
@@ -235,5 +242,16 @@ footer .footer-brand img.corrected {
   setTimeout(enforceCorrectElements, 500);
   setTimeout(enforceCorrectElements, 1500);
 })();
+
+// Show tree after page loads to prevent flash
+document.addEventListener('DOMContentLoaded', function() {
+  const treeStage = document.querySelector('.tree-stage');
+  if (treeStage) {
+    // Small delay to ensure CSS is loaded
+    setTimeout(() => {
+      treeStage.classList.add('visible');
+    }, 100);
+  }
+});
 </script>
 </body></html>

@@ -252,7 +252,7 @@
 <div class="hf-field">
 <label class="hf-label">How should I contact you?</label>
 <div class="hf-chips">
-<button type="button" class="hf-chip selected" data-method="whatsapp" onclick="toggleContactMethod(event)"><span class="check">&#x2713;</span> WhatsApp</button>
+<button type="button" class="hf-chip selected" data-method="whatsapp" onclick="toggleContactMethod(event)"><span class="check">✓</span> WhatsApp</button>
 <button type="button" class="hf-chip" data-method="email" onclick="toggleContactMethod(event)">Email</button>
 <button type="button" class="hf-chip" data-method="phone" onclick="toggleContactMethod(event)">Phone call</button>
 </div>
@@ -378,7 +378,7 @@ function toggleContactMethod(event) {
     button.classList.add('selected');
     const methodName = button.dataset.method === 'whatsapp' ? 'WhatsApp' : 
                                  button.dataset.method === 'email' ? 'Email' : 'Phone call';
-    button.innerHTML = '<span class="check">&#x2713;</span> ' + methodName;
+    button.innerHTML = '<span class="check">✓</span> ' + methodName;
   }
 }
 
@@ -493,7 +493,7 @@ async function submitHireForm(event) {
       // Re-select WhatsApp as default
       const whatsappBtn = document.querySelector('[data-method="whatsapp"]');
       whatsappBtn.classList.add('selected');
-      whatsappBtn.innerHTML = '<span class="check">&#x2713;</span> WhatsApp';
+      whatsappBtn.innerHTML = '<span class="check">✓</span> WhatsApp';
       
       updateCharCount();
       
