@@ -1726,7 +1726,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Open modal with no preset amount
         openSupportModal(null);
       } else {
-        // Extract amount (e.g., "?2,000" -> 2000)
+        // Extract amount (e.g., "₦2,000" -> 2000)
         const amount = parseInt(amountText.replace(/[^0-9]/g, ''));
         openSupportModal(amount);
       }
@@ -1892,7 +1892,7 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
     <div class="co-body">
       <div class="sup-amount">
-        <span>?</span>
+        <span>₦</span>
         <input type="text" id="support-amount" value="5,000" />
       </div>
       <div class="sup-quick">
