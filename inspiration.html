@@ -20,18 +20,25 @@
 <next-route-announcer style="position: absolute;"></next-route-announcer>
 
 <script>
-// Mobile menu toggle - wait for DOM to be ready
+// Mobile menu toggle - ensure it runs after all other scripts
 (function() {
   function initMobileMenu() {
     const menuBtn = document.querySelector('.menu-btn');
     const navbar = document.querySelector('.navbar');
 
     if (menuBtn && navbar) {
-      menuBtn.addEventListener('click', function() {
+      // Remove any existing listeners
+      const newMenuBtn = menuBtn.cloneNode(true);
+      menuBtn.parentNode.replaceChild(newMenuBtn, menuBtn);
+      
+      // Add fresh click listener
+      newMenuBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
         navbar.classList.toggle('open');
         const isExpanded = this.getAttribute('aria-expanded') === 'true';
         this.setAttribute('aria-expanded', !isExpanded);
-      });
+      }, true);
     }
 
     // Support button handler
@@ -43,12 +50,10 @@
     }
   }
 
-  // Run when DOM is ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initMobileMenu);
-  } else {
-    initMobileMenu();
-  }
+  // Run after full page load with delay
+  window.addEventListener('load', function() {
+    setTimeout(initMobileMenu, 200);
+  });
 })();
 </script>
 <style>
