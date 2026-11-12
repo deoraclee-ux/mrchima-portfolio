@@ -1,6 +1,21 @@
 {
   "buildCommand": null,
   "framework": null,
+  "headers": [
+    {
+      "source": "/(.*).html",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/html; charset=UTF-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    }
+  ],
   "rewrites": [
     { "source": "/hire", "destination": "/hire.html" },
     { "source": "/source-code", "destination": "/source-code.html" },

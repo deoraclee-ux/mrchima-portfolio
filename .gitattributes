@@ -1,0 +1,17 @@
+# Force UTF-8 encoding for all text files
+*.html text eol=lf encoding=UTF-8
+*.css text eol=lf encoding=UTF-8
+*.js text eol=lf encoding=UTF-8
+*.json text eol=lf encoding=UTF-8
+*.md text eol=lf encoding=UTF-8
+*.txt text eol=lf encoding=UTF-8
+*.py text eol=lf encoding=UTF-8
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.zip binary
+*.db binary
