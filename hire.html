@@ -1402,6 +1402,19 @@ document.querySelectorAll('.nav-support, .footer-support')?.forEach(btn => {
     alert('Support modal coming soon! For now, please contact via email.');
   });
 });
+
+// Mobile menu toggle
+document.addEventListener('DOMContentLoaded', function() {
+  const menuBtn = document.querySelector(".menu-btn");
+  const navbar = document.querySelector(".navbar");
+  if (menuBtn && navbar) {
+    menuBtn.addEventListener("click", function() {
+      navbar.classList.toggle("open");
+      const expanded = this.getAttribute("aria-expanded") === "true";
+      this.setAttribute("aria-expanded", !expanded);
+    });
+  }
+});
 </script>
 
 </body></html>
