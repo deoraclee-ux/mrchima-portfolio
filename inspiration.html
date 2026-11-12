@@ -68,7 +68,7 @@
     const supportBtn = document.querySelector('.nav-support');
     if (supportBtn) {
       supportBtn.addEventListener('click', function() {
-        window.location.href = '/#support';
+        window.location.href = '/index.html#support';
       });
     }
   }
@@ -76,14 +76,6 @@
   // Run after full page load with delay
   window.addEventListener('load', function() {
     setTimeout(initMobileMenu, 200);
-    
-    // Mark tree as loaded to prevent flash
-    setTimeout(function() {
-      const treePage = document.querySelector('.tree-page');
-      if (treePage) {
-        treePage.classList.add('loaded');
-      }
-    }, 100);
   });
 })();
 </script>
