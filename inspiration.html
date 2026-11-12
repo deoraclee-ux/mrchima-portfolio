@@ -41,37 +41,70 @@ if (supportBtn) {
 }
 </script>
 <script>
-// Force correct navbar logo and prevent JavaScript overrides
+// Force correct navbar/footer logos and links, prevent JavaScript overrides
 (function() {
-  const CORRECT_LOGO = '/brand/logo-blue-new.png';
+  const CORRECT_NAVBAR_LOGO = '/brand/logo-blue-new.png';
+  const CORRECT_FOOTER_LOGO = '/brand/my-logo-for-footer.png';
   
-  function enforceCorrectLogo() {
-    const logoImg = document.querySelector('.logo img, .navbar .logo img, header img[alt="Mr Chima"]');
-    if (logoImg && logoImg.src && !logoImg.src.includes('logo-blue-new.png')) {
-      logoImg.src = CORRECT_LOGO;
-      logoImg.setAttribute('src', CORRECT_LOGO);
-      logoImg.style.cssText = 'width: 120px !important; max-width: 120px !important; height: auto !important;';
+  function enforceCorrectElements() {
+    // Fix navbar logo
+    const navLogoImg = document.querySelector('.logo img, .navbar .logo img, header img[alt="Mr Chima"]');
+    if (navLogoImg && navLogoImg.src && !navLogoImg.src.includes('logo-blue-new.png')) {
+      navLogoImg.src = CORRECT_NAVBAR_LOGO;
+      navLogoImg.setAttribute('src', CORRECT_NAVBAR_LOGO);
+      navLogoImg.style.cssText = 'width: 120px !important; max-width: 120px !important; height: auto !important;';
     }
+    
+    // Fix footer logo
+    const footerLogoImg = document.querySelector('footer .footer-brand img, footer img[alt*="logo"], .footer-brand img');
+    if (footerLogoImg && footerLogoImg.src && !footerLogoImg.src.includes('my-logo-for-footer.png')) {
+      footerLogoImg.src = CORRECT_FOOTER_LOGO;
+      footerLogoImg.setAttribute('src', CORRECT_FOOTER_LOGO);
+    }
+    
+    // Change all "E-book" / "E-books" / "Ebook" to "Shop" in navbar and footer
+    const allLinks = document.querySelectorAll('nav a, header a, footer a, .navbar a, .footer-links a');
+    allLinks.forEach(function(link) {
+      if (link.textContent) {
+        const text = link.textContent.trim();
+        if (text === 'E-book' || text === 'E-books' || text === 'Ebook' || text === 'EBOOK' || text === 'E-BOOK') {
+          link.textContent = 'Shop';
+        }
+      }
+    });
+    
+    // Remove any "Mr Bayo" text
+    const allText = document.querySelectorAll('nav, header, .navbar');
+    allText.forEach(function(element) {
+      if (element.textContent && element.textContent.includes('Mr Bayo')) {
+        element.innerHTML = element.innerHTML.replace(/Mr\s+Bayo/gi, '');
+      }
+    });
   }
   
   // Enforce immediately, on load, and watch for changes
-  enforceCorrectLogo();
-  window.addEventListener('load', enforceCorrectLogo);
+  enforceCorrectElements();
+  window.addEventListener('load', enforceCorrectElements);
   
   // Watch for React/Next.js hydration changes
-  const observer = new MutationObserver(enforceCorrectLogo);
+  const observer = new MutationObserver(enforceCorrectElements);
   setTimeout(function() {
     const header = document.querySelector('header');
+    const footer = document.querySelector('footer');
     if (header) {
       observer.observe(header, { attributes: true, childList: true, subtree: true });
     }
-    enforceCorrectLogo();
+    if (footer) {
+      observer.observe(footer, { attributes: true, childList: true, subtree: true });
+    }
+    enforceCorrectElements();
   }, 100);
   
   // Additional checks for late hydration
-  setTimeout(enforceCorrectLogo, 500);
-  setTimeout(enforceCorrectLogo, 1000);
-  setTimeout(enforceCorrectLogo, 2000);
+  setTimeout(enforceCorrectElements, 500);
+  setTimeout(enforceCorrectElements, 1000);
+  setTimeout(enforceCorrectElements, 2000);
+  setTimeout(enforceCorrectElements, 3000);
 })();
 </script>
 </body></html>
