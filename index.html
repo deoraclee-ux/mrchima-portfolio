@@ -1892,7 +1892,7 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
     <div class="co-body">
       <div class="sup-amount">
-        <span>?</span>
+        <span>₦</span>
         <input type="text" id="support-amount" value="5,000" />
       </div>
       <div class="sup-quick">
@@ -2628,8 +2628,9 @@ document.addEventListener('DOMContentLoaded', function() {
   // Support button handler
   const supportBtn = document.querySelector('.nav-support');
   if (supportBtn) {
-    supportBtn.addEventListener('click', () => {
-      window.location.href = 'support.html';
+    supportBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      openSupportModal();
     });
   }
 });
