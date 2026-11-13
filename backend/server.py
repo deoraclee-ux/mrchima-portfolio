@@ -362,7 +362,8 @@ def send_email(to_email: str, to_name: str, subject: str, html_content: str, tex
                 "to": [
                     {
                         "email": to_email,
-                        "name": to_name
+                        "name": to_name,
+                        "removeTrackingPixel": True  # Disable tracking for this recipient
                     }
                 ],
                 "subject": subject,
