@@ -70,14 +70,17 @@ MAX_DOWNLOADS_PER_TOKEN = int(os.getenv('MAX_DOWNLOADS_PER_TOKEN', '3'))
 RATE_LIMIT_REQUESTS = int(os.getenv('RATE_LIMIT_REQUESTS', '10'))  # Max attempts per IP
 RATE_LIMIT_WINDOW = int(os.getenv('RATE_LIMIT_WINDOW', '3600'))  # 1 hour window
 
-# SMTP Configuration
+# Email Configuration - USE SENDGRID API INSTEAD OF SMTP (Render blocks SMTP ports)
+SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY', '')
+FROM_EMAIL = os.getenv('FROM_EMAIL', 'noreply@mrchima.dev')
+FROM_NAME = os.getenv('FROM_NAME', 'Abone Chima (Mr Chima)')
+
+# Legacy SMTP config (kept for backward compatibility, but not used if SendGrid is configured)
 SMTP_HOST = os.getenv('SMTP_HOST', 'smtp.gmail.com')
 SMTP_PORT = int(os.getenv('SMTP_PORT', '587'))
 SMTP_USE_SSL = os.getenv('SMTP_USE_SSL', 'false').lower() == 'true'
 SMTP_USER = os.getenv('SMTP_USER', 'your-email@gmail.com').strip() if os.getenv('SMTP_USER') else 'your-email@gmail.com'
 SMTP_PASSWORD = os.getenv('SMTP_PASSWORD', 'your-app-password').strip().replace(' ', '') if os.getenv('SMTP_PASSWORD') else 'your-app-password'
-FROM_EMAIL = os.getenv('FROM_EMAIL', 'noreply@mrchima.dev')
-FROM_NAME = 'Abone Chima (Mr Chima)'
 
 # Domain
 DOMAIN = os.getenv('DOMAIN', 'http://localhost:8080')
@@ -151,20 +154,25 @@ print(f"🚀 Mr Chima Portfolio Backend - Starting Up")
 print(f"{'='*60}")
 print(f"✓ FastAPI initialized")
 print(f"✓ Database initialized")
-print(f"\n📧 SMTP Configuration:")
-print(f"   Host: {SMTP_HOST}:{SMTP_PORT}")
-print(f"   User: {SMTP_USER}")
-print(f"   SSL: {SMTP_USE_SSL}")
-print(f"   From: {FROM_NAME} <{FROM_EMAIL}>")
-
-if not SMTP_USER or SMTP_USER == 'your-email@gmail.com':
-    print(f"   ⚠️  WARNING: SMTP_USER not configured!")
-    print(f"   ⚠️  Emails will NOT be sent!")
-elif not SMTP_PASSWORD or SMTP_PASSWORD == 'your-app-password':
-    print(f"   ⚠️  WARNING: SMTP_PASSWORD not configured!")
-    print(f"   ⚠️  Emails will NOT be sent!")
+print(f"\n📧 Email Configuration:")
+print(f"   SendGrid API: {'✓ Configured' if SENDGRID_API_KEY else '✗ Not configured'}")
+if SENDGRID_API_KEY:
+    print(f"   From: {FROM_NAME} <{FROM_EMAIL}>")
+    print(f"   ℹ️  Using SendGrid API (SMTP blocked on Render)")
 else:
-    print(f"   ✓ SMTP configured and ready")
+    print(f"   ⚠️  WARNING: SENDGRID_API_KEY not set!")
+    print(f"   Falling back to SMTP (may not work on Render)")
+    print(f"   Host: {SMTP_HOST}:{SMTP_PORT}")
+    print(f"   User: {SMTP_USER}")
+    print(f"   SSL: {SMTP_USE_SSL}")
+    print(f"   From: {FROM_NAME} <{FROM_EMAIL}>")
+    
+    if not SMTP_USER or SMTP_USER == 'your-email@gmail.com':
+        print(f"   ⚠️  WARNING: SMTP_USER not configured!")
+    elif not SMTP_PASSWORD or SMTP_PASSWORD == 'your-app-password':
+        print(f"   ⚠️  WARNING: SMTP_PASSWORD not configured!")
+    else:
+        print(f"   ✓ SMTP configured")
 
 print(f"\n💳 Paystack Configuration:")
 if PAYSTACK_SECRET_KEY and PAYSTACK_SECRET_KEY != 'sk_test_YOUR_SECRET_KEY':
@@ -336,74 +344,140 @@ def log_download_attempt(token: str, ip: str, user_agent: str, success: bool, re
 
 
 def send_email(to_email: str, to_name: str, subject: str, html_content: str, text_content: str):
-    """Send email via SMTP"""
-    try:
-        # Validate SMTP configuration
-        if not SMTP_USER or SMTP_USER == 'your-email@gmail.com':
-            print(f"❌ SMTP_USER not configured! Current value: {SMTP_USER}")
+    """Send email via SendGrid API (preferred) or SMTP fallback"""
+    
+    # Try SendGrid first (works on Render - no port blocking)
+    if SENDGRID_API_KEY:
+        try:
+            print(f"📧 Sending email via SendGrid API to: {to_email}")
+            print(f"   Subject: {subject}")
+            
+            import httpx
+            
+            payload = {
+                "personalizations": [{
+                    "to": [{"email": to_email, "name": to_name}],
+                    "subject": subject
+                }],
+                "from": {
+                    "email": FROM_EMAIL,
+                    "name": FROM_NAME
+                },
+                "content": [
+                    {"type": "text/plain", "value": text_content},
+                    {"type": "text/html", "value": html_content}
+                ]
+            }
+            
+            async def send_via_sendgrid():
+                async with httpx.AsyncClient() as client:
+                    response = await client.post(
+                        'https://api.sendgrid.com/v3/mail/send',
+                        headers={
+                            'Authorization': f'Bearer {SENDGRID_API_KEY}',
+                            'Content-Type': 'application/json'
+                        },
+                        json=payload,
+                        timeout=30.0
+                    )
+                    return response
+            
+            # Run async function
+            import asyncio
+            try:
+                loop = asyncio.get_event_loop()
+            except RuntimeError:
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+            
+            response = loop.run_until_complete(send_via_sendgrid())
+            
+            if response.status_code in [200, 201, 202]:
+                print(f"✓ Email sent successfully via SendGrid to {to_email}!")
+                return True
+            else:
+                print(f"❌ SendGrid error: {response.status_code}")
+                print(f"   Response: {response.text}")
+                return False
+                
+        except Exception as e:
+            print(f"❌ SendGrid error: {e}")
+            import traceback
+            traceback.print_exc()
             return False
+    
+    # Fallback to SMTP (won't work on Render due to port blocking)
+    else:
+        print(f"⚠️  No SendGrid API key - falling back to SMTP")
+        print(f"⚠️  Note: SMTP is blocked on Render's free tier!")
         
-        if not SMTP_PASSWORD or SMTP_PASSWORD == 'your-app-password':
-            print(f"❌ SMTP_PASSWORD not configured!")
+        try:
+            # Validate SMTP configuration
+            if not SMTP_USER or SMTP_USER == 'your-email@gmail.com':
+                print(f"❌ SMTP_USER not configured! Current value: {SMTP_USER}")
+                return False
+            
+            if not SMTP_PASSWORD or SMTP_PASSWORD == 'your-app-password':
+                print(f"❌ SMTP_PASSWORD not configured!")
+                return False
+            
+            print(f"📧 Sending email to: {to_email}")
+            print(f"   Subject: {subject}")
+            print(f"   SMTP: {SMTP_HOST}:{SMTP_PORT}")
+            print(f"   User: {SMTP_USER}")
+            print(f"   SSL: {SMTP_USE_SSL}")
+            
+            # Create message
+            msg = MIMEMultipart('alternative')
+            msg['From'] = f'{FROM_NAME} <{FROM_EMAIL}>'
+            msg['To'] = to_email
+            msg['Subject'] = subject
+            
+            # Add text and HTML parts
+            text_part = MIMEText(text_content, 'plain')
+            html_part = MIMEText(html_content, 'html')
+            msg.attach(text_part)
+            msg.attach(html_part)
+            
+            # Send email - handle both SSL and TLS
+            if SMTP_USE_SSL:
+                # Use SMTP_SSL for port 465
+                print(f"🔐 Connecting with SSL...")
+                with smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT, timeout=30) as server:
+                    print(f"✓ Connected to {SMTP_HOST}")
+                    server.login(SMTP_USER, SMTP_PASSWORD)
+                    print(f"✓ Logged in as {SMTP_USER}")
+                    server.send_message(msg)
+                    print(f"✓ Email sent successfully!")
+            else:
+                # Use STARTTLS for port 587
+                with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=30) as server:
+                    print(f"🔐 Connecting to {SMTP_HOST}:{SMTP_PORT}...")
+                    print(f"✓ Connected, starting TLS...")
+                    server.starttls()
+                    print(f"✓ TLS started, logging in...")
+                    server.login(SMTP_USER, SMTP_PASSWORD)
+                    print(f"✓ Logged in as {SMTP_USER}")
+                    server.send_message(msg)
+                    print(f"✓ Email sent successfully to {to_email}!")
+            
+            return True
+        except smtplib.SMTPAuthenticationError as auth_err:
+            print(f"❌ SMTP Authentication Failed!")
+            print(f"   Error: {auth_err}")
+            print(f"   Check: SMTP_USER and SMTP_PASSWORD are correct")
+            print(f"   Gmail users: Make sure you're using an App Password, not your regular password")
             return False
-        
-        print(f"📧 Sending email to: {to_email}")
-        print(f"   Subject: {subject}")
-        print(f"   SMTP: {SMTP_HOST}:{SMTP_PORT}")
-        print(f"   User: {SMTP_USER}")
-        print(f"   SSL: {SMTP_USE_SSL}")
-        
-        # Create message
-        msg = MIMEMultipart('alternative')
-        msg['From'] = f'{FROM_NAME} <{FROM_EMAIL}>'
-        msg['To'] = to_email
-        msg['Subject'] = subject
-        
-        # Add text and HTML parts
-        text_part = MIMEText(text_content, 'plain')
-        html_part = MIMEText(html_content, 'html')
-        msg.attach(text_part)
-        msg.attach(html_part)
-        
-        # Send email - handle both SSL and TLS
-        if SMTP_USE_SSL:
-            # Use SMTP_SSL for port 465
-            print(f"🔐 Connecting with SSL...")
-            with smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT, timeout=30) as server:
-                print(f"✓ Connected to {SMTP_HOST}")
-                server.login(SMTP_USER, SMTP_PASSWORD)
-                print(f"✓ Logged in as {SMTP_USER}")
-                server.send_message(msg)
-                print(f"✓ Email sent successfully!")
-        else:
-            # Use STARTTLS for port 587
-            with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=30) as server:
-                print(f"🔐 Connecting to {SMTP_HOST}:{SMTP_PORT}...")
-                print(f"✓ Connected, starting TLS...")
-                server.starttls()
-                print(f"✓ TLS started, logging in...")
-                server.login(SMTP_USER, SMTP_PASSWORD)
-                print(f"✓ Logged in as {SMTP_USER}")
-                server.send_message(msg)
-                print(f"✓ Email sent successfully to {to_email}!")
-        
-        return True
-    except smtplib.SMTPAuthenticationError as auth_err:
-        print(f"❌ SMTP Authentication Failed!")
-        print(f"   Error: {auth_err}")
-        print(f"   Check: SMTP_USER and SMTP_PASSWORD are correct")
-        print(f"   Gmail users: Make sure you're using an App Password, not your regular password")
-        return False
-    except smtplib.SMTPException as smtp_err:
-        print(f"❌ SMTP Error: {smtp_err}")
-        print(f"   Type: {type(smtp_err).__name__}")
-        return False
-    except Exception as e:
-        print(f"❌ Email error: {e}")
-        print(f"   Type: {type(e).__name__}")
-        import traceback
-        traceback.print_exc()
-        return False
+        except smtplib.SMTPException as smtp_err:
+            print(f"❌ SMTP Error: {smtp_err}")
+            print(f"   Type: {type(smtp_err).__name__}")
+            return False
+        except Exception as e:
+            print(f"❌ Email error: {e}")
+            print(f"   Type: {type(e).__name__}")
+            import traceback
+            traceback.print_exc()
+            return False
 
 
 def generate_download_token(product_id: str, reference: str, customer_email: str, ip: str, user_agent: str) -> str:
