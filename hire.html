@@ -156,6 +156,17 @@
   display: block;
   animation: slideDown 0.3s ease-out;
 }
+
+/* Fix checkmark encoding - hide the span and use CSS ::before */
+.hf-chip .check {
+  display: none;
+}
+
+.hf-chip.selected::before {
+  content: "✓";
+  margin-right: 6px;
+  font-weight: bold;
+}
 </style>
 </head>
 <body>
@@ -252,7 +263,7 @@
 <div class="hf-field">
 <label class="hf-label">How should I contact you?</label>
 <div class="hf-chips">
-<button type="button" class="hf-chip selected" data-method="whatsapp" onclick="toggleContactMethod(event)"><span class="check">✓</span> WhatsApp</button>
+<button type="button" class="hf-chip selected" data-method="whatsapp" onclick="toggleContactMethod(event)">WhatsApp</button>
 <button type="button" class="hf-chip" data-method="email" onclick="toggleContactMethod(event)">Email</button>
 <button type="button" class="hf-chip" data-method="phone" onclick="toggleContactMethod(event)">Phone call</button>
 </div>
@@ -378,7 +389,7 @@ function toggleContactMethod(event) {
     button.classList.add('selected');
     const methodName = button.dataset.method === 'whatsapp' ? 'WhatsApp' : 
                                  button.dataset.method === 'email' ? 'Email' : 'Phone call';
-    button.innerHTML = '<span class="check">✓</span> ' + methodName;
+    button.innerHTML = methodName;
   }
 }
 
@@ -493,7 +504,7 @@ async function submitHireForm(event) {
       // Re-select WhatsApp as default
       const whatsappBtn = document.querySelector('[data-method="whatsapp"]');
       whatsappBtn.classList.add('selected');
-      whatsappBtn.innerHTML = '<span class="check">✓</span> WhatsApp';
+      whatsappBtn.innerHTML = 'WhatsApp';
       
       updateCharCount();
       
