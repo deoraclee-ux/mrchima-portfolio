@@ -630,26 +630,28 @@ a:not(.btn-dark):not(.nav-cta), a:hover:not(.btn-dark):not(.nav-cta) {
 
 /* NO HARDCODED MODAL CSS - Use original stylesheet only */
 
-/* Footer logo positioning - overlay content on logo */
+/* Footer logo positioning - simple small logo */
 .site-footer {
   position: relative !important;
 }
 
-
+.footer-brand {
+  margin-left: -15px !important; /* Move logo slightly to the left */
+}
 
 .footer-brand img {
   width: 100px !important;
   height: auto !important;
   max-width: none !important;
-  min-width: 400px !important;
+  min-width: 100px !important;
 }
 
 .footer-grid {
   position: relative !important;
-  z-index: 2 !important; /* Place nav above logo */
+  z-index: 2 !important;
   padding-top: 0 !important;
   margin-top: 0 !important;
-  gap: 30px !important; /* Reduce gap between columns */
+  gap: 30px !important;
 }
 
 /* Reduce spacing between footer nav links */
