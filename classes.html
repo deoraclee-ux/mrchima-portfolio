@@ -630,18 +630,22 @@ a:not(.btn-dark):not(.nav-cta), a:hover:not(.btn-dark):not(.nav-cta) {
 
 /* NO HARDCODED MODAL CSS - Use original stylesheet only */
 
-/* Footer logo positioning - overlay content on logo */
+/* Footer logo positioning - same as home page but smaller */
 .site-footer {
   position: relative !important;
 }
 
-
+.footer-brand {
+  display: block !important;
+  text-align: left !important;
+  margin-left: -20px !important; /* Move logo to the left - same as home page */
+}
 
 .footer-brand img {
-  width: 400px !important; /* Much much larger logo */
+  width: 100px !important; /* Small logo for classes page */
   height: auto !important;
   max-width: none !important;
-  min-width: 400px !important;
+  min-width: 100px !important;
 }
 
 .footer-grid {
@@ -668,11 +672,13 @@ a:not(.btn-dark):not(.nav-cta), a:hover:not(.btn-dark):not(.nav-cta) {
 
 /* Mobile footer adjustments */
 @media (max-width: 768px) {
-  
+  .footer-brand {
+    margin-left: -15px !important;
+  }
   
   .footer-brand img {
-    width: 300px !important; /* Bigger on mobile */
-    min-width: 300px !important;
+    width: 100px !important;
+    min-width: 100px !important;
   }
   
   .footer-grid {
@@ -682,11 +688,13 @@ a:not(.btn-dark):not(.nav-cta), a:hover:not(.btn-dark):not(.nav-cta) {
 }
 
 @media (max-width: 480px) {
-  
+  .footer-brand {
+    margin-left: -10px !important;
+  }
   
   .footer-brand img {
-    width: 250px !important; /* Still big on small mobile */
-    min-width: 250px !important;
+    width: 100px !important;
+    min-width: 100px !important;
   }
   
   .footer-grid {
