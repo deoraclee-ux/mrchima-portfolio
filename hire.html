@@ -499,13 +499,13 @@ async function submitHireForm(event) {
         // Remove checkmark by getting just the text
         const methodName = el.dataset.method === 'whatsapp' ? 'WhatsApp' : 
                            el.dataset.method === 'email' ? 'Email' : 'Phone call';
-        el.innerHTML = methodName;
+        el.textContent = methodName;
       });
       
       // Re-select WhatsApp as default
       const whatsappBtn = document.querySelector('[data-method="whatsapp"]');
       whatsappBtn.classList.add('selected');
-      whatsappBtn.innerHTML = 'WhatsApp';
+      whatsappBtn.textContent = 'WhatsApp';
       
       updateCharCount();
       
