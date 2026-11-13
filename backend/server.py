@@ -771,7 +771,7 @@ def send_download_email(customer_email: str, customer_name: str, product_name: s
     
     subject = f'{product_name}'
     
-    # Ultra-minimal iOS-style email
+    # Ultra-minimal iOS-style email (disable link tracking with data-premailer="ignore")
     html_content = f'''<!DOCTYPE html>
 <html>
 <head>
@@ -807,7 +807,7 @@ p {{
 .button {{
     display: inline-block;
     background: #000000;
-    color: #ffffff;
+    color: #ffffff !important;
     text-decoration: none;
     padding: 16px 32px;
     border-radius: 8px;
@@ -832,6 +832,12 @@ p {{
     color: #8e8e93;
     margin: 64px 0 0 0;
 }}
+.link {{
+    color: #000000;
+    word-break: break-all;
+    font-size: 13px;
+    text-decoration: none;
+}}
 </style>
 </head>
 <body>
@@ -840,6 +846,8 @@ p {{
 <p>Hi {customer_name},</p>
 <p>Your purchase is complete. Download your files below.</p>
 <a href="{download_url}" class="button">Download</a>
+<p style="font-size: 13px; color: #8e8e93;">Or copy this link:</p>
+<p><a href="{download_url}" class="link">{download_url}</a></p>
 <div class="divider"></div>
 <div class="meta">
 Link expires in 7 days<br>
