@@ -1703,70 +1703,108 @@ async def hire_request(request: Request):
         # Contact methods
         contact_methods = ', '.join(preferred_contact) if preferred_contact else 'Email'
         
-        # Compose email
-        email_subject = f'🔔 New Hire Request from {name}'
+        # Compose email - iOS Dark Theme
+        email_subject = f'New Hire Request from {name}'
         
-        email_body = f"""
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <style>
-                body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
-                .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
-                .header {{ background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px 8px 0 0; }}
-                .content {{ background: #f9f9f9; padding: 20px; border: 1px solid #ddd; border-top: none; border-radius: 0 0 8px 8px; }}
-                .field {{ margin-bottom: 15px; }}
-                .label {{ font-weight: bold; color: #667eea; }}
-                .value {{ margin-top: 5px; padding: 10px; background: white; border-left: 3px solid #667eea; }}
-                .project-type {{ background: #e7f3ff; border-left: 4px solid #667eea; padding: 15px; margin: 15px 0; border-radius: 6px; font-size: 16px; }}
-                .footer {{ margin-top: 20px; padding-top: 20px; border-top: 2px solid #ddd; font-size: 12px; color: #666; }}
-            </style>
-        </head>
-        <body>
-            <div class="container">
-                <div class="header">
-                    <h2>🔔 New Hire Request</h2>
-                    <p>Someone wants to work with you!</p>
-                </div>
-                <div class="content">
-                    <div class="project-type">
-                        <strong>Project Type:</strong><br>
-                        {project_type_display}
-                    </div>
-                    
-                    <div class="field">
-                        <div class="label">👤 Name:</div>
-                        <div class="value">{name}</div>
-                    </div>
-                    
-                    <div class="field">
-                        <div class="label">📧 Email:</div>
-                        <div class="value">{email}</div>
-                    </div>
-                    
-                    {f'<div class="field"><div class="label">📞 Phone:</div><div class="value">{phone}{" (Same as WhatsApp)" if same_whatsapp else ""}</div></div>' if phone else ''}
-                    
-                    {f'<div class="field"><div class="label">🏢 Company:</div><div class="value">{company}</div></div>' if company else ''}
-                    
-                    <div class="field">
-                        <div class="label">💬 Preferred Contact:</div>
-                        <div class="value">{contact_methods}</div>
-                    </div>
-                    
-                    <div class="field">
-                        <div class="label">💬 Project Description:</div>
-                        <div class="value">{description}</div>
-                    </div>
-                    
-                    <div class="footer">
-                        <p>📍 Sent from IP: {client_ip}</p>
-                        <p>🕐 Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S UTC')}</p>
-                    </div>
-                </div>
-            </div>
-        </body>
-        </html>
-        """
+        email_body = f"""<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+* {{ margin: 0; padding: 0; box-sizing: border-box; }}
+body {{
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: #000000;
+    color: #ffffff;
+}}
+.container {{
+    max-width: 600px;
+    margin: 80px auto;
+    padding: 0 40px;
+}}
+h1 {{
+    font-size: 28px;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 8px 0;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+}}
+.subtitle {{
+    font-size: 15px;
+    color: #8e8e93;
+    margin: 0 0 48px 0;
+}}
+.section {{
+    margin: 0 0 32px 0;
+}}
+.label {{
+    font-size: 13px;
+    color: #8e8e93;
+    margin: 0 0 6px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}}
+.value {{
+    font-size: 17px;
+    color: #ffffff;
+    line-height: 1.5;
+    white-space: pre-wrap;
+}}
+.divider {{
+    height: 1px;
+    background: #2c2c2e;
+    margin: 48px 0;
+}}
+.meta {{
+    font-size: 13px;
+    line-height: 1.8;
+    color: #8e8e93;
+    margin: 24px 0 0 0;
+}}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>New Hire Request</h1>
+<div class="subtitle">{project_type_display}</div>
+
+<div class="section">
+<div class="label">Name</div>
+<div class="value">{name}</div>
+</div>
+
+<div class="section">
+<div class="label">Email</div>
+<div class="value">{email}</div>
+</div>
+
+{f'<div class="section"><div class="label">Phone</div><div class="value">{phone}{" (Same as WhatsApp)" if same_whatsapp else ""}</div></div>' if phone else ''}
+
+{f'<div class="section"><div class="label">Company</div><div class="value">{company}</div></div>' if company else ''}
+
+<div class="section">
+<div class="label">Preferred Contact</div>
+<div class="value">{contact_methods}</div>
+</div>
+
+<div class="section">
+<div class="label">Project Description</div>
+<div class="value">{description}</div>
+</div>
+
+<div class="divider"></div>
+
+<div class="meta">
+{datetime.now().strftime('%B %d, %Y at %H:%M UTC')}<br>
+IP: {client_ip}
+</div>
+</div>
+</body>
+</html>"""
         
         # Send email via Brevo API (SMTP blocked by Render)
         try:
