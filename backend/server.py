@@ -1763,24 +1763,38 @@ async def hire_request(request: Request):
         </html>
         """
         
-        # Send email via SMTP
+        # Send email via Brevo API (SMTP blocked by Render)
         try:
-            msg = MIMEMultipart('alternative')
-            msg['From'] = FROM_EMAIL
-            msg['To'] = 'abonejoseph@gmail.com'  # Your admin email
-            msg['Subject'] = email_subject
-            msg['Reply-To'] = email  # Allow easy reply to customer
+            # Use Brevo API if available, fallback to SMTP
+            if BREVO_API_KEY:
+                email_sent = await send_email(
+                    to_email='abonejoseph@gmail.com',
+                    to_name='Abone Chima',
+                    subject=email_subject,
+                    html_content=email_body,
+                    reply_to=email
+                )
+                
+                if not email_sent:
+                    raise Exception("Brevo API failed to send email")
+                    
+                print(f"✓ Hire request email sent via Brevo to abonejoseph@gmail.com")
+            else:
+                # Fallback to SMTP (only works locally)
+                msg = MIMEMultipart('alternative')
+                msg['From'] = FROM_EMAIL
+                msg['To'] = 'abonejoseph@gmail.com'
+                msg['Subject'] = email_subject
+                msg['Reply-To'] = email
+                msg.attach(MIMEText(email_body, 'html'))
+                
+                with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as server:
+                    server.starttls()
+                    server.login(SMTP_USER, SMTP_PASSWORD)
+                    server.send_message(msg)
+                
+                print(f"✓ Hire request email sent via SMTP to abonejoseph@gmail.com")
             
-            # Attach HTML body
-            msg.attach(MIMEText(email_body, 'html'))
-            
-            # Connect and send
-            with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as server:
-                server.starttls()
-                server.login(SMTP_USER, SMTP_PASSWORD)
-                server.send_message(msg)
-            
-            print(f"✓ Hire request email sent to abonejoseph@gmail.com")
             print(f"  From: {name} <{email}>")
             print(f"  Project: {project_type_display}")
             print(f"  Contact: {contact_methods}")
@@ -1791,7 +1805,7 @@ async def hire_request(request: Request):
             }
             
         except Exception as smtp_error:
-            print(f"❌ SMTP Error: {smtp_error}")
+            print(f"❌ Email Error: {smtp_error}")
             raise HTTPException(
                 status_code=500,
                 detail='Failed to send email. Please try again or contact directly.'
