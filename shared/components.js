@@ -85,7 +85,7 @@
         const supportBtn = document.querySelector('.nav-support');
         if (supportBtn) {
             supportBtn.addEventListener('click', () => {
-                window.location.href = '/support';
+                window.location.href = '/#support';
             });
         }
     }
