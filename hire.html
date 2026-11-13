@@ -265,7 +265,7 @@
 <div class="hf-field">
 <label class="hf-label">How should I contact you?</label>
 <div class="hf-chips">
-<button type="button" class="hf-chip selected" data-method="whatsapp" onclick="toggleContactMethod(event)">WhatsApp</button>
+<button type="button" class="hf-chip selected" data-method="whatsapp" onclick="toggleContactMethod(event)">✓ WhatsApp</button>
 <button type="button" class="hf-chip" data-method="email" onclick="toggleContactMethod(event)">Email</button>
 <button type="button" class="hf-chip" data-method="phone" onclick="toggleContactMethod(event)">Phone call</button>
 </div>
@@ -391,7 +391,7 @@ function toggleContactMethod(event) {
     button.classList.add('selected');
     const methodName = button.dataset.method === 'whatsapp' ? 'WhatsApp' : 
                                  button.dataset.method === 'email' ? 'Email' : 'Phone call';
-    button.textContent = methodName;
+    button.textContent = '✓ ' + methodName;
   }
 }
 
@@ -469,11 +469,19 @@ async function submitHireForm(event) {
     timestamp: new Date().toISOString()
   };
   
-  // Show loading state
+  // Show loading state with progress in button
   submitBtn.disabled = true;
   submitBtn.classList.add('loading');
-  // Show iOS progress bar instead of spinner
-  showProgressBar();
+  btnText.textContent = 'Sending... 0%';
+  
+  // Start progress animation
+  let progress = 0;
+  const progressInterval = setInterval(() => {
+    progress += 2;
+    if (progress <= 90) {
+      btnText.textContent = `Sending... ${progress}%`;
+    }
+  }, 100);
   
   try {
     const response = await fetch(EMAIL_ENDPOINT, {
@@ -486,14 +494,15 @@ async function submitHireForm(event) {
     });
     
     const result = await response.json();
+    clearInterval(progressInterval);
     
     if (response.ok) {
-      // Show success message
-      completeProgressBar();
+      // Complete progress
+      btnText.textContent = 'Sending... 100%';
       setTimeout(() => {
-        hideProgressBar();
+        btnText.textContent = 'Sent! ✓';
         showToast('Message sent successfully', 'success');
-      }, 500);
+      }, 300);
       
       // Reset form
       document.getElementById('hire-form').reset();
@@ -510,7 +519,7 @@ async function submitHireForm(event) {
       // Re-select WhatsApp as default
       const whatsappBtn = document.querySelector('[data-method="whatsapp"]');
       whatsappBtn.classList.add('selected');
-      whatsappBtn.textContent = 'WhatsApp';
+      whatsappBtn.textContent = '✓ WhatsApp';
       
       updateCharCount();
       
@@ -522,12 +531,15 @@ async function submitHireForm(event) {
     }
   } catch (error) {
     console.error('Submission error:', error);
-    hideProgressBar();
+    clearInterval(progressInterval);
+    btnText.textContent = 'Failed to send';
     showToast('Failed to send. Please try again', 'error');
   } finally {
-    submitBtn.disabled = false;
-    submitBtn.classList.remove('loading');
-    hideProgressBar();
+    setTimeout(() => {
+      submitBtn.disabled = false;
+      submitBtn.classList.remove('loading');
+      btnText.textContent = 'Send request';
+    }, 2000);
   }
 }
 

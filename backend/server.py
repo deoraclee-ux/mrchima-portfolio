@@ -376,7 +376,8 @@ def send_email(to_email: str, to_name: str, subject: str, html_content: str, tex
             }
             
             # Use synchronous httpx.Client instead of async to avoid event loop issues
-            with httpx.Client(timeout=30.0) as client:
+            # Increased timeout for faster response
+            with httpx.Client(timeout=15.0) as client:
                 response = client.post(
                     'https://api.brevo.com/v3/smtp/email',
                     headers={
@@ -1690,7 +1691,7 @@ async def hire_request(request: Request):
         # Contact methods
         contact_methods = ', '.join(preferred_contact) if preferred_contact else 'Email'
         
-        # Compose email - Enhanced iOS Design with Better Contrast
+        # Compose email - Clean Modern iOS Design (Light Theme)
         email_subject = f'New Hire Request from {name}'
         
         email_body = f"""<!DOCTYPE html>
@@ -1701,143 +1702,101 @@ async def hire_request(request: Request):
 <style>
 * {{ margin: 0; padding: 0; box-sizing: border-box; }}
 body {{
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background: #f5f5f7;
-    padding: 40px 20px;
+    background: #ffffff;
+    line-height: 1.5;
 }}
 .container {{
     max-width: 600px;
     margin: 0 auto;
-    background: #ffffff;
-    border-radius: 18px;
-    overflow: hidden;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    padding: 48px 32px;
 }}
-.header {{
-    background: linear-gradient(135deg, #000000 0%, #1c1c1e 100%);
-    padding: 32px 32px 24px;
-}}
-.header h1 {{
-    font-size: 24px;
+h1 {{
+    font-size: 32px;
     font-weight: 700;
-    color: #ffffff;
-    margin: 0 0 6px 0;
-    letter-spacing: -0.02em;
-}}
-.header .subtitle {{
-    font-size: 15px;
-    color: #a1a1a6;
-    margin: 0;
-}}
-.content {{
-    padding: 32px;
-}}
-.section {{
-    margin: 0 0 28px 0;
-    padding: 20px;
-    background: #f5f5f7;
-    border-radius: 12px;
-    border-left: 4px solid #007AFF;
-}}
-.section:last-of-type {{
-    margin-bottom: 0;
-}}
-.label {{
-    font-size: 12px;
-    color: #8e8e93;
+    color: #000000;
     margin: 0 0 8px 0;
+    letter-spacing: -0.03em;
+}}
+.subtitle {{
+    font-size: 17px;
+    color: #8e8e93;
+    margin: 0 0 40px 0;
+}}
+.field {{
+    margin: 0 0 24px 0;
+}}
+.field-label {{
+    font-size: 13px;
+    color: #8e8e93;
+    margin: 0 0 6px 0;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
     font-weight: 600;
 }}
-.value {{
-    font-size: 16px;
-    color: #1d1d1f;
+.field-value {{
+    font-size: 17px;
+    color: #000000;
     line-height: 1.5;
     white-space: pre-wrap;
-    font-weight: 500;
 }}
-.section.description {{
-    border-left-color: #34C759;
+.field.project {{
+    background: #f5f5f7;
+    padding: 20px;
+    border-radius: 12px;
+    margin: 32px 0;
 }}
-.section.description .value {{
-    font-size: 15px;
+.field.project .field-value {{
     line-height: 1.6;
 }}
 .divider {{
     height: 1px;
-    background: #e5e5e7;
+    background: #d1d1d6;
     margin: 32px 0;
 }}
 .footer {{
-    padding: 0 32px 32px;
     font-size: 13px;
-    line-height: 1.8;
     color: #8e8e93;
-}}
-.footer-item {{
-    margin: 4px 0;
-}}
-@media (max-width: 600px) {{
-    body {{
-        padding: 20px 12px;
-    }}
-    .header {{
-        padding: 24px 20px 20px;
-    }}
-    .content {{
-        padding: 24px 20px;
-    }}
-    .section {{
-        padding: 16px;
-    }}
-    .footer {{
-        padding: 0 20px 24px;
-    }}
+    margin-top: 40px;
 }}
 </style>
 </head>
 <body>
 <div class="container">
 
-<div class="header">
 <h1>New Hire Request</h1>
 <div class="subtitle">{project_type_display}</div>
+
+<div class="field">
+<div class="field-label">Name</div>
+<div class="field-value">{name}</div>
 </div>
 
-<div class="content">
-
-<div class="section">
-<div class="label">Name</div>
-<div class="value">{name}</div>
+<div class="field">
+<div class="field-label">Email</div>
+<div class="field-value">{email}</div>
 </div>
 
-<div class="section">
-<div class="label">Email</div>
-<div class="value">{email}</div>
+{f'<div class="field"><div class="field-label">Phone</div><div class="field-value">{phone}{" • WhatsApp" if same_whatsapp else ""}</div></div>' if phone else ''}
+
+{f'<div class="field"><div class="field-label">Company</div><div class="field-value">{company}</div></div>' if company else ''}
+
+<div class="field">
+<div class="field-label">Contact Method</div>
+<div class="field-value">{contact_methods}</div>
 </div>
 
-{f'<div class="section"><div class="label">Phone</div><div class="value">{phone}{" (Same as WhatsApp)" if same_whatsapp else ""}</div></div>' if phone else ''}
-
-{f'<div class="section"><div class="label">Company</div><div class="value">{company}</div></div>' if company else ''}
-
-<div class="section">
-<div class="label">Preferred Contact</div>
-<div class="value">{contact_methods}</div>
+<div class="field project">
+<div class="field-label">Project Description</div>
+<div class="field-value">{description}</div>
 </div>
 
-<div class="section description">
-<div class="label">Project Description</div>
-<div class="value">{description}</div>
-</div>
-
-</div>
+<div class="divider"></div>
 
 <div class="footer">
-<div class="footer-item">{datetime.now().strftime('%B %d, %Y at %H:%M UTC')}</div>
-<div class="footer-item">IP: {client_ip}</div>
+{datetime.now().strftime('%B %d, %Y at %H:%M UTC')} · {client_ip}
 </div>
 
 </div>
