@@ -59,6 +59,10 @@ window.submitHireForm = async function(event) {
   showProgressBar();
   submitBtn.disabled = true;
   
+  // Set a longer timeout for the fetch (30 seconds)
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 30000);
+  
   try {
     const response = await fetch(window.EMAIL_ENDPOINT, {
       method: 'POST',
@@ -66,9 +70,11 @@ window.submitHireForm = async function(event) {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
       },
-      body: JSON.stringify(formData)
+      body: JSON.stringify(formData),
+      signal: controller.signal
     });
     
+    clearTimeout(timeoutId);
     const result = await response.json();
     
     if (response.ok) {

@@ -1690,7 +1690,7 @@ async def hire_request(request: Request):
         # Contact methods
         contact_methods = ', '.join(preferred_contact) if preferred_contact else 'Email'
         
-        # Compose email - iOS Dark Theme
+        # Compose email - Enhanced iOS Design with Better Contrast
         email_subject = f'New Hire Request from {name}'
         
         email_body = f"""<!DOCTYPE html>
@@ -1704,60 +1704,110 @@ body {{
     font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background: #000000;
-    color: #ffffff;
+    background: #f5f5f7;
+    padding: 40px 20px;
 }}
 .container {{
     max-width: 600px;
-    margin: 80px auto;
-    padding: 0 40px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
 }}
-h1 {{
-    font-size: 28px;
+.header {{
+    background: linear-gradient(135deg, #000000 0%, #1c1c1e 100%);
+    padding: 32px 32px 24px;
+}}
+.header h1 {{
+    font-size: 24px;
     font-weight: 700;
     color: #ffffff;
-    margin: 0 0 8px 0;
-    letter-spacing: -0.03em;
-    line-height: 1.2;
+    margin: 0 0 6px 0;
+    letter-spacing: -0.02em;
 }}
-.subtitle {{
+.header .subtitle {{
     font-size: 15px;
-    color: #8e8e93;
-    margin: 0 0 48px 0;
+    color: #a1a1a6;
+    margin: 0;
+}}
+.content {{
+    padding: 32px;
 }}
 .section {{
-    margin: 0 0 32px 0;
+    margin: 0 0 28px 0;
+    padding: 20px;
+    background: #f5f5f7;
+    border-radius: 12px;
+    border-left: 4px solid #007AFF;
+}}
+.section:last-of-type {{
+    margin-bottom: 0;
 }}
 .label {{
-    font-size: 13px;
+    font-size: 12px;
     color: #8e8e93;
-    margin: 0 0 6px 0;
+    margin: 0 0 8px 0;
     text-transform: uppercase;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.05em;
+    font-weight: 600;
 }}
 .value {{
-    font-size: 17px;
-    color: #ffffff;
+    font-size: 16px;
+    color: #1d1d1f;
     line-height: 1.5;
     white-space: pre-wrap;
+    font-weight: 500;
+}}
+.section.description {{
+    border-left-color: #34C759;
+}}
+.section.description .value {{
+    font-size: 15px;
+    line-height: 1.6;
 }}
 .divider {{
     height: 1px;
-    background: #2c2c2e;
-    margin: 48px 0;
+    background: #e5e5e7;
+    margin: 32px 0;
 }}
-.meta {{
+.footer {{
+    padding: 0 32px 32px;
     font-size: 13px;
     line-height: 1.8;
     color: #8e8e93;
-    margin: 24px 0 0 0;
+}}
+.footer-item {{
+    margin: 4px 0;
+}}
+@media (max-width: 600px) {{
+    body {{
+        padding: 20px 12px;
+    }}
+    .header {{
+        padding: 24px 20px 20px;
+    }}
+    .content {{
+        padding: 24px 20px;
+    }}
+    .section {{
+        padding: 16px;
+    }}
+    .footer {{
+        padding: 0 20px 24px;
+    }}
 }}
 </style>
 </head>
 <body>
 <div class="container">
+
+<div class="header">
 <h1>New Hire Request</h1>
 <div class="subtitle">{project_type_display}</div>
+</div>
+
+<div class="content">
 
 <div class="section">
 <div class="label">Name</div>
@@ -1778,17 +1828,18 @@ h1 {{
 <div class="value">{contact_methods}</div>
 </div>
 
-<div class="section">
+<div class="section description">
 <div class="label">Project Description</div>
 <div class="value">{description}</div>
 </div>
 
-<div class="divider"></div>
-
-<div class="meta">
-{datetime.now().strftime('%B %d, %Y at %H:%M UTC')}<br>
-IP: {client_ip}
 </div>
+
+<div class="footer">
+<div class="footer-item">{datetime.now().strftime('%B %d, %Y at %H:%M UTC')}</div>
+<div class="footer-item">IP: {client_ip}</div>
+</div>
+
 </div>
 </body>
 </html>"""
