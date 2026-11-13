@@ -145,6 +145,45 @@ def init_database():
 # Initialize database on startup
 init_database()
 
+# Startup health check
+print(f"\n{'='*60}")
+print(f"🚀 Mr Chima Portfolio Backend - Starting Up")
+print(f"{'='*60}")
+print(f"✓ FastAPI initialized")
+print(f"✓ Database initialized")
+print(f"\n📧 SMTP Configuration:")
+print(f"   Host: {SMTP_HOST}:{SMTP_PORT}")
+print(f"   User: {SMTP_USER}")
+print(f"   SSL: {SMTP_USE_SSL}")
+print(f"   From: {FROM_NAME} <{FROM_EMAIL}>")
+
+if not SMTP_USER or SMTP_USER == 'your-email@gmail.com':
+    print(f"   ⚠️  WARNING: SMTP_USER not configured!")
+    print(f"   ⚠️  Emails will NOT be sent!")
+elif not SMTP_PASSWORD or SMTP_PASSWORD == 'your-app-password':
+    print(f"   ⚠️  WARNING: SMTP_PASSWORD not configured!")
+    print(f"   ⚠️  Emails will NOT be sent!")
+else:
+    print(f"   ✓ SMTP configured and ready")
+
+print(f"\n💳 Paystack Configuration:")
+if PAYSTACK_SECRET_KEY and PAYSTACK_SECRET_KEY != 'sk_test_YOUR_SECRET_KEY':
+    print(f"   ✓ Secret key configured")
+else:
+    print(f"   ⚠️  WARNING: Paystack secret key not configured!")
+
+if PAYSTACK_PUBLIC_KEY and PAYSTACK_PUBLIC_KEY != 'pk_test_YOUR_PUBLIC_KEY':
+    print(f"   ✓ Public key configured")
+else:
+    print(f"   ⚠️  WARNING: Paystack public key not configured!")
+
+print(f"\n🔒 Security Configuration:")
+print(f"   Token expiry: {TOKEN_EXPIRY_HOURS} hours")
+print(f"   Max downloads: {MAX_DOWNLOADS_PER_TOKEN}")
+print(f"   Rate limit: {RATE_LIMIT_REQUESTS} requests / {RATE_LIMIT_WINDOW}s")
+print(f"   Domain: {DOMAIN}")
+print(f"{'='*60}\n")
+
 # Models
 class PaymentVerification(BaseModel):
     reference: str
@@ -299,6 +338,21 @@ def log_download_attempt(token: str, ip: str, user_agent: str, success: bool, re
 def send_email(to_email: str, to_name: str, subject: str, html_content: str, text_content: str):
     """Send email via SMTP"""
     try:
+        # Validate SMTP configuration
+        if not SMTP_USER or SMTP_USER == 'your-email@gmail.com':
+            print(f"❌ SMTP_USER not configured! Current value: {SMTP_USER}")
+            return False
+        
+        if not SMTP_PASSWORD or SMTP_PASSWORD == 'your-app-password':
+            print(f"❌ SMTP_PASSWORD not configured!")
+            return False
+        
+        print(f"📧 Sending email to: {to_email}")
+        print(f"   Subject: {subject}")
+        print(f"   SMTP: {SMTP_HOST}:{SMTP_PORT}")
+        print(f"   User: {SMTP_USER}")
+        print(f"   SSL: {SMTP_USE_SSL}")
+        
         # Create message
         msg = MIMEMultipart('alternative')
         msg['From'] = f'{FROM_NAME} <{FROM_EMAIL}>'
@@ -315,19 +369,41 @@ def send_email(to_email: str, to_name: str, subject: str, html_content: str, tex
         if SMTP_USE_SSL:
             # Use SMTP_SSL for port 465
             import smtplib
+            print(f"🔐 Connecting with SSL...")
             with smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT, timeout=30) as server:
+                print(f"✓ Connected to {SMTP_HOST}")
                 server.login(SMTP_USER, SMTP_PASSWORD)
+                print(f"✓ Logged in as {SMTP_USER}")
                 server.send_message(msg)
+                print(f"✓ Email sent successfully!")
         else:
             # Use STARTTLS for port 587
             with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=30) as server:
+                print(f"🔐 Connecting to {SMTP_HOST}:{SMTP_PORT}...")
+                print(f"✓ Connected, starting TLS...")
                 server.starttls()
+                print(f"✓ TLS started, logging in...")
                 server.login(SMTP_USER, SMTP_PASSWORD)
+                print(f"✓ Logged in as {SMTP_USER}")
                 server.send_message(msg)
+                print(f"✓ Email sent successfully to {to_email}!")
         
         return True
+    except smtplib.SMTPAuthenticationError as auth_err:
+        print(f"❌ SMTP Authentication Failed!")
+        print(f"   Error: {auth_err}")
+        print(f"   Check: SMTP_USER and SMTP_PASSWORD are correct")
+        print(f"   Gmail users: Make sure you're using an App Password, not your regular password")
+        return False
+    except smtplib.SMTPException as smtp_err:
+        print(f"❌ SMTP Error: {smtp_err}")
+        print(f"   Type: {type(smtp_err).__name__}")
+        return False
     except Exception as e:
-        print(f"Email error: {e}")
+        print(f"❌ Email error: {e}")
+        print(f"   Type: {type(e).__name__}")
+        import traceback
+        traceback.print_exc()
         return False
 
 
