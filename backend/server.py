@@ -1771,17 +1771,17 @@ async def hire_request(request: Request):
         # Send email via Brevo API (SMTP blocked by Render)
         try:
             # Use Brevo API if available, fallback to SMTP
-            if BREVO_API_KEY:
-                email_sent = await send_email(
-                    to_email='abonejoseph@gmail.com',
-                    to_name='Abone Chima',
-                    subject=email_subject,
-                    html_content=email_body,
-                    reply_to=email
-                )
-                
-                if not email_sent:
-                    raise Exception("Brevo API failed to send email")
+            # Note: send_email is synchronous, not async
+            email_sent = send_email(
+                to_email='abonejoseph@gmail.com',
+                to_name='Abone Chima',
+                subject=email_subject,
+                html_content=email_body,
+                text_content=f"New hire request from {name}\nEmail: {email}\nProject: {project_type_display}\n\n{description}"
+            )
+            
+            if not email_sent:
+                raise Exception("Email failed to send")
                     
                 print(f"✓ Hire request email sent via Brevo to abonejoseph@gmail.com")
             else:
