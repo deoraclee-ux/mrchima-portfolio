@@ -384,13 +384,13 @@ function toggleContactMethod(event) {
       button.classList.remove('selected');
       const methodName = button.dataset.method === 'whatsapp' ? 'WhatsApp' : 
                           button.dataset.method === 'email' ? 'Email' : 'Phone call';
-      button.innerHTML = methodName;
+      button.textContent = methodName;
     }
   } else {
     button.classList.add('selected');
     const methodName = button.dataset.method === 'whatsapp' ? 'WhatsApp' : 
                                  button.dataset.method === 'email' ? 'Email' : 'Phone call';
-    button.innerHTML = methodName;
+    button.textContent = methodName;
   }
 }
 
