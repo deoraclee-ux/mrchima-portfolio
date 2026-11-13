@@ -215,8 +215,11 @@ def get_client_ip(request: Request) -> str:
     return request.client.host if request.client else "unknown"
 
 
-def check_rate_limit(ip: str) -> bool:
+def check_rate_limit(ip: str, max_requests: int = None) -> bool:
     """Check if IP has exceeded rate limit"""
+    if max_requests is None:
+        max_requests = RATE_LIMIT_REQUESTS
+    
     now = time.time()
     
     # Clean old entries
