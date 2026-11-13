@@ -70,12 +70,12 @@ MAX_DOWNLOADS_PER_TOKEN = int(os.getenv('MAX_DOWNLOADS_PER_TOKEN', '3'))
 RATE_LIMIT_REQUESTS = int(os.getenv('RATE_LIMIT_REQUESTS', '10'))  # Max attempts per IP
 RATE_LIMIT_WINDOW = int(os.getenv('RATE_LIMIT_WINDOW', '3600'))  # 1 hour window
 
-# Email Configuration - USE SENDGRID API INSTEAD OF SMTP (Render blocks SMTP ports)
-SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY', '')
+# Email Configuration - USE BREVO API INSTEAD OF SMTP (Render blocks SMTP ports)
+BREVO_API_KEY = os.getenv('BREVO_API_KEY', '')
 FROM_EMAIL = os.getenv('FROM_EMAIL', 'noreply@mrchima.dev')
 FROM_NAME = os.getenv('FROM_NAME', 'Abone Chima (Mr Chima)')
 
-# Legacy SMTP config (kept for backward compatibility, but not used if SendGrid is configured)
+# Legacy SMTP config (kept for backward compatibility, but not used if Brevo is configured)
 SMTP_HOST = os.getenv('SMTP_HOST', 'smtp.gmail.com')
 SMTP_PORT = int(os.getenv('SMTP_PORT', '587'))
 SMTP_USE_SSL = os.getenv('SMTP_USE_SSL', 'false').lower() == 'true'
@@ -155,12 +155,12 @@ print(f"{'='*60}")
 print(f"✓ FastAPI initialized")
 print(f"✓ Database initialized")
 print(f"\n📧 Email Configuration:")
-print(f"   SendGrid API: {'✓ Configured' if SENDGRID_API_KEY else '✗ Not configured'}")
-if SENDGRID_API_KEY:
+print(f"   Brevo API: {'✓ Configured' if BREVO_API_KEY else '✗ Not configured'}")
+if BREVO_API_KEY:
     print(f"   From: {FROM_NAME} <{FROM_EMAIL}>")
-    print(f"   ℹ️  Using SendGrid API (SMTP blocked on Render)")
+    print(f"   ℹ️  Using Brevo API (SMTP blocked on Render)")
 else:
-    print(f"   ⚠️  WARNING: SENDGRID_API_KEY not set!")
+    print(f"   ⚠️  WARNING: BREVO_API_KEY not set!")
     print(f"   Falling back to SMTP (may not work on Render)")
     print(f"   Host: {SMTP_HOST}:{SMTP_PORT}")
     print(f"   User: {SMTP_USER}")
@@ -344,38 +344,40 @@ def log_download_attempt(token: str, ip: str, user_agent: str, success: bool, re
 
 
 def send_email(to_email: str, to_name: str, subject: str, html_content: str, text_content: str):
-    """Send email via SendGrid API (preferred) or SMTP fallback"""
+    """Send email via Brevo API (preferred) or SMTP fallback"""
     
-    # Try SendGrid first (works on Render - no port blocking)
-    if SENDGRID_API_KEY:
+    # Try Brevo first (works on Render - no port blocking)
+    if BREVO_API_KEY:
         try:
-            print(f"📧 Sending email via SendGrid API to: {to_email}")
+            print(f"📧 Sending email via Brevo API to: {to_email}")
             print(f"   Subject: {subject}")
             
             import httpx
             
             payload = {
-                "personalizations": [{
-                    "to": [{"email": to_email, "name": to_name}],
-                    "subject": subject
-                }],
-                "from": {
-                    "email": FROM_EMAIL,
-                    "name": FROM_NAME
+                "sender": {
+                    "name": FROM_NAME,
+                    "email": FROM_EMAIL
                 },
-                "content": [
-                    {"type": "text/plain", "value": text_content},
-                    {"type": "text/html", "value": html_content}
-                ]
+                "to": [
+                    {
+                        "email": to_email,
+                        "name": to_name
+                    }
+                ],
+                "subject": subject,
+                "htmlContent": html_content,
+                "textContent": text_content
             }
             
-            async def send_via_sendgrid():
+            async def send_via_brevo():
                 async with httpx.AsyncClient() as client:
                     response = await client.post(
-                        'https://api.sendgrid.com/v3/mail/send',
+                        'https://api.brevo.com/v3/smtp/email',
                         headers={
-                            'Authorization': f'Bearer {SENDGRID_API_KEY}',
-                            'Content-Type': 'application/json'
+                            'api-key': BREVO_API_KEY,
+                            'Content-Type': 'application/json',
+                            'accept': 'application/json'
                         },
                         json=payload,
                         timeout=30.0
@@ -390,25 +392,27 @@ def send_email(to_email: str, to_name: str, subject: str, html_content: str, tex
                 loop = asyncio.new_event_loop()
                 asyncio.set_event_loop(loop)
             
-            response = loop.run_until_complete(send_via_sendgrid())
+            response = loop.run_until_complete(send_via_brevo())
             
             if response.status_code in [200, 201, 202]:
-                print(f"✓ Email sent successfully via SendGrid to {to_email}!")
+                print(f"✓ Email sent successfully via Brevo to {to_email}!")
+                result = response.json()
+                print(f"   Message ID: {result.get('messageId', 'N/A')}")
                 return True
             else:
-                print(f"❌ SendGrid error: {response.status_code}")
+                print(f"❌ Brevo error: {response.status_code}")
                 print(f"   Response: {response.text}")
                 return False
                 
         except Exception as e:
-            print(f"❌ SendGrid error: {e}")
+            print(f"❌ Brevo error: {e}")
             import traceback
             traceback.print_exc()
             return False
     
     # Fallback to SMTP (won't work on Render due to port blocking)
     else:
-        print(f"⚠️  No SendGrid API key - falling back to SMTP")
+        print(f"⚠️  No Brevo API key - falling back to SMTP")
         print(f"⚠️  Note: SMTP is blocked on Render's free tier!")
         
         try:
