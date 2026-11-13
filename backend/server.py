@@ -367,8 +367,7 @@ def send_email(to_email: str, to_name: str, subject: str, html_content: str, tex
                 "to": [
                     {
                         "email": to_email,
-                        "name": to_name,
-                        "removeTrackingPixel": True  # Disable tracking for this recipient
+                        "name": to_name
                     }
                 ],
                 "subject": subject,
@@ -376,29 +375,17 @@ def send_email(to_email: str, to_name: str, subject: str, html_content: str, tex
                 "textContent": text_content
             }
             
-            async def send_via_brevo():
-                async with httpx.AsyncClient() as client:
-                    response = await client.post(
-                        'https://api.brevo.com/v3/smtp/email',
-                        headers={
-                            'api-key': BREVO_API_KEY,
-                            'Content-Type': 'application/json',
-                            'accept': 'application/json'
-                        },
-                        json=payload,
-                        timeout=30.0
-                    )
-                    return response
-            
-            # Run async function
-            import asyncio
-            try:
-                loop = asyncio.get_event_loop()
-            except RuntimeError:
-                loop = asyncio.new_event_loop()
-                asyncio.set_event_loop(loop)
-            
-            response = loop.run_until_complete(send_via_brevo())
+            # Use synchronous httpx.Client instead of async to avoid event loop issues
+            with httpx.Client(timeout=30.0) as client:
+                response = client.post(
+                    'https://api.brevo.com/v3/smtp/email',
+                    headers={
+                        'api-key': BREVO_API_KEY,
+                        'Content-Type': 'application/json',
+                        'accept': 'application/json'
+                    },
+                    json=payload
+                )
             
             if response.status_code in [200, 201, 202]:
                 print(f"✓ Email sent successfully via Brevo to {to_email}!")
