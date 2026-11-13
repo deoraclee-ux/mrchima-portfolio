@@ -74,8 +74,8 @@ RATE_LIMIT_WINDOW = int(os.getenv('RATE_LIMIT_WINDOW', '3600'))  # 1 hour window
 SMTP_HOST = os.getenv('SMTP_HOST', 'smtp.gmail.com')
 SMTP_PORT = int(os.getenv('SMTP_PORT', '587'))
 SMTP_USE_SSL = os.getenv('SMTP_USE_SSL', 'false').lower() == 'true'
-SMTP_USER = os.getenv('SMTP_USER', 'your-email@gmail.com')
-SMTP_PASSWORD = os.getenv('SMTP_PASSWORD', 'your-app-password')
+SMTP_USER = os.getenv('SMTP_USER', 'your-email@gmail.com').strip() if os.getenv('SMTP_USER') else 'your-email@gmail.com'
+SMTP_PASSWORD = os.getenv('SMTP_PASSWORD', 'your-app-password').strip().replace(' ', '') if os.getenv('SMTP_PASSWORD') else 'your-app-password'
 FROM_EMAIL = os.getenv('FROM_EMAIL', 'noreply@mrchima.dev')
 FROM_NAME = 'Abone Chima (Mr Chima)'
 
@@ -1164,27 +1164,44 @@ async def verify_payment(request: Request):
         # Create download URL
         download_url = f'{DOMAIN}/api/download/{token}'
         
-        # Send email
+        # Send email with detailed error catching
         print(f"Sending email to {data.customer_email}...")
-        email_sent = send_download_email(
-            data.customer_email,
-            data.customer_name,
-            product['name'],
-            download_url,
-            data.reference
-        )
-        print(f"✓ Email sent: {email_sent}")
+        email_sent = False
+        email_error = None
+        
+        try:
+            email_sent = send_download_email(
+                data.customer_email,
+                data.customer_name,
+                product['name'],
+                download_url,
+                data.reference
+            )
+            print(f"✓ Email sent: {email_sent}")
+        except Exception as email_ex:
+            email_error = str(email_ex)
+            print(f"❌ Email sending failed: {email_error}")
+            import traceback
+            traceback.print_exc()
         
         # Log successful verification
         log_download_attempt(token, client_ip, user_agent, True, "Token generated after payment")
         
-        return {
+        response_data = {
             'success': True,
             'email_sent': email_sent,
             'download_url': download_url,
             'message': 'Payment verified and email sent' if email_sent else 'Payment verified but email failed',
             'security_note': 'Download link is securely bound to your device and IP address'
         }
+        
+        # Include email error details for debugging
+        if email_error:
+            response_data['email_error'] = email_error
+            response_data['email_debug'] = f'SMTP: {SMTP_USER}@{SMTP_HOST}:{SMTP_PORT}, SSL={SMTP_USE_SSL}'
+        
+        return response_data
+        
     except ValidationError as ve:
         print(f"❌ Validation Error: {ve}")
         print(f"Errors: {ve.errors()}")

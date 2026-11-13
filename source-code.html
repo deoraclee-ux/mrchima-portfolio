@@ -1649,17 +1649,36 @@ function handlePaymentSuccess(response, email, name, productId) {
       customer_name: name
     })
   })
-  .then(res => res.json())
+  .then(res => {
+    if (!res.ok) {
+      console.error('HTTP Error:', res.status, res.statusText);
+      throw new Error(`Server returned ${res.status}: ${res.statusText}`);
+    }
+    return res.json();
+  })
   .then(data => {
+    console.log('Backend response:', data);
     if (data.success) {
-      alert('Download link sent to your email!');
+      if (data.email_sent) {
+        alert('Download link sent to your email!');
+      } else {
+        let errorMsg = 'Payment verified but email failed. Please contact support with reference: ' + response.reference;
+        if (data.email_error) {
+          errorMsg += '\n\nError: ' + data.email_error;
+          console.error('Email error details:', data.email_error);
+          if (data.email_debug) {
+            console.error('Email debug:', data.email_debug);
+          }
+        }
+        alert(errorMsg);
+      }
     } else {
       alert('Payment verified but email failed. Please contact support with reference: ' + response.reference);
     }
   })
   .catch(error => {
     console.error('Error:', error);
-    alert('Unable to send download link. Please contact support with reference: ' + response.reference);
+    alert('Unable to send download link. Please contact support with reference: ' + response.reference + '\n\nError: ' + error.message);
   });
 }
 
