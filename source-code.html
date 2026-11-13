@@ -1661,7 +1661,7 @@ function handlePaymentSuccess(response, email, name, productId) {
     if (data.success && data.email_sent) {
       alert('Download link sent to your email!');
     } else if (data.success) {
-      alert('Payment successful!\n\nDownload link:\n' + data.download_url);
+      alert('Payment successful! Check your email for the download link.');
     } else {
       alert('Payment verification failed. Please contact support with reference: ' + response.reference);
     }
