@@ -474,14 +474,14 @@ async function submitHireForm(event) {
   submitBtn.classList.add('loading');
   btnText.textContent = 'Sending... 0%';
   
-  // Start progress animation
+  // Start progress animation that stops at 90%
   let progress = 0;
   const progressInterval = setInterval(() => {
-    progress += 2;
+    progress += 3;
     if (progress <= 90) {
       btnText.textContent = `Sending... ${progress}%`;
     }
-  }, 100);
+  }, 80);
   
   try {
     const response = await fetch(EMAIL_ENDPOINT, {
@@ -493,38 +493,44 @@ async function submitHireForm(event) {
       body: JSON.stringify(formData)
     });
     
-    const result = await response.json();
+    // Stop progress animation
     clearInterval(progressInterval);
     
+    const result = await response.json();
+    
     if (response.ok) {
-      // Complete progress
+      // Show completion sequence
       btnText.textContent = 'Sending... 100%';
+      
       setTimeout(() => {
         btnText.textContent = 'Sent! ✓';
-        showToast('Message sent successfully', 'success');
-      }, 300);
-      
-      // Reset form
-      document.getElementById('hire-form').reset();
-      selectedProjectType = null;
-      document.querySelectorAll('.hf-option').forEach(el => el.classList.remove('selected'));
-      document.querySelectorAll('.hf-chip').forEach(el => {
-        el.classList.remove('selected');
-        // Remove checkmark by getting just the text
-        const methodName = el.dataset.method === 'whatsapp' ? 'WhatsApp' : 
-                           el.dataset.method === 'email' ? 'Email' : 'Phone call';
-        el.textContent = methodName;
-      });
-      
-      // Re-select WhatsApp as default
-      const whatsappBtn = document.querySelector('[data-method="whatsapp"]');
-      whatsappBtn.classList.add('selected');
-      whatsappBtn.textContent = '✓ WhatsApp';
-      
-      updateCharCount();
-      
-      // Scroll to success message
-      successMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        showToast('Message sent successfully!', 'success');
+        
+        // Reset form after showing success
+        setTimeout(() => {
+          document.getElementById('hire-form').reset();
+          selectedProjectType = null;
+          document.querySelectorAll('.hf-option').forEach(el => el.classList.remove('selected'));
+          document.querySelectorAll('.hf-chip').forEach(el => {
+            el.classList.remove('selected');
+            const methodName = el.dataset.method === 'whatsapp' ? 'WhatsApp' : 
+                               el.dataset.method === 'email' ? 'Email' : 'Phone call';
+            el.textContent = methodName;
+          });
+          
+          // Re-select WhatsApp as default
+          const whatsappBtn = document.querySelector('[data-method="whatsapp"]');
+          whatsappBtn.classList.add('selected');
+          whatsappBtn.textContent = '✓ WhatsApp';
+          
+          updateCharCount();
+          
+          // Re-enable button
+          submitBtn.disabled = false;
+          submitBtn.classList.remove('loading');
+          btnText.textContent = 'Send request';
+        }, 2000);
+      }, 400);
       
     } else {
       throw new Error(result.message || result.detail || 'Failed to send request');
@@ -532,14 +538,16 @@ async function submitHireForm(event) {
   } catch (error) {
     console.error('Submission error:', error);
     clearInterval(progressInterval);
-    btnText.textContent = 'Failed to send';
+    
+    btnText.textContent = 'Send failed ✗';
     showToast('Failed to send. Please try again', 'error');
-  } finally {
+    
+    // Re-enable button after error
     setTimeout(() => {
       submitBtn.disabled = false;
       submitBtn.classList.remove('loading');
       btnText.textContent = 'Send request';
-    }, 2000);
+    }, 2500);
   }
 }
 
