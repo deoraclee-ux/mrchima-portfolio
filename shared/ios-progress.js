@@ -1,116 +1,127 @@
 // iOS Progress Bar and Toast Notification System
 
-// Enhance submitHireForm to use iOS progress
-const originalSubmitHireForm = window.submitHireForm;
-window.submitHireForm = async function(event) {
-  event.preventDefault();
-  const submitBtn = document.getElementById('submit-btn');
-  const successMessage = document.getElementById('success-message');
-  const errorMessage = document.getElementById('error-message');
+// Wait for page to load before overriding
+document.addEventListener('DOMContentLoaded', function() {
   
-  // Hide previous messages
-  successMessage.classList.remove('show');
-  errorMessage.classList.remove('show');
+  // Store original submit function
+  const originalSubmit = window.submitHireForm;
   
-  // Validation
-  if (!window.selectedProjectType) {
-    showError('Please select a project type');
-    return;
-  }
-  const description = document.getElementById('project-description').value.trim();
-  if (!description) {
-    showError('Please describe your project');
-    return;
-  }
-  const name = document.getElementById('contact-name').value.trim();
-  const email = document.getElementById('contact-email').value.trim();
-  if (!name) {
-    showError('Please enter your name');
-    return;
-  }
-  if (!email || !isValidEmail(email)) {
-    showError('Please enter a valid email address');
-    return;
-  }
-  const selectedMethods = Array.from(document.querySelectorAll('.hf-chip.selected'))
-    .map(chip => chip.dataset.method);
-  if (selectedMethods.length === 0) {
-    showError('Please select at least one contact method');
-    return;
-  }
-  const phone = document.getElementById('contact-phone').value.trim();
-  if ((selectedMethods.includes('whatsapp') || selectedMethods.includes('phone')) && !phone) {
-    showError('Phone number is required when selecting WhatsApp or Phone call');
-    return;
-  }
-  
-  const formData = {
-    projectType: sanitizeInput(window.selectedProjectType),
-    description: sanitizeInput(description),
-    name: sanitizeInput(name),
-    email: sanitizeInput(email),
-    phone: sanitizeInput(phone),
-    sameWhatsapp: document.getElementById('same-whatsapp').checked,
-    contactMethods: selectedMethods,
-    timestamp: new Date().toISOString()
+  // Override submitHireForm with iOS progress
+  window.submitHireForm = async function(event) {
+    event.preventDefault();
+    const submitBtn = document.getElementById('submit-btn');
+    const successMessage = document.getElementById('success-message');
+    const errorMessage = document.getElementById('error-message');
+    
+    // Hide previous messages
+    if (successMessage) successMessage.classList.remove('show');
+    if (errorMessage) errorMessage.classList.remove('show');
+    
+    // Get selectedProjectType from global scope (defined in hire.html)
+    const projectType = window.selectedProjectType;
+    
+    // Validation
+    if (!projectType) {
+      if (window.showError) window.showError('Please select a project type');
+      return;
+    }
+    const description = document.getElementById('project-description').value.trim();
+    if (!description) {
+      if (window.showError) window.showError('Please describe your project');
+      return;
+    }
+    const name = document.getElementById('contact-name').value.trim();
+    const email = document.getElementById('contact-email').value.trim();
+    if (!name) {
+      if (window.showError) window.showError('Please enter your name');
+      return;
+    }
+    if (!email || !window.isValidEmail(email)) {
+      if (window.showError) window.showError('Please enter a valid email address');
+      return;
+    }
+    const selectedMethods = Array.from(document.querySelectorAll('.hf-chip.selected'))
+      .map(chip => chip.dataset.method);
+    if (selectedMethods.length === 0) {
+      if (window.showError) window.showError('Please select at least one contact method');
+      return;
+    }
+    const phone = document.getElementById('contact-phone').value.trim();
+    if ((selectedMethods.includes('whatsapp') || selectedMethods.includes('phone')) && !phone) {
+      if (window.showError) window.showError('Phone number is required when selecting WhatsApp or Phone call');
+      return;
+    }
+    
+    const formData = {
+      projectType: window.sanitizeInput(projectType),
+      description: window.sanitizeInput(description),
+      name: window.sanitizeInput(name),
+      email: window.sanitizeInput(email),
+      phone: window.sanitizeInput(phone),
+      sameWhatsapp: document.getElementById('same-whatsapp').checked,
+      contactMethods: selectedMethods,
+      timestamp: new Date().toISOString()
+    };
+    
+    // Show iOS progress bar
+    showProgressBar();
+    submitBtn.disabled = true;
+    
+    // Set a longer timeout for the fetch (30 seconds)
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000);
+    
+    try {
+      const response = await fetch(window.EMAIL_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(formData),
+        signal: controller.signal
+      });
+      
+      clearTimeout(timeoutId);
+      const result = await response.json();
+      
+      if (response.ok) {
+        completeProgressBar();
+        setTimeout(() => {
+          hideProgressBar();
+          showToast('Message sent successfully', 'success');
+          
+          // Reset form
+          document.getElementById('hire-form').reset();
+          window.selectedProjectType = null;
+          document.querySelectorAll('.hf-option').forEach(el => el.classList.remove('selected'));
+          document.querySelectorAll('.hf-chip').forEach(el => {
+            el.classList.remove('selected');
+            // Fix encoding issue - use proper text instead of innerHTML
+            const methodName = el.dataset.method === 'whatsapp' ? 'WhatsApp' : 
+                               el.dataset.method === 'email' ? 'Email' : 'Phone call';
+            el.textContent = methodName;
+          });
+          const whatsappBtn = document.querySelector('[data-method="whatsapp"]');
+          if (whatsappBtn) {
+            whatsappBtn.classList.add('selected');
+            whatsappBtn.textContent = 'WhatsApp';
+          }
+          if (window.updateCharCount) window.updateCharCount();
+        }, 500);
+      } else {
+        throw new Error(result.message || result.detail || 'Failed to send request');
+      }
+    } catch (error) {
+      console.error('Submission error:', error);
+      hideProgressBar();
+      showToast('Failed to send. Please try again', 'error');
+    } finally {
+      submitBtn.disabled = false;
+    }
   };
   
-  // Show iOS progress bar
-  showProgressBar();
-  submitBtn.disabled = true;
-  
-  // Set a longer timeout for the fetch (30 seconds)
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 30000);
-  
-  try {
-    const response = await fetch(window.EMAIL_ENDPOINT, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify(formData),
-      signal: controller.signal
-    });
-    
-    clearTimeout(timeoutId);
-    const result = await response.json();
-    
-    if (response.ok) {
-      completeProgressBar();
-      setTimeout(() => {
-        hideProgressBar();
-        showToast('Message sent successfully', 'success');
-        
-        // Reset form
-        document.getElementById('hire-form').reset();
-        window.selectedProjectType = null;
-        document.querySelectorAll('.hf-option').forEach(el => el.classList.remove('selected'));
-        document.querySelectorAll('.hf-chip').forEach(el => {
-          el.classList.remove('selected');
-          const methodName = el.dataset.method === 'whatsapp' ? 'WhatsApp' : 
-                             el.dataset.method === 'email' ? 'Email' : 'Phone call';
-          el.innerHTML = methodName;
-        });
-        const whatsappBtn = document.querySelector('[data-method="whatsapp"]');
-        if (whatsappBtn) {
-          whatsappBtn.classList.add('selected');
-          whatsappBtn.innerHTML = 'WhatsApp';
-        }
-        if (window.updateCharCount) window.updateCharCount();
-      }, 500);
-    } else {
-      throw new Error(result.message || result.detail || 'Failed to send request');
-    }
-  } catch (error) {
-    console.error('Submission error:', error);
-    hideProgressBar();
-    showToast('Failed to send. Please try again', 'error');
-  } finally {
-    submitBtn.disabled = false;
-  }
-};
+});
 
 // iOS Progress Bar Functions
 function showProgressBar() {
