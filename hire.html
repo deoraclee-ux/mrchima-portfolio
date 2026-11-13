@@ -471,8 +471,8 @@ async function submitHireForm(event) {
   // Show loading state
   submitBtn.disabled = true;
   submitBtn.classList.add('loading');
-  btnText.textContent = 'Sending...';
-  spinner.style.display = 'inline-block';
+  // Show iOS progress bar instead of spinner
+  showProgressBar();
   
   try {
     const response = await fetch(EMAIL_ENDPOINT, {
@@ -488,7 +488,11 @@ async function submitHireForm(event) {
     
     if (response.ok) {
       // Show success message
-      successMessage.classList.add('show');
+      completeProgressBar();
+      setTimeout(() => {
+        hideProgressBar();
+        showToast('Message sent successfully', 'success');
+      }, 500);
       
       // Reset form
       document.getElementById('hire-form').reset();
@@ -517,12 +521,12 @@ async function submitHireForm(event) {
     }
   } catch (error) {
     console.error('Submission error:', error);
-    showError('Failed to send request. Please try again or email me directly at hello@mrchima.dev');
+    hideProgressBar();
+    showToast('Failed to send. Please try again', 'error');
   } finally {
     submitBtn.disabled = false;
     submitBtn.classList.remove('loading');
-    btnText.textContent = 'Send request';
-    spinner.style.display = 'none';
+    hideProgressBar();
   }
 }
 
@@ -636,7 +640,55 @@ document.getElementById('support-overlay')?.addEventListener('click', (e) => {
 
 // Initialize on page load
 loadSharedComponents();
+
+// iOS Progress Bar Functions
+function showProgressBar() {
+  let progressBar = document.getElementById('ios-progress-bar');
+  if (!progressBar) {
+    progressBar = document.createElement('div');
+    progressBar.id = 'ios-progress-bar';
+    progressBar.innerHTML = '<div class="ios-progress-fill"></div>';
+    document.body.appendChild(progressBar);
+  }
+  progressBar.classList.add('show');
+  const fill = progressBar.querySelector('.ios-progress-fill');
+  fill.style.width = '0%';
+  setTimeout(() => { fill.style.width = '90%'; }, 10);
+}
+
+function completeProgressBar() {
+  const progressBar = document.getElementById('ios-progress-bar');
+  if (progressBar) {
+    const fill = progressBar.querySelector('.ios-progress-fill');
+    fill.style.width = '100%';
+  }
+}
+
+function hideProgressBar() {
+  const progressBar = document.getElementById('ios-progress-bar');
+  if (progressBar) {
+    setTimeout(() => {
+      progressBar.classList.remove('show');
+      const fill = progressBar.querySelector('.ios-progress-fill');
+      fill.style.width = '0%';
+    }, 300);
+  }
+}
+
+function showToast(message, type) {
+  let toast = document.getElementById('ios-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'ios-toast';
+    toast.innerHTML = '<svg class="toast-icon" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M7 10L9 12L13 8M19 10C19 14.9706 14.9706 19 10 19C5.02944 19 1 14.9706 1 10C1 5.02944 5.02944 1 10 1C14.9706 1 19 5.02944 19 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="toast-message"></span>';
+    document.body.appendChild(toast);
+  }
+  toast.className = 'ios-toast ' + type;
+  toast.querySelector('.toast-message').textContent = message;
+  setTimeout(() => toast.classList.add('show'), 10);
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
 </script>
 
-<script src="/shared/ios-progress.js?v=20261113133201"></script></body>
+</body>
 </html>
