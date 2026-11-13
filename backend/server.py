@@ -570,120 +570,97 @@ def invalidate_token(token: str):
 
 
 def send_support_email(customer_email: str, customer_name: str, amount: int, reference: str):
-    """Send iOS-style clean support confirmation email to customer AND notification to admin"""
+    """Send iOS-style minimal support confirmation email"""
     
-    # Format amount with Naira symbol
     formatted_amount = f"₦{amount:,}"
     
-    # CUSTOMER EMAIL
-    subject = 'Support Received — Thank You'
+    subject = 'Payment Received'
     
-    # iOS-style minimal HTML email
+    # Ultra-minimal iOS-style email
     html_content = f'''<!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
+* {{ margin: 0; padding: 0; box-sizing: border-box; }}
 body {{
-    margin: 0;
-    padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-}}
-.email-wrapper {{
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 40px 20px;
-}}
-.email-content {{
     background: #ffffff;
-    border: 1px solid #e5e5e5;
-    border-radius: 12px;
-    padding: 40px 32px;
+}}
+.container {{
+    max-width: 600px;
+    margin: 80px auto;
+    padding: 0 40px;
 }}
 h1 {{
-    font-size: 24px;
-    font-weight: 600;
+    font-size: 28px;
+    font-weight: 700;
     color: #000000;
-    margin: 0 0 24px 0;
-    letter-spacing: -0.02em;
+    margin: 0 0 48px 0;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+}}
+.amount {{
+    font-size: 48px;
+    font-weight: 700;
+    color: #000000;
+    margin: 48px 0;
+    letter-spacing: -0.04em;
 }}
 p {{
     font-size: 17px;
     line-height: 1.5;
     color: #000000;
-    margin: 0 0 16px 0;
+    margin: 0 0 24px 0;
 }}
-.amount {{
-    font-size: 36px;
-    font-weight: 700;
-    color: #000000;
-    margin: 32px 0;
-    text-align: center;
-    letter-spacing: -0.03em;
+.divider {{
+    height: 1px;
+    background: #e5e5e5;
+    margin: 48px 0;
 }}
-.reference {{
+.meta {{
     font-size: 13px;
     color: #8e8e93;
     margin: 24px 0 0 0;
-    padding-top: 24px;
-    border-top: 1px solid #e5e5e5;
-}}
-.signature {{
-    font-size: 15px;
-    color: #000000;
-    margin: 32px 0 0 0;
 }}
 .footer {{
     font-size: 13px;
     color: #8e8e93;
-    text-align: center;
-    margin: 24px 0 0 0;
+    margin: 64px 0 0 0;
 }}
 </style>
 </head>
 <body>
-<div class="email-wrapper">
-<div class="email-content">
-<h1>Support Received</h1>
-<p>Hi {customer_name},</p>
-<p>Your support has been received successfully.</p>
+<div class="container">
+<h1>Payment Received</h1>
 <div class="amount">{formatted_amount}</div>
-<p>Thank you for supporting my work. Your contribution helps me continue building and sharing quality projects.</p>
-<div class="signature">
-Best regards,<br>
-Abone Chima
-</div>
-<div class="reference">
+<p>Hi {customer_name},</p>
+<p>Thank you for your support.</p>
+<div class="divider"></div>
+<div class="meta">
 Reference: {reference}
 </div>
-</div>
 <div class="footer">
-© 2026 Abone Chima
+Abone Chima
 </div>
 </div>
 </body>
 </html>'''
     
-    # Plain text version
-    text_content = f'''Support Received — Thank You
+    text_content = f'''Payment Received
+
+{formatted_amount}
 
 Hi {customer_name},
 
-Your support has been received successfully.
-
-Amount: {formatted_amount}
-
-Thank you for supporting my work. Your contribution helps me continue building and sharing quality projects.
-
-Best regards,
-Abone Chima
+Thank you for your support.
 
 Reference: {reference}
 
-© 2026 Abone Chima'''
+Abone Chima'''
     
     # Send to customer
     customer_sent = send_email(
@@ -694,9 +671,9 @@ Reference: {reference}
         text_content=text_content
     )
     
-    # ADMIN NOTIFICATION EMAIL
+    # ADMIN NOTIFICATION - also minimal
     admin_email = "abonejoseph@gmail.com"
-    admin_subject = f'🎉 New Support Payment: {formatted_amount}'
+    admin_subject = f'New Support: {formatted_amount}'
     
     admin_html = f'''<!DOCTYPE html>
 <html>
@@ -704,84 +681,75 @@ Reference: {reference}
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
+* {{ margin: 0; padding: 0; box-sizing: border-box; }}
 body {{
-    margin: 0;
-    padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
-}}
-.email-wrapper {{
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 40px 20px;
-}}
-.email-content {{
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
     background: #ffffff;
-    border: 2px solid #007ACC;
-    border-radius: 12px;
-    padding: 40px 32px;
+}}
+.container {{
+    max-width: 600px;
+    margin: 80px auto;
+    padding: 0 40px;
 }}
 h1 {{
-    font-size: 24px;
+    font-size: 28px;
     font-weight: 700;
-    color: #007ACC;
-    margin: 0 0 24px 0;
+    color: #000000;
+    margin: 0 0 48px 0;
+    letter-spacing: -0.03em;
 }}
 .amount {{
     font-size: 48px;
     font-weight: 700;
-    color: #007ACC;
-    margin: 32px 0;
-    text-align: center;
+    color: #000000;
+    margin: 48px 0;
+    letter-spacing: -0.04em;
 }}
 .info {{
-    background: #f9fafb;
-    border-radius: 8px;
-    padding: 16px;
     margin: 16px 0;
     font-size: 15px;
 }}
 .label {{
-    font-weight: 600;
-    color: #6b7280;
+    font-size: 13px;
+    color: #8e8e93;
     margin-bottom: 4px;
 }}
 .value {{
-    color: #111827;
+    color: #000000;
+}}
+.divider {{
+    height: 1px;
+    background: #e5e5e5;
+    margin: 32px 0;
 }}
 </style>
 </head>
 <body>
-<div class="email-wrapper">
-<div class="email-content">
-<h1>🎉 New Support Payment!</h1>
+<div class="container">
+<h1>New Support Payment</h1>
 <div class="amount">{formatted_amount}</div>
 <div class="info">
-<div class="label">Customer Name</div>
+<div class="label">Customer</div>
 <div class="value">{customer_name}</div>
 </div>
 <div class="info">
-<div class="label">Customer Email</div>
+<div class="label">Email</div>
 <div class="value">{customer_email}</div>
 </div>
-<div class="info">
-<div class="label">Reference</div>
-<div class="value">{reference}</div>
-</div>
-<p style="margin-top: 24px; color: #6b7280;">Confirmation email sent to customer.</p>
-</div>
+<div class="divider"></div>
+<div class="label">Reference: {reference}</div>
 </div>
 </body>
 </html>'''
     
-    admin_text = f'''🎉 New Support Payment!
+    admin_text = f'''New Support Payment
 
-Amount: {formatted_amount}
+{formatted_amount}
 
-Customer Name: {customer_name}
-Customer Email: {customer_email}
-Reference: {reference}
-
-Confirmation email sent to customer.'''
+Customer: {customer_name}
+Email: {customer_email}
+Reference: {reference}'''
     
     # Send to admin
     admin_sent = send_email(
@@ -795,131 +763,109 @@ Confirmation email sent to customer.'''
     print(f"✓ Customer email sent: {customer_sent}")
     print(f"✓ Admin notification sent: {admin_sent}")
     
-    return customer_sent  # Return customer email status for main response
+    return customer_sent
 
 
 def send_download_email(customer_email: str, customer_name: str, product_name: str, download_url: str, reference: str):
-    """Send download link email"""
+    """Send download link email - iOS minimal style"""
     
-    subject = f'Your {product_name} Download Link'
+    subject = f'{product_name}'
     
-    # HTML email template
-    html_content = f'''
-<!DOCTYPE html>
+    # Ultra-minimal iOS-style email
+    html_content = f'''<!DOCTYPE html>
 <html>
 <head>
-    <style>
-        body {{
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-        }}
-        .header {{
-            background: #007ACC;
-            color: white;
-            padding: 30px 20px;
-            text-align: center;
-            border-radius: 8px 8px 0 0;
-        }}
-        .content {{
-            background: white;
-            padding: 30px 20px;
-            border: 1px solid #e0e0e0;
-            border-top: none;
-        }}
-        .button {{
-            display: inline-block;
-            background: #8B0000;
-            color: white;
-            padding: 14px 32px;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: 600;
-            margin: 20px 0;
-        }}
-        .footer {{
-            background: #f8f9fa;
-            padding: 20px;
-            text-align: center;
-            font-size: 14px;
-            color: #666;
-            border-radius: 0 0 8px 8px;
-        }}
-        .info-box {{
-            background: #f8f9fa;
-            padding: 16px;
-            border-radius: 6px;
-            margin: 20px 0;
-        }}
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+* {{ margin: 0; padding: 0; box-sizing: border-box; }}
+body {{
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: #ffffff;
+}}
+.container {{
+    max-width: 600px;
+    margin: 80px auto;
+    padding: 0 40px;
+}}
+h1 {{
+    font-size: 28px;
+    font-weight: 700;
+    color: #000000;
+    margin: 0 0 48px 0;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+}}
+p {{
+    font-size: 17px;
+    line-height: 1.5;
+    color: #000000;
+    margin: 0 0 24px 0;
+}}
+.button {{
+    display: inline-block;
+    background: #000000;
+    color: #ffffff;
+    text-decoration: none;
+    padding: 16px 32px;
+    border-radius: 8px;
+    font-size: 17px;
+    font-weight: 600;
+    margin: 32px 0 48px 0;
+    letter-spacing: -0.01em;
+}}
+.divider {{
+    height: 1px;
+    background: #e5e5e5;
+    margin: 48px 0;
+}}
+.meta {{
+    font-size: 13px;
+    line-height: 1.6;
+    color: #8e8e93;
+    margin: 24px 0 0 0;
+}}
+.footer {{
+    font-size: 13px;
+    color: #8e8e93;
+    margin: 64px 0 0 0;
+}}
+</style>
 </head>
 <body>
-    <div class="header">
-        <h1 style="margin:0;">Thank You for Your Purchase!</h1>
-    </div>
-    
-    <div class="content">
-        <p>Hi {customer_name},</p>
-        
-        <p>Your payment was successful! You can now download your <strong>{product_name}</strong>.</p>
-        
-        <div style="text-align: center;">
-            <a href="{download_url}" class="button">Download Now</a>
-        </div>
-        
-        <div class="info-box">
-            <strong>Important Information:</strong>
-            <ul style="margin: 10px 0;">
-                <li>This download link expires in 7 days</li>
-                <li>You can download the file up to 3 times</li>
-                <li>Keep this email for your records</li>
-            </ul>
-        </div>
-        
-        <p><strong>Transaction Reference:</strong> {reference}</p>
-        
-        <p>If you have any questions or issues with your download, please reply to this email or contact us at support@mrchima.dev</p>
-        
-        <p>Best regards,<br>
-        <strong>Abone Chima</strong><br>
-        Python Developer & Instructor</p>
-    </div>
-    
-    <div class="footer">
-        <p>© 2026 Abone Chima. All rights reserved.</p>
-        <p>mrchima.dev</p>
-    </div>
+<div class="container">
+<h1>{product_name}</h1>
+<p>Hi {customer_name},</p>
+<p>Your purchase is complete. Download your files below.</p>
+<a href="{download_url}" class="button">Download</a>
+<div class="divider"></div>
+<div class="meta">
+Link expires in 7 days<br>
+Maximum 3 downloads<br>
+Reference: {reference}
+</div>
+<div class="footer">
+Abone Chima
+</div>
+</div>
 </body>
-</html>
-    '''
+</html>'''
     
-    # Plain text version
-    text_content = f'''
+    text_content = f'''{product_name}
+
 Hi {customer_name},
 
-Thank you for your purchase!
+Your purchase is complete. Download your files using the link below.
 
-Your payment was successful and you can now download your {product_name}.
+{download_url}
 
-Download Link: {download_url}
+Link expires in 7 days
+Maximum 3 downloads
+Reference: {reference}
 
-Important Information:
-- This download link expires in 7 days
-- You can download the file up to 3 times
-- Keep this email for your records
-
-Transaction Reference: {reference}
-
-If you have any questions, please contact us at support@mrchima.dev
-
-Best regards,
-Abone Chima
-Python Developer & Instructor
-mrchima.dev
-    '''
+Abone Chima'''
     
     return send_email(
         to_email=customer_email,
