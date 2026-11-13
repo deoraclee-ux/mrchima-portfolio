@@ -675,12 +675,14 @@ a:not(.btn-dark):not(.nav-cta), a:hover:not(.btn-dark):not(.nav-cta) {
 @media (max-width: 768px) {
   .footer-brand {
     margin-bottom: -150px !important; /* Higher negative - pull content way up on mobile */
-    margin-left: -10px !important;
+    margin-left: -30px !important; /* Move logo more to the left */
+    position: relative;
+    left: -20px; /* Additional left positioning */
   }
   
   .footer-brand img {
-    width: 400px !important; /* Bigger on mobile */
-    min-width: 400px !important;
+    width: 100px !important; /* Smaller logo on mobile - size 100 */
+    min-width: 100px !important;
   }
   
   .footer-grid {
@@ -692,12 +694,14 @@ a:not(.btn-dark):not(.nav-cta), a:hover:not(.btn-dark):not(.nav-cta) {
 @media (max-width: 480px) {
   .footer-brand {
     margin-bottom: -120px !important; /* Even higher negative */
-    margin-left: -10px !important;
+    margin-left: -30px !important; /* Move logo more to the left */
+    position: relative;
+    left: -20px; /* Additional left positioning */
   }
   
   .footer-brand img {
-    width: 300px !important; /* Still big on small mobile */
-    min-width: 300px !important;
+    width: 100px !important; /* Same size on small mobile - size 100 */
+    min-width: 100px !important;
   }
   
   .footer-grid {
