@@ -368,7 +368,6 @@ def send_email(to_email: str, to_name: str, subject: str, html_content: str, tex
         # Send email - handle both SSL and TLS
         if SMTP_USE_SSL:
             # Use SMTP_SSL for port 465
-            import smtplib
             print(f"🔐 Connecting with SSL...")
             with smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT, timeout=30) as server:
                 print(f"✓ Connected to {SMTP_HOST}")
