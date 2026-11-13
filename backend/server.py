@@ -1817,24 +1817,8 @@ h1 {{
             
             if not email_sent:
                 raise Exception("Email failed to send")
-                    
-                print(f"✓ Hire request email sent via Brevo to abonejoseph@gmail.com")
-            else:
-                # Fallback to SMTP (only works locally)
-                msg = MIMEMultipart('alternative')
-                msg['From'] = FROM_EMAIL
-                msg['To'] = 'abonejoseph@gmail.com'
-                msg['Subject'] = email_subject
-                msg['Reply-To'] = email
-                msg.attach(MIMEText(email_body, 'html'))
-                
-                with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as server:
-                    server.starttls()
-                    server.login(SMTP_USER, SMTP_PASSWORD)
-                    server.send_message(msg)
-                
-                print(f"✓ Hire request email sent via SMTP to abonejoseph@gmail.com")
             
+            print(f"✓ Hire request email sent via Brevo to abonejoseph@gmail.com")
             print(f"  From: {name} <{email}>")
             print(f"  Project: {project_type_display}")
             print(f"  Contact: {contact_methods}")
@@ -1844,8 +1828,8 @@ h1 {{
                 'message': 'Your message has been sent successfully! I\'ll get back to you soon.'
             }
             
-        except Exception as smtp_error:
-            print(f"❌ Email Error: {smtp_error}")
+        except Exception as email_error:
+            print(f"❌ Email Error: {email_error}")
             raise HTTPException(
                 status_code=500,
                 detail='Failed to send email. Please try again or contact directly.'
