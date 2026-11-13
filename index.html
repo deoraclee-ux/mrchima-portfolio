@@ -1586,7 +1586,7 @@ function handlePaymentSuccess(response, email, name, productId) {
   alert(`Payment successful!\n\nYour download link will be sent to ${email}\n\nReference: ${response.reference}`);
   
   // Send to backend for verification and email
-  fetch('${BACKEND_URL}/api/verify-payment', {
+  fetch(`${BACKEND_URL}/api/verify-payment`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -2461,7 +2461,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const originalText = submitBtn.textContent;
       
       try {
-        const response = await fetch('${BACKEND_URL}/api/contact', {
+        const response = await fetch(`${BACKEND_URL}/api/contact`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

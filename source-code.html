@@ -1637,7 +1637,7 @@ function handlePaymentSuccess(response, email, name, productId) {
   alert(`Payment successful!\n\nYour download link will be sent to ${email}\n\nReference: ${response.reference}`);
   
   // Send to backend for verification and email
-  fetch('${BACKEND_URL}/api/verify-payment', {
+  fetch(`${BACKEND_URL}/api/verify-payment`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
