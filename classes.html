@@ -956,10 +956,10 @@ document.addEventListener('DOMContentLoaded', function() {
     ? "http://localhost:8000" 
     : "https://mrchima-portfolio.onrender.com";
   
-  // Support button handler
-  document.querySelector(".nav-support")?.addEventListener("click", () => {
-    window.location.href = "/index.html#support";
-  });
+  // Support button handler - DO NOT use (will be overridden below)
+  // document.querySelector(".nav-support")?.addEventListener("click", () => {
+  //   window.location.href = "/index.html#support";
+  // });
   
   // Mobile menu toggle
   const menuBtn = document.querySelector(".menu-btn");
@@ -973,4 +973,210 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 </script>
+
+<!-- Support Section -->
+<section class="support">
+  <div class="container">
+    <div class="support-row">
+      <div class="support-text">
+        <h2>Support the work</h2>
+        <p>Help keep the content free and accessible</p>
+      </div>
+      <div class="support-actions">
+        <button type="button" class="support-chip" data-amount="2000">₦2,000</button>
+        <button type="button" class="support-chip" data-amount="5000">₦5,000</button>
+        <button type="button" class="support-chip" data-amount="10000">₦10,000</button>
+        <button type="button" class="support-chip" data-amount="20000">₦20,000</button>
+        <button type="button" class="support-chip is-other" data-amount="other">Other</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Support Modal -->
+<div id="support-modal" class="co-overlay" style="display:none;">
+  <div class="co-modal">
+    <div class="co-head">
+      <div class="co-item">
+        <h3>Support Mr Chima</h3>
+      </div>
+      <button class="co-close" onclick="closeSupportModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="co-body">
+      <div class="sup-amount">
+        <span>₦</span>
+        <input type="text" id="support-amount" value="5,000" />
+      </div>
+      <div class="sup-quick">
+        <button type="button" data-amount="2000">₦2,000</button>
+        <button type="button" data-amount="5000">₦5,000</button>
+        <button type="button" data-amount="10000">₦10,000</button>
+        <button type="button" data-amount="20000">₦20,000</button>
+      </div>
+      <div class="field">
+        <input type="email" id="support-email" placeholder="Email" />
+      </div>
+      <div class="field">
+        <input type="text" id="support-name" placeholder="Name (optional)" />
+      </div>
+    </div>
+    <div class="co-foot">
+      <button class="co-pay-btn" id="support-pay-btn" onclick="confirmSupportPayment()">Support with ₦5,000</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Support modal functionality
+let selectedSupportAmount = null;
+
+function openSupportModal(amount = null) {
+  const modal = document.getElementById('support-modal');
+  modal.style.display = 'flex';
+  
+  if (amount) {
+    selectedSupportAmount = amount;
+    document.getElementById('support-amount').value = amount.toLocaleString();
+    document.getElementById('support-pay-btn').textContent = `Support with ₦${amount.toLocaleString()}`;
+  } else {
+    selectedSupportAmount = 5000;
+    document.getElementById('support-amount').value = '5,000';
+    document.getElementById('support-pay-btn').textContent = 'Support with ₦5,000';
+  }
+  
+  // Clear previous quick button selections
+  document.querySelectorAll('#support-modal .sup-quick button').forEach(btn => {
+    btn.classList.remove('is-on');
+  });
+  
+  // Highlight matching quick button
+  if (amount) {
+    const matchingBtn = document.querySelector(`#support-modal .sup-quick button[data-amount="${amount}"]`);
+    if (matchingBtn) matchingBtn.classList.add('is-on');
+  }
+}
+
+function closeSupportModal() {
+  document.getElementById('support-modal').style.display = 'none';
+  selectedSupportAmount = null;
+}
+
+function confirmSupportPayment() {
+  const email = document.getElementById('support-email').value.trim();
+  const name = document.getElementById('support-name').value.trim();
+  const amountStr = document.getElementById('support-amount').value.replace(/,/g, '');
+  const amount = parseInt(amountStr);
+  
+  if (!email) {
+    alert('Please enter your email address');
+    return;
+  }
+  
+  if (!amount || amount < 100) {
+    alert('Please enter a valid amount (minimum ₦100)');
+    return;
+  }
+  
+  // Initialize Paystack
+  const handler = PaystackPop.setup({
+    key: 'pk_live_1ea6fadc18c46c05f93efe32f5d5fa56b2a19cc7',
+    email: email,
+    amount: amount * 100,
+    currency: 'NGN',
+    ref: 'SUP-' + Math.floor((Math.random() * 1000000000) + 1),
+    metadata: {
+      custom_fields: [
+        {
+          display_name: "Support Type",
+          variable_name: "support_type",
+          value: "General Support"
+        },
+        {
+          display_name: "Supporter Name",
+          variable_name: "supporter_name",
+          value: name || "Anonymous"
+        }
+      ]
+    },
+    callback: function(response) {
+      closeSupportModal();
+      alert('Thank you for your support! ❤️');
+    },
+    onClose: function() {
+      console.log('Payment window closed');
+    }
+  });
+  
+  handler.openIframe();
+}
+
+// Support section chip handlers
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.support-chip').forEach(chip => {
+    chip.addEventListener('click', function() {
+      const amountText = this.textContent.trim();
+      
+      if (amountText === 'Other') {
+        openSupportModal(null);
+      } else {
+        const amount = parseInt(amountText.replace(/[^0-9]/g, ''));
+        openSupportModal(amount);
+      }
+    });
+  });
+  
+  // Quick amount buttons in modal
+  document.querySelectorAll('#support-modal .sup-quick button').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const amount = parseInt(this.getAttribute('data-amount'));
+      document.getElementById('support-amount').value = amount.toLocaleString();
+      document.getElementById('support-pay-btn').textContent = `Support with ₦${amount.toLocaleString()}`;
+      selectedSupportAmount = amount;
+      
+      // Update button states
+      document.querySelectorAll('#support-modal .sup-quick button').forEach(b => b.classList.remove('is-on'));
+      this.classList.add('is-on');
+    });
+  });
+  
+  // Amount input handler
+  document.getElementById('support-amount').addEventListener('input', function() {
+    let value = this.value.replace(/,/g, '');
+    if (value && !isNaN(value)) {
+      const amount = parseInt(value);
+      this.value = amount.toLocaleString();
+      document.getElementById('support-pay-btn').textContent = `Support with ₦${amount.toLocaleString()}`;
+      selectedSupportAmount = amount;
+      
+      // Clear quick button selections if custom amount
+      const matchingBtn = document.querySelector(`#support-modal .sup-quick button[data-amount="${amount}"]`);
+      if (!matchingBtn) {
+        document.querySelectorAll('#support-modal .sup-quick button').forEach(b => b.classList.remove('is-on'));
+      }
+    }
+  });
+  
+  // Close modal on overlay click
+  document.getElementById('support-modal').addEventListener('click', function(e) {
+    if (e.target === this) {
+      closeSupportModal();
+    }
+  });
+  
+  // Update nav support button to open modal instead of redirect
+  const navSupportBtn = document.querySelector('.nav-support');
+  if (navSupportBtn) {
+    navSupportBtn.removeEventListener('click', navSupportBtn);
+    navSupportBtn.addEventListener('click', function() {
+      openSupportModal();
+    });
+  }
+});
+</script>
+
+<!-- Load Paystack -->
+<script src="https://js.paystack.co/v1/inline.js"></script>
+
 </body></html>

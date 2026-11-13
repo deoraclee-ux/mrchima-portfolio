@@ -49,13 +49,15 @@ load_dotenv()
 
 app = FastAPI(title="Mr Chima Portfolio API - Secure Edition")
 
-# CORS
+# CORS - Allow all origins for now (frontend at Vercel, backend at Render)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"],  # Allow all origins
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allow_headers=["*"],
+    expose_headers=["*"],
+    max_age=3600,
 )
 
 # Configuration
